@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ProgressBar
+        android:id="@+id/guess_number_main_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/guess_number_show_text_view"
+        android:paddingTop="100dp"
+        android:paddingBottom="@dimen/default_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        />
+
+    <TextView
+        android:id="@+id/guess_number_answer_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TableLayout
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TableRow>
+                <Button android:id="@+id/guess_number_button1"/>
+                <Button android:id="@+id/guess_number_button2"/>
+                <Button android:id="@+id/guess_number_button3"/>
+            </TableRow>
+
+            <TableRow>
+                <Button android:id="@+id/guess_number_button4"/>
+                <Button android:id="@+id/guess_number_button5"/>
+                <Button android:id="@+id/guess_number_button6"/>
+            </TableRow>
+
+            <TableRow>
+                <Button android:id="@+id/guess_number_button7"/>
+                <Button android:id="@+id/guess_number_button8"/>
+                <Button android:id="@+id/guess_number_button9"/>
+            </TableRow>
+
+            <TableRow>
+                <Button android:id="@+id/guess_number_button0" android:layout_span="2"/>
+                <Button android:id="@+id/guess_number_edit_button"/>
+
+            </TableRow>
+
+        </TableLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

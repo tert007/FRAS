@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="application_title">Скорочтение</string>
+    <string name="record">Рекорд</string>
+    <string name="settings">Настройки</string>
+    <string name="shulte_table_description">При работе с таблицами Шульте следует постоянно помнить, что тренировка здесь не самоцель. Главное — расширение поля зрения, что может быть достигнуто только при аккуратном выполнении правил работы с таблицами, систематическими и осознанными тренировками.</string>
+    <string name="shulte_next_item">Следующий элемент</string>
+    <string name="start">Начать</string>
+    <string name="shulte_table_type_settings">Цифры / Буквы</string>
+    <string name="current_time">Текущее время</string>
+    <string name="guess_number_settings_choose_complexity">Выберите сложность</string>
+    <string name="author">Автор</string>
+    <string name="language">Язык</string>
+    <string name="book_title">Название книги</string>
+    <string name="file_path">Путь к файлу</string>
+
+</resources>

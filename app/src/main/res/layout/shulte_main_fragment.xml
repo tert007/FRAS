@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_marginLeft="@dimen/default_margin"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:padding="@dimen/default_margin">
+
+        <com.example.alexander.fastreading.SquareTextView
+            android:id="@+id/shulte_next_item"
+            android:text="12"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/default_background"
+            android:textColor="@color/color_primary_main"
+            android:textSize="20sp">
+        </com.example.alexander.fastreading.SquareTextView>
+
+        <TextView
+            android:id="@+id/shulte_record"
+
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="sans-serif"
+
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_toLeftOf="@id/shulte_record"
+            android:layout_toStartOf="@id/shulte_record"
+            android:layout_alignBaseline="@id/shulte_record"
+
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+
+            android:text="@string/record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="sans-serif"
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <Chronometer
+            android:id="@+id/shulte_chronometer"
+            android:layout_below="@id/shulte_record"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_toLeftOf="@id/shulte_chronometer"
+            android:layout_toStartOf="@id/shulte_chronometer"
+            android:layout_alignBaseline="@id/shulte_chronometer"
+
+            android:text="@string/current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="sans-serif"
+
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+
+            android:textSize="16sp"
+            android:textColor="@color/black" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <GridView
+            android:id="@+id/shulte_table"
+            android:layout_centerInParent="true"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:stretchMode="columnWidth"
+            android:padding="0dp">
+        </GridView>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
