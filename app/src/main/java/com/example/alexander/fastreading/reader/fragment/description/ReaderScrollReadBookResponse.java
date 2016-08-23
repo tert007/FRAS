@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader;
+package com.example.alexander.fastreading.reader.fragment.description;
 
 import com.example.alexander.fastreading.reader.book.Book;
 
@@ -6,6 +6,6 @@ import com.example.alexander.fastreading.reader.book.Book;
  * Created by Alexander on 08.08.2016.
  * Передает  книгу из фрагмента в активити
  */
-public interface ReaderStartReadBookResponse {
-    void onBookClick(Book book);
+public interface ReaderScrollReadBookResponse {
+    void onScrollReadBookClick(Book book);
 }

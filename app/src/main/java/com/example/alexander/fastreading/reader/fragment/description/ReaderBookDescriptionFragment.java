@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.fragment;
+package com.example.alexander.fastreading.reader.fragment.description;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.ReaderStartReadBookResponse;
 import com.example.alexander.fastreading.reader.BookReaderHelper;
 import com.example.alexander.fastreading.reader.book.Book;
 import com.example.alexander.fastreading.reader.book.EpubBook;
@@ -25,7 +24,8 @@ import java.io.File;
  */
 public class ReaderBookDescriptionFragment extends Fragment {
 
-    public ReaderStartReadBookResponse delegate;
+    public ReaderScrollReadBookResponse scrollDelegate;
+    public ReaderPagesReadBookResponse pagesDelegate;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_book_description_fragment, container, false);
@@ -49,6 +49,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
             TextView bookPathTextView = (TextView) view.findViewById(R.id.reader_book_description_book_path_text_view);
 
             Button startReadingButton = (Button) view.findViewById(R.id.stard_read_button);
+            Button button = (Button) view.findViewById(R.id.stard_pages_read_button);
 
             if (book instanceof EpubBook) {
                 EpubBook epubBook = (EpubBook) book;
@@ -70,11 +71,11 @@ public class ReaderBookDescriptionFragment extends Fragment {
                 bookAuthorTextView.setText(getString(R.string.author) + " " +epubBook.getAuthor());
                 bookLanguageTextView.setText(getString(R.string.language) + " " +epubBook.getLanguage());
 
-                startReadingButton.setVisibility(View.VISIBLE);
+                startReadingButton.setVisibility(View.INVISIBLE);
                 startReadingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        delegate.onBookClick(book);
+                        scrollDelegate.onScrollReadBookClick(book);
                     }
                 });
             } else {
@@ -85,7 +86,14 @@ public class ReaderBookDescriptionFragment extends Fragment {
                 startReadingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        delegate.onBookClick(book);
+                        scrollDelegate.onScrollReadBookClick(book);
+                    }
+                });
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pagesDelegate.onPagesReadBookClick(book);
                     }
                 });
             }

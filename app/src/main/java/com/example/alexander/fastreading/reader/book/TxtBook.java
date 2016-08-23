@@ -14,7 +14,6 @@ public class TxtBook extends Book {
     }
 
     public String getText() {
-
         return text;
     }
 

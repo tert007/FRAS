@@ -13,5 +13,7 @@
     <string name="language">Язык</string>
     <string name="book_title">Название книги</string>
     <string name="file_path">Путь к файлу</string>
+    <string name="speed">Скорость</string>
+    <string name="file_opening">Открытие файла</string>
 
 </resources>

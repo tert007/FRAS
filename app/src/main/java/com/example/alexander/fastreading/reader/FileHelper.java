@@ -73,14 +73,15 @@ public class FileHelper {
         StringBuilder text = new StringBuilder();
 
         InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
-        BufferedReader br = new BufferedReader(streamReader);
+        BufferedReader bufferedReader = new BufferedReader(streamReader);
+
         String line;
 
-        while ((line = br.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
             text.append(line);
             text.append('\n');
         }
-        br.close();
+        bufferedReader.close();
 
         return text.toString();
     }

@@ -39,8 +39,16 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:text="@string/start"
+        android:text="Прокрутка"
         android:id="@+id/stard_read_button"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:text="Страницы"
+        android:id="@+id/stard_pages_read_button"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_gravity="center"
         android:layout_width="200dp"

@@ -10,17 +10,22 @@ import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.book.Book;
-import com.example.alexander.fastreading.reader.fragment.ReaderBookDescriptionFragment;
+import com.example.alexander.fastreading.reader.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.fragment.ReaderFileExplorerFileExplorerFragment;
-import com.example.alexander.fastreading.reader.fragment.ReaderMainFragment;
+import com.example.alexander.fastreading.reader.fragment.description.ReaderPagesReadBookResponse;
+import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
+import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragment;
+import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
 import java.io.File;
 
 
-public class ReaderActivity extends AppCompatActivity implements ReaderFileExplorerOnClickResponse, ReaderStartReadBookResponse {
+public class ReaderActivity extends AppCompatActivity implements ReaderFileExplorerOnClickResponse,
+        ReaderScrollReadBookResponse, ReaderPagesReadBookResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
-    private ReaderMainFragment mainFragment;
+    private ReaderScrollFragment scrollFragment;
+    private ReaderPagesFragment pagesFragment;
     private ReaderBookDescriptionFragment bookDescriptionFragment;
 
     private FragmentManager fragmentManager;
@@ -88,7 +93,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
             changeDirectory(currentDirectory);
         } else {
             bookDescriptionFragment = new ReaderBookDescriptionFragment();
-            bookDescriptionFragment.delegate = this;
+            bookDescriptionFragment.scrollDelegate = this;
+            bookDescriptionFragment.pagesDelegate = this;
 
             Bundle bundle = new Bundle();
             bundle.putString("file_path", file.getPath());
@@ -112,16 +118,30 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
     }
 
     @Override
-    public void onBookClick(Book book) {
-        mainFragment = new ReaderMainFragment();
+    public void onScrollReadBookClick(Book book) {
+        scrollFragment = new ReaderScrollFragment();
 
         Bundle bundle = new Bundle();
         bundle.putString("file_path", book.getFilePath());
 
-        mainFragment.setArguments(bundle);
+        scrollFragment.setArguments(bundle);
 
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, mainFragment);
+        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onPagesReadBookClick(Book book) {
+        pagesFragment = new ReaderPagesFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("file_path", book.getFilePath());
+
+        pagesFragment.setArguments(bundle);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.reader_fragment_container, pagesFragment);
         fragmentTransaction.commit();
     }
 }
