@@ -101,7 +101,7 @@ public class EpubBookParser implements BookParser {
         NodeList childNodes = bodyTag.getChildNodes();
 
         Map<String, String> tagMap = new HashMap<>(childNodes.getLength());
-
+        //НЕ ГОВНО ЛИ?! Мапа вроде не подходит
         for (int i = 0; i < childNodes.getLength(); i++){
             String nodeName = childNodes.item(i).getNodeName();
             String nodeValue = childNodes.item(i).getTextContent();

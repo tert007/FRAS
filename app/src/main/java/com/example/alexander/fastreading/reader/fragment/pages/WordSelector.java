@@ -12,8 +12,8 @@ public class WordSelector {
     private int index;
 
     private final static String regExp = "\\b([\\w]+)\\b";
-    private final static String startTag = "<font color='red'>";
-    private final static String finishTag = "</font>";
+    private final static String startTag = "<h1>";
+    private final static String finishTag = "</h1>";
 
     private final static String START_PARAGRAPH_TAG = "<p>";
     private final static String FINISH_PARAGRAPH_TAG = "</p>";
