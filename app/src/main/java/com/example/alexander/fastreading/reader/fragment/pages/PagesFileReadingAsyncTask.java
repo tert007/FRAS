@@ -6,21 +6,24 @@ import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.bookparser.BookParserFactory;
+import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
+import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
+import com.example.alexander.fastreading.reader.bookparser.trash.Book;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Alexander on 22.08.2016.
  */
-public class FileReadingAsyncTask extends AsyncTask<String, Void, String> {
+public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<HtmlTag> > {
 
-    public FileReaderAsyncTaskResponse delegate;
+    public PagesFileReaderAsyncTaskResponse delegate;
 
     private Context context;
     private ProgressDialog progressDialog;
 
-    public FileReadingAsyncTask(Context context) {
+    public PagesFileReadingAsyncTask(Context context) {
         this.context = context;
     }
 
@@ -34,24 +37,21 @@ public class FileReadingAsyncTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected List<HtmlTag> doInBackground(String... params) {
         String filePath = params[0];
-        String textFromFile;
 
         try {
-            textFromFile = FileHelper.getTextFromFile(new File(filePath));
-        } catch (IOException e) {
+            return BookParserFactory.getHtmlTagsText(filePath);
+        } catch (Exception e) {
             return null;
         }
-
-        return textFromFile;
     }
 
     @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
+    protected void onPostExecute(List<HtmlTag> tagList) {
+        super.onPostExecute(tagList);
+        //EXCEPTION (NULL)
         progressDialog.dismiss();
-        delegate.onFileReadingPostExecute(s);
+        delegate.onFileReadingPostExecute(tagList);
     }
-
 }

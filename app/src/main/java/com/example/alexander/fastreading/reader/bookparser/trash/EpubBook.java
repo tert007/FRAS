@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.book;
+package com.example.alexander.fastreading.reader.bookparser.trash;
 
 import android.graphics.Bitmap;
 
@@ -13,7 +13,7 @@ public class EpubBook extends Book {
     private String author;
     private String language;
     private Bitmap cover;
-    private List<BookNavigationPoint> navigationPoints;
+    private List<BookChapter> navigationPoints;
 
     public String getAuthor() {
         return author;
@@ -47,11 +47,11 @@ public class EpubBook extends Book {
         this.cover = cover;
     }
 
-    public List<BookNavigationPoint> getNavigationPoints() {
+    public List<BookChapter> getNavigationPoints() {
         return navigationPoints;
     }
 
-    public void setNavigationPoints(List<BookNavigationPoint> navigationPoints) {
+    public void setNavigationPoints(List<BookChapter> navigationPoints) {
         this.navigationPoints = navigationPoints;
     }
 

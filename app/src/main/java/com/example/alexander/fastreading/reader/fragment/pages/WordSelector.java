@@ -1,5 +1,12 @@
 package com.example.alexander.fastreading.reader.fragment.pages;
 
+import android.text.Spanned;
+
+import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
+import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,57 +14,79 @@ import java.util.regex.Pattern;
  * Created by Alexander on 22.08.2016.
  */
 public class WordSelector {
-    private String inputText;
+    private List<HtmlTag> page;
 
+    private int tagIndex = -1;
+    private List<HtmlTag> newPage;
     private int index;
 
     private final static String regExp = "\\b([\\w]+)\\b";
-    private final static String startTag = "<h1>";
-    private final static String finishTag = "</h1>";
+    private final static String startTag = "<b>";
+    private final static String finishTag = "</b>";
 
-    private final static String START_PARAGRAPH_TAG = "<p>";
-    private final static String FINISH_PARAGRAPH_TAG = "</p>";
-
-    private final static String NEW_LINE_TAG = "<br>";
-
-    private Pattern pattern;
+    private final Pattern pattern;
     private Matcher matcher;
 
-    public WordSelector(String inputText) {
-        this.inputText = inputText;
-
-        pattern = Pattern.compile(regExp);
-        matcher = pattern.matcher(inputText);
+    public WordSelector(List<HtmlTag> page){
+        this.page = page;
+        this.pattern = Pattern.compile(regExp);
     }
 
-    public String getNextSelectedWord(){
-        if (matcher.find()){
 
-            String match = matcher.group();
-            index = inputText.indexOf(match, index);
+    public Spanned getNextSelectedWord(){
+        newPage = new ArrayList<>(page);
 
-            String firstPart = inputText.subSequence(0, index).toString();
-            String middlePart = startTag + match + finishTag;
-            String lastPart = inputText.subSequence(index + match.length(), inputText.length()).toString();
+        return selectNextWord();
+    }
 
-            String result = firstPart + middlePart + lastPart;
-            String[] lines = result.split("\n");
+    private Spanned selectNextWord(){
+        setTagIndex();
+        if (tagIndex == page.size()){
+            return null;
+        }
 
-            result = "";
+        if (matcher == null)
+            matcher = pattern.matcher(page.get(tagIndex).getTagContent());
 
-            for (int i = 0; i < lines.length; i++) {
-                lines[i] = lines[i].trim();
-                if (lines[i].isEmpty()) {
-                    //lines[i] = NEW_LINE_TAG;
-                } else {
-                    lines[i] = START_PARAGRAPH_TAG + lines[i] + FINISH_PARAGRAPH_TAG;
-                }
-
-                result += lines[i];
-            }
-
-            return result;
+        String result = find();
+        if (result != null){
+            newPage.set(tagIndex, new HtmlTag(page.get(tagIndex).getTagName(), result));
+            return HtmlHelper.convertHtmlPageToSpanned(newPage);
         } else {
+            matcher = null;
+            return selectNextWord();
+        }
+    }
+
+    private void setTagIndex(){
+        if (matcher == null){
+            while (tagIndex < page.size()){
+                tagIndex++;
+                if (tagIndex == page.size()) {
+                    break;
+                }
+                if (page.get(tagIndex).getTagContent() == null){
+                    continue;
+                }
+                break;
+            }
+        }
+    }
+
+    private String find() {
+
+        if (matcher.find()){
+            String match = matcher.group();
+
+            index = page.get(tagIndex).getTagContent().indexOf(match, index);
+
+            String firstPart = page.get(tagIndex).getTagContent().subSequence(0, index).toString();
+            String middlePart = startTag + match + finishTag;
+            String lastPart = page.get(tagIndex).getTagContent().subSequence(index + match.length(), page.get(tagIndex).getTagContent().length()).toString();
+
+            return firstPart + middlePart + lastPart;
+        } else {
+            index = 0;
             return null;
         }
     }

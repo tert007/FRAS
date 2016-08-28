@@ -4,7 +4,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,22 +13,18 @@ import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.fragment.scroll.LockableScrollView;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by Alexander on 04.08.2016.
  */
-public class ReaderScrollFragment extends Fragment implements View.OnTouchListener {
+public class ReaderScrollFragment extends Fragment implements View.OnTouchListener, ScrollFileReadingAsyncTaskResponse {
 
     private LockableScrollView lockableScrollView;
     private TextView textView;
     private TextView statisticTextView;
 
     private volatile boolean itsScrolling;
+    private volatile int speed = 10;
 
     private static final int MAX_CLICK_DISTANCE = 30;
 
@@ -37,16 +33,10 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
     //Запопимаент промежуточный свайп, помогает следить за сложностью
     private float movedOldY;
 
-
-    private volatile int speed;
-
-    ObjectAnimator animator;
+    private ObjectAnimator animator;
     long length;
 
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
+    private ScrollFileReadingAsyncTask asyncTask;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_scroll_fragment, container, false);
@@ -55,29 +45,21 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
         lockableScrollView.setScrollingEnabled(false);
 
         statisticTextView = (TextView) view.findViewById(R.id.reader_scroll_fragment_speed_text_view);
+        statisticTextView.setText(String.valueOf(speed));
 
         textView = (TextView) view.findViewById(R.id.reader_scroll_fragment_text_view);
 
         String filePath = getArguments().getString("file_path");
-        speed = 10;
 
-        statisticTextView.setText(String.valueOf(speed));
-
-        try {
-            String textFromFile = FileHelper.getTextFromFile(new File(filePath));
-            length = textFromFile.length();
-            textView.setText(textFromFile);
-            textView.setOnTouchListener(this);
-        } catch (IOException e) {
-            Log.e("File reading error", e.getMessage());
-        }
+        asyncTask = new ScrollFileReadingAsyncTask(getActivity());
+        asyncTask.delegate = this;
+        asyncTask.execute(filePath);
 
         return view;
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
         switch (event.getAction()){
             case MotionEvent.ACTION_DOWN:
                 pressedDownX = event.getX();
@@ -92,7 +74,6 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
 
                 float distanceInPx = (float) Math.sqrt(dx * dx + dy * dy);
                 float distanceInDp = distanceInPx / getResources().getDisplayMetrics().density;
-
 
                 if (distanceInDp < MAX_CLICK_DISTANCE){
                     itsScrolling = !itsScrolling;
@@ -164,5 +145,22 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
 
         }
         return false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (animator != null) {
+            animator.cancel();
+        }
+    }
+
+    @Override
+    public void onFileReadingPostExecute(Spanned spannedText) {
+        textView.setText(spannedText);
+        if (spannedText != null){
+            length = spannedText.length();
+            textView.setOnTouchListener(this);
+        }
     }
 }

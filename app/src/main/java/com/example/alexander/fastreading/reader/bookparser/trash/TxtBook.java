@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.book;
+package com.example.alexander.fastreading.reader.bookparser.trash;
 
 /**
  * Created by Alexander on 13.08.2016.

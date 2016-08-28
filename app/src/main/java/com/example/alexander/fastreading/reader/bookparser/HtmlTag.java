@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.fragment.pages;
+package com.example.alexander.fastreading.reader.bookparser;
 
 /**
  * Created by Alexander on 24.08.2016.

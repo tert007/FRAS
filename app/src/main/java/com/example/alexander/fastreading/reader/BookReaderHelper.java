@@ -2,11 +2,11 @@ package com.example.alexander.fastreading.reader;
 
 
 
-import com.example.alexander.fastreading.reader.book.Book;
-import com.example.alexander.fastreading.reader.bookparser.BookParser;
+import com.example.alexander.fastreading.reader.bookparser.trash.Book;
+import com.example.alexander.fastreading.reader.bookparser.trash.BookParser;
 import com.example.alexander.fastreading.reader.bookparser.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.EpubBookParser;
-import com.example.alexander.fastreading.reader.bookparser.TxtBookParser;
+import com.example.alexander.fastreading.reader.bookparser.trash.EpubBookParser;
+import com.example.alexander.fastreading.reader.bookparser.trash.TxtBookParser;
 
 import java.io.File;
 

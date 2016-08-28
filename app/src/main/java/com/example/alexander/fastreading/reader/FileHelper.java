@@ -1,5 +1,7 @@
 package com.example.alexander.fastreading.reader;
 
+import android.graphics.Path;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -69,27 +71,37 @@ public class FileHelper {
         return extension;
     }
 
-    public static String getTextFromFile(File file) throws IOException {
-        StringBuilder text = new StringBuilder();
+    public static String getFileExtension(String filePath) {
+        String extension = null;
+        int i = filePath.lastIndexOf('.');
 
-        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
-        BufferedReader bufferedReader = new BufferedReader(streamReader);
-
-        String line;
-
-        while ((line = bufferedReader.readLine()) != null) {
-            text.append(line);
-            text.append('\n');
+        if (i > 0 && i < filePath.length() - 1) {
+            extension = filePath.substring(i + 1).toLowerCase();
         }
-        bufferedReader.close();
+        return extension;
+    }
 
-        return text.toString();
+    public static String getTextFromFile(File file) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
+
+        return getTextFromFile(streamReader);
     }
 
     public static String getTextFromFile(InputStream inputStream) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(inputStream, "utf8");
+
+        return getTextFromFile(streamReader);
+    }
+
+    public static String getTextFromFile(String filePath) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(filePath), "utf8");
+
+        return getTextFromFile(streamReader);
+    }
+
+    private static String getTextFromFile(InputStreamReader streamReader) throws IOException {
         StringBuilder text = new StringBuilder();
 
-        InputStreamReader streamReader = new InputStreamReader(inputStream, "utf8");
         BufferedReader br = new BufferedReader(streamReader);
         String line;
 
@@ -111,7 +123,7 @@ public class FileHelper {
         if(!rootDirectory.exists()){
             rootDirectory.mkdir();
         } else {
-            rootDirectory.delete();
+            deleteDirectory(rootDirectory);
             rootDirectory.mkdir();
         }
 
@@ -148,4 +160,59 @@ public class FileHelper {
         }
         zipFile.close();
     }
+
+    private static boolean deleteDirectory(File directory) {
+        if(directory.exists()){
+            File[] files = directory.listFiles();
+            if(files != null){
+                for (File file: files) {
+                    if(file.isDirectory()) {
+                        deleteDirectory(file);
+                    }
+                    else {
+                        file.delete();
+                    }
+                }
+            }
+        }
+        return(directory.delete());
+    }
+
+    public static List<File> getFilesCollection(String filePath){
+        File root = new File(filePath);
+        File[] tempFiles =  root.listFiles();
+        if (tempFiles == null)
+            return null;
+
+        List<File> files = new ArrayList<>();
+
+        for (File file : tempFiles) {
+            if (file.isFile()) {
+                files.add(file);
+            } else {
+                getFilesRecursive(file, files);
+            }
+        }
+
+        return files;
+    }
+
+    private static List<File> getFilesRecursive(File file, List<File> files) {
+        if (file.isFile()){
+            files.add(file);
+
+            return files;
+        }
+
+        File[] tempFiles =  file.listFiles();
+        if (tempFiles == null)
+            return files;
+
+        for(File file1 : tempFiles) {
+            getFilesRecursive(file1, files);
+        }
+
+        return files;
+    }
+
 }

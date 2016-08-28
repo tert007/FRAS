@@ -1,12 +1,10 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader.bookparser.trash;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.book.Book;
-import com.example.alexander.fastreading.reader.book.BookNavigationPoint;
-import com.example.alexander.fastreading.reader.book.EpubBook;
+import com.example.alexander.fastreading.reader.bookparser.BookParserException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -27,6 +25,9 @@ import org.w3c.dom.*;
  * Created by Alexander on 05.08.2016.
  */
 public class EpubBookParser implements BookParser {
+
+
+
 
     private ZipFile zipFile;
     ArrayList<? extends ZipEntry> zipEntries;
@@ -112,13 +113,13 @@ public class EpubBookParser implements BookParser {
         return tagMap;
     }
 
-    private List<BookNavigationPoint> getNavigationPoints(Document document) throws BookParserException {
+    private List<BookChapter> getNavigationPoints(Document document) throws BookParserException {
         NodeList navPoints = document.getElementsByTagName("navPoint");
 
-        List<BookNavigationPoint> bookNavigationPoints = new ArrayList<>(navPoints.getLength());
+        List<BookChapter> bookChapters = new ArrayList<>(navPoints.getLength());
 
         for (int i = 0; i < navPoints.getLength(); i++){
-            BookNavigationPoint navigationPoint = new BookNavigationPoint();
+            BookChapter navigationPoint = new BookChapter();
 
             //Каждый узел в документе
             Node nodePoint = navPoints.item(i);
@@ -153,7 +154,7 @@ public class EpubBookParser implements BookParser {
                         if (entryName.equals(textContentPath)){
                             try {
                                 String text = FileHelper.getTextFromFile(zipFile.getInputStream(entry));
-                                navigationPoint.setText(text);
+                                //navigationPoint.setText(text);
                             } catch (IOException e) {
                                 throw new BookParserException(e);
                             }
@@ -162,10 +163,10 @@ public class EpubBookParser implements BookParser {
                 }
 
             }
-            bookNavigationPoints.add(navigationPoint);
+            bookChapters.add(navigationPoint);
         }
 
-        return bookNavigationPoints;
+        return bookChapters;
     }
     @Override
     public Book getBook(File fileBook) throws BookParserException  {
@@ -203,9 +204,9 @@ public class EpubBookParser implements BookParser {
                 }
 
                 if (fileName.toLowerCase().equals("toc.ncx")) {
-                    Document document = getXmlFromStream(zipFile.getInputStream(entry));
+                    //Document document = getXmlFromStream(zipFile.getInputStream(entry));
 
-                    book.setNavigationPoints(getNavigationPoints(document));
+                    //book.setBookChapters(getBookChapters(document));
                 }
 
                 if (entry.getName().equals(coverPath)){

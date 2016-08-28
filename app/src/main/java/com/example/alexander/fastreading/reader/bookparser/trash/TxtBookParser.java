@@ -1,8 +1,7 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader.bookparser.trash;
 
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.book.Book;
-import com.example.alexander.fastreading.reader.book.TxtBook;
+import com.example.alexander.fastreading.reader.bookparser.BookParserException;
 
 import java.io.File;
 import java.io.IOException;

@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.BookReaderHelper;
-import com.example.alexander.fastreading.reader.book.Book;
-import com.example.alexander.fastreading.reader.book.EpubBook;
+import com.example.alexander.fastreading.reader.bookparser.trash.Book;
+import com.example.alexander.fastreading.reader.bookparser.trash.EpubBook;
 import com.example.alexander.fastreading.reader.bookparser.BookParserException;
 
 import java.io.File;
@@ -31,16 +31,6 @@ public class ReaderBookDescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.reader_book_description_fragment, container, false);
 
         String filePath = getArguments().getString("file_path");
-
-        /*
-        try {
-            FileHelper.unZip(filePath, getActivity().getApplicationInfo().dataDir + File.separator + "test1");
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-            Log.e("ER", e.getMessage());
-        }
-
-        */
 
         try {
             final Book book = BookReaderHelper.getBook(new File(filePath));
@@ -71,11 +61,18 @@ public class ReaderBookDescriptionFragment extends Fragment {
                 bookAuthorTextView.setText(getString(R.string.author) + " " +epubBook.getAuthor());
                 bookLanguageTextView.setText(getString(R.string.language) + " " +epubBook.getLanguage());
 
-                startReadingButton.setVisibility(View.INVISIBLE);
+                startReadingButton.setVisibility(View.VISIBLE);
                 startReadingButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         scrollDelegate.onScrollReadBookClick(book);
+                    }
+                });
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pagesDelegate.onPagesReadBookClick(book);
                     }
                 });
             } else {

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.FileExplorerListAdapter;
 import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.ReaderFileExplorerOnClickResponse;
 

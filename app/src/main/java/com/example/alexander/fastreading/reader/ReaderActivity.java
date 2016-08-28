@@ -9,12 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.book.Book;
+import com.example.alexander.fastreading.reader.bookparser.trash.Book;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.fragment.ReaderFileExplorerFileExplorerFragment;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderPagesReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
-import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragment;
+import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragmentPages;
 import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
 import java.io.File;
@@ -25,7 +25,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
     private ReaderScrollFragment scrollFragment;
-    private ReaderPagesFragment pagesFragment;
+    private ReaderPagesFragmentPages pagesFragment;
     private ReaderBookDescriptionFragment bookDescriptionFragment;
 
     private FragmentManager fragmentManager;
@@ -133,7 +133,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
 
     @Override
     public void onPagesReadBookClick(Book book) {
-        pagesFragment = new ReaderPagesFragment();
+        pagesFragment = new ReaderPagesFragmentPages();
 
         Bundle bundle = new Bundle();
         bundle.putString("file_path", book.getFilePath());

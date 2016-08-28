@@ -1,8 +1,6 @@
-package com.example.alexander.fastreading.reader.fragment.pages;
+package com.example.alexander.fastreading.reader.bookparser;
 
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.Spanned;
 
 import java.util.ArrayList;
@@ -13,6 +11,12 @@ import java.util.List;
  */
 public class HtmlHelper {
     public final static String PARAGRAPH_TAG = "p";
+    public final static String HEAD_1_TAG = "h1";
+    public final static String HEAD_2_TAG = "h2";
+    public final static String HEAD_3_TAG = "h3";
+    public final static String HEAD_4_TAG = "h4";
+    public final static String HEAD_5_TAG = "h5";
+    public final static String HEAD_6_TAG = "h6";
     public final static String NEW_LINE_TAG = "br";
 
     public static List<HtmlTag> convertTextToHtmlPage(String text) {
@@ -43,8 +47,8 @@ public class HtmlHelper {
             case NEW_LINE_TAG:
                 paragraph = "<" + NEW_LINE_TAG + ">";
                 break;
-            case PARAGRAPH_TAG:
-                paragraph = "<" + PARAGRAPH_TAG + ">" + htmlTag.getTagContent() + "</" + PARAGRAPH_TAG + ">";
+            default:
+                paragraph = "<" + htmlTag.getTagName() + ">" + htmlTag.getTagContent() + "</" + htmlTag.getTagName() + ">";
                 break;
         }
 
@@ -58,8 +62,8 @@ public class HtmlHelper {
             case NEW_LINE_TAG:
                 paragraph = "<" + NEW_LINE_TAG + ">";
                 break;
-            case PARAGRAPH_TAG:
-                paragraph = "<" + PARAGRAPH_TAG + ">" + htmlTag.getTagContent() + "</" + PARAGRAPH_TAG + ">";
+            default:
+                paragraph = "<" + htmlTag.getTagName() + ">" + htmlTag.getTagContent() + "</" + htmlTag.getTagName() + ">";
                 break;
         }
 
@@ -67,12 +71,13 @@ public class HtmlHelper {
     }
 
     public static Spanned convertHtmlPageToSpanned(List<HtmlTag> htmlPage) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
+
 
         for (int i = 0; i < htmlPage.size(); i++) {
-            result += convertHtmlTagToString(htmlPage.get(i));
+            result.append(convertHtmlTagToString(htmlPage.get(i)));
         }
 
-        return Html.fromHtml(result);
+        return Html.fromHtml(result.toString());
     }
 }
