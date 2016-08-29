@@ -1,5 +1,8 @@
 package com.example.alexander.fastreading.reader.bookparser;
 
+import android.os.SystemClock;
+import android.util.Log;
+
 import org.w3c.dom.Document;
 
 import java.io.BufferedReader;
@@ -44,16 +47,14 @@ public class XmlParser {
 
             Document document = documentBuilder.parse(byteArrayInputStream);
             document.getDocumentElement().normalize();
-
             return document;
         } catch (Exception e) {
             throw new BookParserException(e);
         }
-
     }
 
 
-    private static String removeSpaces(Reader inputReader) {
+    private static String removeSpaces(Reader inputReader)throws BookParserException {
         BufferedReader reader = new BufferedReader(inputReader);
         StringBuilder result = new StringBuilder();
         try {
@@ -62,7 +63,7 @@ public class XmlParser {
                 result.append(line.trim());
             return result.toString();
         } catch (IOException e) {
-            throw new RuntimeException(e); //
+            throw new BookParserException(e);
         }
     }
 

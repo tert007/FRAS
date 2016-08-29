@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
@@ -26,10 +27,10 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
     private List<Spanned> pages;
     private int currentPage;
 
-    private WordSelector wordParser;
+    private MyWordSelector wordParser;
 
     private boolean itsStarted;
-    private int delay = 50;
+    private int delay = 500;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_pages_fragment, container, false);
@@ -41,7 +42,7 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
         pagesFileReadingAsyncTask = new PagesFileReadingAsyncTask(getActivity());
         pagesFileReadingAsyncTask.delegate = this;
         pagesFileReadingAsyncTask.execute(filePath);
-/*
+
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +55,7 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
                 }
             }
         });
-*/
+
         return view;
     }
 
@@ -64,10 +65,13 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
         PageSplitter textSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
         pages = textSplitter.getPages(response);
         textView.setText(pages.get(currentPage));
+
+        wordParser = new MyWordSelector(pages.get(currentPage));
+        //Toast.makeText(getActivity(), a.getNextSelectedWord(), Toast.LENGTH_SHORT).show();
         //wordParser = new WordSelector(pages.get(currentPage));
     }
 
-/*
+
     private Runnable wordSelector = new Runnable() {
         @Override
         public void run() {
@@ -80,7 +84,7 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
                 } else {
                     if (currentPage <  pages.size() - 1){
                         currentPage++;
-                        wordParser = new WordSelector(pages.get(currentPage));
+                        wordParser = new MyWordSelector(pages.get(currentPage));
                         textView.postDelayed(this, delay);
                     } else {
                         itsStarted = false;
@@ -89,5 +93,5 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
             }
         }
     };
-*/
+
 }

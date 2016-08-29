@@ -1,6 +1,8 @@
 package com.example.alexander.fastreading.reader.bookparser;
 
+import android.os.SystemClock;
 import android.text.Spanned;
+import android.util.Log;
 
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.FileHelper;
@@ -13,6 +15,7 @@ import org.w3c.dom.NodeList;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,8 +55,11 @@ public class MyEpubParser implements MyBookParser {
     @Override
     public List<HtmlTag> getHtmlTagsText(String filePath) throws BookParserException {
         try {
+            Log.d("Start", String.valueOf(SystemClock.elapsedRealtime()));
             FileHelper.unZip(filePath, SettingsManager.getTempPath());
+            //Log.d("UnzipEnd", String.valueOf(SystemClock.elapsedRealtime()));
             List<File> files = FileHelper.getFilesCollection(SettingsManager.getTempPath());
+            //Log.d("getFileCollectionEnd", String.valueOf(SystemClock.elapsedRealtime()));
             List<String> bookChaptersPaths = null;
 
             for (File file : files) {
@@ -64,8 +70,8 @@ public class MyEpubParser implements MyBookParser {
                 }
             }
 
-            List<HtmlTag> result = new ArrayList<>(bookChaptersPaths.size());
-
+            List<HtmlTag> result = new ArrayList<>(10000);
+            //Log.d("parseChaptersSrart", String.valueOf(SystemClock.elapsedRealtime()));
             for (String bookChapterPath : bookChaptersPaths) {
                 for (File file : files) {
                     if (file.getName().toLowerCase().equals(bookChapterPath)) {
@@ -76,7 +82,7 @@ public class MyEpubParser implements MyBookParser {
                     }
                 }
             }
-
+            Log.d("Finish", String.valueOf(SystemClock.elapsedRealtime()));
             return result;
         } catch (IOException e){
             throw new BookParserException(e);
@@ -84,8 +90,20 @@ public class MyEpubParser implements MyBookParser {
     }
 
     private List<String> getBookChaptersPaths(Document docNcx) {
-        NodeList navPoints = docNcx.getElementsByTagName("navPoint");
+        NodeList navPoints = docNcx.getElementsByTagName("content");
         List<String> bookChaptersContentPath = new ArrayList<>(navPoints.getLength());
+
+        for (int i = 0; i < navPoints.getLength(); i++) {
+            String contentPath = ((Element) navPoints.item(i)).getAttribute("src");
+            Matcher matcher = pattern.matcher(contentPath);
+            matcher.find();
+
+            contentPath = matcher.group();
+            if (!bookChaptersContentPath.contains(contentPath)){
+                bookChaptersContentPath.add(contentPath);
+            }
+        }
+        /*
 
         for (int i = 0; i < navPoints.getLength(); i++) {
             Node nodePoint = navPoints.item(i);
@@ -105,6 +123,7 @@ public class MyEpubParser implements MyBookParser {
                 }
             }
         }
+        */
         return bookChaptersContentPath;
     }
 

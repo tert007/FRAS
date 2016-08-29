@@ -1,5 +1,8 @@
 package com.example.alexander.fastreading;
 
+import com.example.alexander.fastreading.reader.bookparser.MyEpubParser;
+import com.example.alexander.fastreading.reader.bookparser.XmlParser;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,7 +12,7 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     @Test
-    public void addition_isCorrect() throws Exception {
+    public void timeTest() throws Exception {
         assertEquals(4, 2 + 2);
     }
 }

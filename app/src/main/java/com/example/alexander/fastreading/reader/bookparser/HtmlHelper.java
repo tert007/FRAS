@@ -1,6 +1,7 @@
 package com.example.alexander.fastreading.reader.bookparser;
 
 import android.text.Html;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
 import java.util.ArrayList;
