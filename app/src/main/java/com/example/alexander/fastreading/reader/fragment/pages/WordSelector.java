@@ -1,19 +1,10 @@
 package com.example.alexander.fastreading.reader.fragment.pages;
 
-import android.text.Spanned;
-
-import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Created by Alexander on 22.08.2016.
  */
 public class WordSelector {
+    /*
     private List<HtmlTag> page;
 
     private int tagIndex = -1;
@@ -90,4 +81,5 @@ public class WordSelector {
             return null;
         }
     }
+    */
 }

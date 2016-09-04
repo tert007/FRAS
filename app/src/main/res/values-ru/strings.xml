@@ -15,5 +15,7 @@
     <string name="file_path">Путь к файлу</string>
     <string name="speed">Скорость</string>
     <string name="file_opening">Открытие файла</string>
+    <string name="text_size">Размер текста</string>
+    <string name="fast_reading">Быстрое чтение</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.text.Spanned;
 import com.example.alexander.fastreading.reader.FileHelper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,15 +21,22 @@ public class MyTxtParser implements MyBookParser {
     }
 
     @Override
-    public Spanned getScrollSpannedText(String filePath) throws BookParserException {
-        return HtmlHelper.convertHtmlPageToSpanned(getHtmlTagsText(filePath));
+    public CharSequence getScrollText(String filePath) throws BookParserException {
+        try {
+            return FileHelper.getTextFromFile(filePath);
+        } catch (IOException e){
+            throw new BookParserException(e);
+        }
     }
 
     @Override
-    public List<HtmlTag> getHtmlTagsText(String filePath) throws BookParserException {
+    public List<CharSequence> getPagesText(String filePath) throws BookParserException {
+        //Тесктовый файл - книга с одной главой
         try {
-            String textFromFile = FileHelper.getTextFromFile(filePath);
-            return HtmlHelper.convertTextToHtmlPage(textFromFile);
+            List<CharSequence> result = new ArrayList<>();
+            result.add(FileHelper.getTextFromFile(filePath));
+
+            return result;
         } catch (IOException e){
             throw new BookParserException(e);
         }

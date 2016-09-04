@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.fragment;
+package com.example.alexander.fastreading.reader.fragment.fileexplorer;
 
 import android.app.Fragment;
 import android.os.Bundle;

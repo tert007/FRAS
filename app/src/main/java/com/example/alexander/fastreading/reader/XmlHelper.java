@@ -1,7 +1,9 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader;
 
 import android.os.SystemClock;
 import android.util.Log;
+
+import com.example.alexander.fastreading.reader.bookparser.BookParserException;
 
 import org.w3c.dom.Document;
 
@@ -19,23 +21,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 /**
  * Created by Alexander on 26.08.2016.
  */
-public class XmlParser {
-
-    /*
-    public static Document getXmlFromFile(File file) throws BookParserException {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-            Document document = documentBuilder.parse(file);
-            document.getDocumentElement().normalize();
-
-            return document;
-        } catch (Exception e) {
-            throw new BookParserException(e);
-        }
-    }
-        */
+public class XmlHelper {
 
     public static Document getXmlFromFile(File file) throws BookParserException {
         try {
@@ -54,7 +40,7 @@ public class XmlParser {
     }
 
 
-    private static String removeSpaces(Reader inputReader)throws BookParserException {
+    private static String removeSpaces(Reader inputReader) throws BookParserException {
         BufferedReader reader = new BufferedReader(inputReader);
         StringBuilder result = new StringBuilder();
         try {
@@ -66,5 +52,4 @@ public class XmlParser {
             throw new BookParserException(e);
         }
     }
-
 }

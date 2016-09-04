@@ -18,7 +18,18 @@
         <item>6</item>
         <item>7</item>
     </string-array>
+
+    <string-array name="text_size_settings" translatable="false">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+    </string-array>
+
     <string name="file_path">File path</string>
     <string name="speed">Speed</string>
     <string name="file_opening">File opening</string>
+    <string name="text_size">Text size</string>
+    <string name="fast_reading">Fast readin</string>
 </resources>

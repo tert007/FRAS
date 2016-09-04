@@ -5,18 +5,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.bookparser.BookParserException;
 import com.example.alexander.fastreading.reader.bookparser.BookParserFactory;
-import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
-import com.example.alexander.fastreading.reader.bookparser.trash.Book;
 
 import java.util.List;
 
 /**
  * Created by Alexander on 22.08.2016.
  */
-public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<HtmlTag> > {
+public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<CharSequence> > {
 
     public PagesFileReaderAsyncTaskResponse delegate;
 
@@ -37,21 +34,21 @@ public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<Html
     }
 
     @Override
-    protected List<HtmlTag> doInBackground(String... params) {
+    protected List<CharSequence> doInBackground(String... params) {
         String filePath = params[0];
 
         try {
-            return BookParserFactory.getHtmlTagsText(filePath);
-        } catch (Exception e) {
+            return BookParserFactory.getPagesText(filePath);
+        } catch (BookParserException e) {
             return null;
         }
     }
 
     @Override
-    protected void onPostExecute(List<HtmlTag> tagList) {
-        super.onPostExecute(tagList);
+    protected void onPostExecute(List<CharSequence> chapters) {
+        super.onPostExecute(chapters);
         //EXCEPTION (NULL)
         progressDialog.dismiss();
-        delegate.onFileReadingPostExecute(tagList);
+        delegate.onFileReadingPostExecute(chapters);
     }
 }

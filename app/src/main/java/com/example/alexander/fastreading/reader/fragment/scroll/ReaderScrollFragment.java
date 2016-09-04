@@ -4,29 +4,40 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.Spanned;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.SettingsManager;
 
 /**
  * Created by Alexander on 04.08.2016.
  */
-public class ReaderScrollFragment extends Fragment implements View.OnTouchListener, ScrollFileReadingAsyncTaskResponse {
+public class ReaderScrollFragment extends Fragment implements  View.OnTouchListener, ScrollFileReadingAsyncTaskResponse {
 
     private LockableScrollView lockableScrollView;
     private TextView textView;
     private TextView statisticTextView;
 
+    private boolean itsFastReading;
+
+    private Menu menu;
+
     private volatile boolean itsScrolling;
     private volatile int speed = 10;
 
-    private static final int MAX_CLICK_DISTANCE = 30;
+    private static final int MAX_CLICK_DISTANCE = 50;
 
     private float pressedDownX;
     private float pressedDownY;
@@ -36,18 +47,27 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
     private ObjectAnimator animator;
     long length;
 
+    private View view;
+
     private ScrollFileReadingAsyncTask asyncTask;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_scroll_fragment, container, false);
 
+        //Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        //setHasOptionsMenu(true);
+
+
         lockableScrollView = (LockableScrollView) view.findViewById(R.id.reader_scroll_fragment_lockable_scroll_view);
-        lockableScrollView.setScrollingEnabled(false);
+        lockableScrollView.setScrollingEnabled(true);
 
         statisticTextView = (TextView) view.findViewById(R.id.reader_scroll_fragment_speed_text_view);
-        statisticTextView.setText(String.valueOf(speed));
+        //statisticTextView.setText(String.valueOf(speed));
 
         textView = (TextView) view.findViewById(R.id.reader_scroll_fragment_text_view);
+        textView.setTextSize(SettingsManager.getReaderTextSize());
 
         String filePath = getArguments().getString("file_path");
 
@@ -55,8 +75,58 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
         asyncTask.delegate = this;
         asyncTask.execute(filePath);
 
+        this.view = view;
+
         return view;
     }
+
+    /*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.fast_reading :
+                if (lockableScrollView.isFullScroll()){
+                    item.setIcon(R.drawable.fast_reading_start);
+
+                    Snackbar snackbar = Snackbar.make(view, "Reading complete", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                    return true;
+                }
+
+                itsFastReading = !itsFastReading;
+
+                if (itsFastReading) {
+                    item.setIcon(R.drawable.fast_reading_stop);
+
+                    Snackbar snackbar = Snackbar.make(view, "Click to screen to start", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+
+                    statisticTextView.setText(String.valueOf(speed));
+
+                    textView.setOnTouchListener(this);
+                    lockableScrollView.setScrollingEnabled(false);
+                } else {
+                    item.setIcon(R.drawable.fast_reading_start);
+
+                    statisticTextView.setVisibility(View.GONE);
+
+                    textView.setOnTouchListener(null);
+                    lockableScrollView.setScrollingEnabled(true);
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.reader_toolbar, menu);
+        this.menu = menu;
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+    */
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -98,6 +168,12 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
                                 @Override
                                 public void onAnimationEnd(Animator animation) {
                                     itsScrolling = false;
+
+                                    if (lockableScrollView.isFullScroll()) {
+                                        itsFastReading = false;
+                                    }
+
+
                                 }
 
                                 @Override
@@ -156,11 +232,13 @@ public class ReaderScrollFragment extends Fragment implements View.OnTouchListen
     }
 
     @Override
-    public void onFileReadingPostExecute(Spanned spannedText) {
-        textView.setText(spannedText);
-        if (spannedText != null){
-            length = spannedText.length();
-            textView.setOnTouchListener(this);
+    public void onFileReadingPostExecute(CharSequence text) {
+        if (text == null){
+            /////FIX
+            Toast.makeText(getActivity(), "File reading error", Toast.LENGTH_SHORT).show();
+        } else {
+            textView.setText(text);
+            length = text.length();
         }
     }
 }

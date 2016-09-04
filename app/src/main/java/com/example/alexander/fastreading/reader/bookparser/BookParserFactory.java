@@ -10,17 +10,18 @@ import java.util.List;
  * Created by Alexander on 27.08.2016.
  */
 public class BookParserFactory {
-    public static Spanned getScrollSpannedText(String filePath) throws BookParserException{
+    public static CharSequence getScrollText(String filePath) throws BookParserException{
         MyBookParser bookParser = getBookParser(filePath);
 
-        return bookParser.getScrollSpannedText(filePath);
+        return bookParser.getScrollText(filePath);
     }
 
-    public static List<HtmlTag> getHtmlTagsText(String filePath) throws BookParserException{
+    public static List<CharSequence> getPagesText(String filePath) throws BookParserException {
         MyBookParser bookParser = getBookParser(filePath);
 
-        return bookParser.getHtmlTagsText(filePath);
+        return bookParser.getPagesText(filePath);
     }
+
     private static MyBookParser getBookParser(String filePath) {
         String fileExtension = FileHelper.getFileExtension(filePath);
 

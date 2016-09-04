@@ -182,7 +182,7 @@ public class FileHelper {
         File root = new File(filePath);
         File[] tempFiles =  root.listFiles();
         if (tempFiles == null)
-            return null;
+            return Collections.emptyList();
 
         List<File> files = new ArrayList<>();
 

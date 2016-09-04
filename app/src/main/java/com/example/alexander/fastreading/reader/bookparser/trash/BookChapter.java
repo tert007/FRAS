@@ -1,6 +1,6 @@
 package com.example.alexander.fastreading.reader.bookparser.trash;
 
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
+import com.example.alexander.fastreading.reader.HtmlTag;
 
 import java.util.List;
 

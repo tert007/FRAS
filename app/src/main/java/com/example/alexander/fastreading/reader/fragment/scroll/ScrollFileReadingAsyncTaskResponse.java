@@ -6,5 +6,5 @@ import android.text.Spanned;
  * Created by Alexander on 27.08.2016.
  */
 public interface ScrollFileReadingAsyncTaskResponse {
-    void onFileReadingPostExecute(Spanned spannedText);
+    void onFileReadingPostExecute(CharSequence text);
 }

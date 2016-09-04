@@ -1,8 +1,5 @@
 package com.example.alexander.fastreading;
 
-import com.example.alexander.fastreading.reader.bookparser.MyEpubParser;
-import com.example.alexander.fastreading.reader.bookparser.XmlParser;
-
 import org.junit.Test;
 
 import static org.junit.Assert.*;

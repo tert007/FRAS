@@ -2,29 +2,25 @@ package com.example.alexander.fastreading.reader.fragment.pages;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
+import com.example.alexander.fastreading.SettingsManager;
 
 import java.util.List;
 
 /**
  * Created by Alexander on 19.08.2016.
  */
-public class ReaderPagesFragmentPages extends Fragment implements PagesFileReaderAsyncTaskResponse {
+public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyncTaskResponse {
 
     private TextView textView;
     private PagesFileReadingAsyncTask pagesFileReadingAsyncTask;
 
-    private List<Spanned> pages;
+    private List<CharSequence> pages;
     private int currentPage;
 
     private MyWordSelector wordParser;
@@ -38,6 +34,7 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
         String filePath = getArguments().getString("file_path");
 
         textView = (TextView) view.findViewById(R.id.reader_PAGES);
+        textView.setTextSize(SettingsManager.getReaderTextSize());
 
         pagesFileReadingAsyncTask = new PagesFileReadingAsyncTask(getActivity());
         pagesFileReadingAsyncTask.delegate = this;
@@ -46,6 +43,12 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (currentPage < pages.size() - 1){
+                    currentPage++;
+                    textView.setText(pages.get(currentPage));
+                }
+
+                /*
                 itsStarted = !itsStarted;
 
                 if (itsStarted){
@@ -53,6 +56,7 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
                 } else {
                     textView.removeCallbacks(wordSelector);
                 }
+                */
             }
         });
 
@@ -60,18 +64,18 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
     }
 
     @Override
-    public void onFileReadingPostExecute(List<HtmlTag> response) {
+    public void onFileReadingPostExecute(List<CharSequence> response) {
 
         PageSplitter textSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
         pages = textSplitter.getPages(response);
         textView.setText(pages.get(currentPage));
 
-        wordParser = new MyWordSelector(pages.get(currentPage));
+        //wordParser = new MyWordSelector(pages.get(currentPage));
         //Toast.makeText(getActivity(), a.getNextSelectedWord(), Toast.LENGTH_SHORT).show();
         //wordParser = new WordSelector(pages.get(currentPage));
     }
 
-
+    /*
     private Runnable wordSelector = new Runnable() {
         @Override
         public void run() {
@@ -93,5 +97,6 @@ public class ReaderPagesFragmentPages extends Fragment implements PagesFileReade
             }
         }
     };
+    */
 
 }

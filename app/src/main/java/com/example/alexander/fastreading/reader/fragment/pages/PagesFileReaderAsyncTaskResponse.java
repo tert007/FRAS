@@ -1,7 +1,5 @@
 package com.example.alexander.fastreading.reader.fragment.pages;
 
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
-
 import java.util.List;
 
 /**
@@ -9,5 +7,5 @@ import java.util.List;
  */
 public interface PagesFileReaderAsyncTaskResponse {
     //Делегирет лист тегов из ScrollFileReadingAsyncTask в PagesFragment
-    void onFileReadingPostExecute(List<HtmlTag> tagList);
+    void onFileReadingPostExecute(List<CharSequence> chapters);
 }

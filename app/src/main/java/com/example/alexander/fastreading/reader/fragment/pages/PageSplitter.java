@@ -5,13 +5,11 @@ import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
-import com.example.alexander.fastreading.reader.bookparser.HtmlHelper;
-import com.example.alexander.fastreading.reader.bookparser.HtmlTag;
+import com.example.alexander.fastreading.reader.HtmlTag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Alexander on 23.08.2016.
@@ -21,7 +19,7 @@ public class PageSplitter {
     private final int pageWidth;
     private final int pageHeight;
     private final float lineSpacingMultiplier;
-    private final int lineSpacingExtra;
+    private final float lineSpacingExtra;
 
     private List<Spanned> pages;
     private List<HtmlTag> page;
@@ -30,8 +28,8 @@ public class PageSplitter {
         this.textPaint = textPaint;
         this.pageWidth = pageWidth;
         this.pageHeight = pageHeight;
-        this.lineSpacingMultiplier = 1;
-        this.lineSpacingExtra = 0;
+        this.lineSpacingMultiplier = 1f;
+        this.lineSpacingExtra = 0f;
     }
 
     public PageSplitter(TextPaint textPaint, int pageWidth, int pageHeight, float lineSpacingMultiplier, int lineSpacingExtra) {
@@ -42,6 +40,103 @@ public class PageSplitter {
         this.lineSpacingExtra = lineSpacingExtra;
     }
 
+    public List<CharSequence> getPages(List<CharSequence> chapters){
+        //Лист глав книги в лист страниц
+        if (chapters.isEmpty())
+            return Collections.emptyList();
+
+        List<CharSequence> result = new ArrayList<>();
+
+        int interlineSpacing = textPaint.getFontMetricsInt(null);
+
+        for (CharSequence chapter : chapters) {
+            int currentPage = 1;
+            int lastLine = 0;
+
+            int startIndex = 0;
+            int endIndex = 0;
+
+            StaticLayout tempLayout = new StaticLayout(chapter, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
+            int lineCount = tempLayout.getLineCount();
+
+            for (int i = 0; i < lineCount; i++) {
+
+                if (i == lineCount - 1) {
+                    //Последнюю страницу можно добавить и не запоненную :)
+                    result.add(chapter.subSequence(startIndex, chapter.length()));
+                    break;
+                }
+
+                int a = tempLayout.getLineBottom(i);
+
+                if (tempLayout.getLineBottom(i) < pageHeight * currentPage) {
+                    lastLine = i;
+                } else {
+                    currentPage++;
+
+                    endIndex = tempLayout.getLineEnd(lastLine);
+                    result.add(chapter.subSequence(startIndex, endIndex));
+                    startIndex = tempLayout.getLineStart(lastLine + 1);;
+
+                    if (Character.isSpaceChar(chapter.charAt(startIndex))){
+                        startIndex++;  //МБ исключение?
+                    }
+                }
+
+            }
+
+
+/*
+
+
+
+
+
+
+
+            textHeight = tempLayout.getHeight();
+
+            if (textHeight % pageHeight == 0){
+                pagesCount = textHeight / pageHeight;
+            } else {
+                pagesCount = textHeight / pageHeight + 1;
+            }
+
+            int startIndex = 0;
+            int endIndex = pageBaseLength;
+
+            for (int i = 0; i < pagesCount; i++) {
+                while (true){
+                    CharSequence part = chapter.subSequence(startIndex, endIndex);
+                    tempLayout = new StaticLayout(part, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
+                    textHeight = tempLayout.getHeight();
+
+                    if (textHeight <= pageHeight){
+                        if (Character.isSpaceChar(chapter.charAt(endIndex))) {
+                            result.add(chapter.subSequence(startIndex, endIndex));
+
+                            startIndex = endIndex + 1;
+                            endIndex = startIndex + pageBaseLength;
+
+                            break;
+                        }
+                    }
+
+
+                    for (int j = endIndex - 1; j > startIndex - 1; j--) {
+                        if (Character.isSpaceChar(chapter.charAt(j))){
+                            endIndex = j;
+                            break;
+                        }
+                    }
+                }
+            }*/
+        }
+        //SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(l);*/
+        return result;
+    }
+
+    /*
     public List<Spanned> getPages(List<HtmlTag> html){
         //Делит один большой html на мелкие
         pages = new ArrayList<>();
@@ -150,4 +245,5 @@ public class PageSplitter {
             }
         }
     }
+    */
 }

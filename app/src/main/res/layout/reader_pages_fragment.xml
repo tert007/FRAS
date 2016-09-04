@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:paddingTop="@dimen/default_margin"
+    android:paddingBottom="@dimen/default_margin"
     android:paddingLeft="@dimen/default_margin"
     android:paddingRight="@dimen/default_margin"
 
@@ -14,8 +15,8 @@
         android:id="@+id/reader_PAGES"
         android:gravity="top"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
