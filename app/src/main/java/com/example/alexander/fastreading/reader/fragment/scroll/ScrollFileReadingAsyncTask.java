@@ -5,8 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.BookParserFactory;
+import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
+import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserFactory;
 
 /**
  * Created by Alexander on 27.08.2016.

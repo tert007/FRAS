@@ -6,9 +6,14 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/reader_library_empty_library_text_view"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/library_is_empty"
         android:visibility="gone"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/reader_library_list_view"
@@ -17,11 +22,11 @@
     </ListView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/reader_library_floating_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        android:src="@drawable/settings" />
+        android:src="@drawable/add" />
 
 </android.support.design.widget.CoordinatorLayout>

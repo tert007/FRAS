@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.ReaderFileExplorerOnClickResponse;
 
 import java.io.File;
 

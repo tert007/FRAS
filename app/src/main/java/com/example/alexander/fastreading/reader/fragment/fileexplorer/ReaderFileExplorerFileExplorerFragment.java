@@ -10,7 +10,6 @@ import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.ReaderFileExplorerOnClickResponse;
 
 import java.io.File;
 
@@ -24,30 +23,57 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements 
     private FileExplorerListAdapter adapter;
     private ListView listView;
 
-    public void setStartDirectoryPath(File startDirectoryPath) {
-        this.startDirectoryPath = startDirectoryPath;
-    }
+    private File path = new File("/");
 
-    private File startDirectoryPath = new File("/");
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_file_explorer_fragment, container, false);
 
-        File[] files = FileHelper.readerFileFilter(startDirectoryPath.listFiles());
-
-        adapter = new FileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
-        adapter.delegate = this;
-
         listView = (ListView) view.findViewById(R.id.reader_file_explorer_list_view);
-        listView.setAdapter(adapter);
+
+        update();
 
         return view;
     }
 
+    public boolean onBackPressed() {
+        //Когда файл последний возвращает true
+        if (path.getParentFile() == null){
+            return true;
+        } else {
+            path = path.getParentFile();
+            update();
+
+            return false;
+        }
+    }
+
     @Override
     public void fileOnClick(File file) {
-        delegate.fileOnClick(file);
+        if (file.isDirectory()){
+            path = file;
+            update();
+        } else {
+            BookAddAsyncTask bookAddAsyncTask = new BookAddAsyncTask(getActivity());
+            bookAddAsyncTask.execute(file.getPath());
+
+            //delegate.fileOnClick(file);
+        }
+    }
+
+    private void update(){
+        File[] files = FileHelper.readerFileFilter(path.listFiles());
+
+        adapter = new FileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
+        adapter.delegate = this;
+
+        listView.setAdapter(adapter);
     }
 }

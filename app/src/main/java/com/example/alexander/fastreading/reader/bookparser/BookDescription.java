@@ -20,7 +20,7 @@ public class BookDescription {
 
     private boolean itsFavorite;
 
-    private Bitmap cover;
+    private String coverImageName;
 
     public int getId() {
         return id;
@@ -78,12 +78,12 @@ public class BookDescription {
         this.itsFavorite = favorite;
     }
 
-    public Bitmap getCover() {
-        return cover;
+    public String getCoverImageName() {
+        return coverImageName;
     }
 
-    public void setCover(Bitmap cover) {
-        this.cover = cover;
+    public void setCoverImageName(String coverImageName) {
+        this.coverImageName = coverImageName;
     }
 
 

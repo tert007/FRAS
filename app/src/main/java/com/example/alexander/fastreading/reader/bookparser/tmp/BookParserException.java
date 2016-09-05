@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader.bookparser.tmp;
 
 /**
  * Created by Alexander on 06.08.2016.

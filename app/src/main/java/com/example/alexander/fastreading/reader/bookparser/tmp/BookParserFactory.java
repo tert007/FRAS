@@ -1,6 +1,4 @@
-package com.example.alexander.fastreading.reader.bookparser;
-
-import android.text.Spanned;
+package com.example.alexander.fastreading.reader.bookparser.tmp;
 
 import com.example.alexander.fastreading.reader.FileHelper;
 

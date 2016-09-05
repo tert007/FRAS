@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader.bookparser.tmp;
 
 import android.graphics.Typeface;
 import android.text.Layout;

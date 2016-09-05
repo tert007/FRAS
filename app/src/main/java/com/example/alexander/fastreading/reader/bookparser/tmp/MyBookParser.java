@@ -1,8 +1,5 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader.bookparser.tmp;
 
-import android.text.Spanned;
-
-import java.io.IOException;
 import java.util.List;
 
 /**

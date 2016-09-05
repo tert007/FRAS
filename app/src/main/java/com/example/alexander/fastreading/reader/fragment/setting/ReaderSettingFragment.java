@@ -18,6 +18,12 @@ public class ReaderSettingFragment extends Fragment {
 
     Spinner textSizeSpinner;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_settings_fragment, container, false);
 

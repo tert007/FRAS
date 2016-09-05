@@ -12,10 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.trash.BookReaderHelper;
-import com.example.alexander.fastreading.reader.bookparser.trash.Book;
-import com.example.alexander.fastreading.reader.bookparser.trash.EpubBook;
-import com.example.alexander.fastreading.reader.bookparser.BookParserException;
+import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
 
 import java.io.File;
 
@@ -63,6 +60,8 @@ public class ReaderBookDescriptionFragment extends Fragment {
         startFastScroll = (Button) view.findViewById(R.id.reader_book_description_fast_scroll_reading_button);
         startPages  = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
         startFastPages  = (Button) view.findViewById(R.id.reader_book_description_fast_pages_reading_button);
+
+        /*
 
         //Далее будет по другому
         String filePath = getArguments().getString("file_path");
@@ -128,7 +127,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
         } catch (BookParserException e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
+        */
         return view;
     }
 }

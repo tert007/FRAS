@@ -17,5 +17,5 @@
     <string name="file_opening">Открытие файла</string>
     <string name="text_size">Размер текста</string>
     <string name="fast_reading">Быстрое чтение</string>
-
+    <string name="library_is_empty">Ваша библиотека пуста :(</string>
 </resources>

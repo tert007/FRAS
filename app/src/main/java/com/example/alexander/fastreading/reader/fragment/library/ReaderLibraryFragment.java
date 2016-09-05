@@ -3,18 +3,16 @@ package com.example.alexander.fastreading.reader.fragment.library;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.dao.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.DaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookHuiVRotDao;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,26 +20,43 @@ import java.util.List;
  */
 public class ReaderLibraryFragment extends Fragment {
 
-    private ReaderLibraryListViewAdapter listAdapter;
+    public ReaderLibraryFloatButtonOnClickResponse delegate;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_library_fragment, container, false);
 
-        BookDescriptionDao bookDescriptionDao = DaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
-        List<BookDescription> a = bookDescriptionDao.getBookDescriptions();
+        try {
+            List<BookDescription> bookDescriptions = new BookHuiVRotDao(getActivity()).getBookDescriptions();
 
-        listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, a);
+            ReaderLibraryListViewAdapter listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, bookDescriptions);
 
-        ListView listView = (ListView) view.findViewById(R.id.reader_library_list_view);
-        listView.setAdapter(listAdapter);
-
-        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(view, "Hello Snackbar", Snackbar.LENGTH_LONG).show();
+            if (bookDescriptions.isEmpty()){
+                TextView emptyLibraryTextView = (TextView) view.findViewById(R.id.reader_library_empty_library_text_view);
+                emptyLibraryTextView.setVisibility(View.VISIBLE);
+            } else {
+                ListView listView = (ListView) view.findViewById(R.id.reader_library_list_view);
+                listView.setAdapter(listAdapter);
             }
-        });
+
+            FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.reader_library_floating_button);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    delegate.onFloatButtonClick();
+                }
+            });
+
+        } catch (Exception e){
+
+        }
+
+
 
         return view;
     }

@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader;
+package com.example.alexander.fastreading.reader.fragment.fileexplorer;
 
 import java.io.File;
 

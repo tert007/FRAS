@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdescription;
 
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 /**
  * Created by Alexander on 02.09.2016.
  */
-public class BookDatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
+public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME = "books_database.db";
     private static final int DATABASE_VERSION = 1;
@@ -48,7 +48,7 @@ public class BookDatabaseHelper extends SQLiteOpenHelper implements BaseColumns 
     };
 
 
-    public BookDatabaseHelper(Context context) {
+    public BookDescriptionDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

@@ -1,9 +1,6 @@
 package com.example.alexander.fastreading.reader;
 
-import android.os.SystemClock;
-import android.util.Log;
-
-import com.example.alexander.fastreading.reader.bookparser.BookParserException;
+import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
 
 import org.w3c.dom.Document;
 

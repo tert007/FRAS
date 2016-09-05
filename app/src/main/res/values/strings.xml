@@ -32,4 +32,5 @@
     <string name="file_opening">File opening</string>
     <string name="text_size">Text size</string>
     <string name="fast_reading">Fast readin</string>
+    <string name="library_is_empty">Your library is free now :(</string>
 </resources>

@@ -71,6 +71,15 @@ public class FileHelper {
         return extension;
     }
 
+    public static String getFileName(File file) {
+        String fileName = file.getName();
+        return fileName.substring(0, fileName.lastIndexOf(".") - 1);
+    }
+
+    public static String getFileName(String fileName) {
+        return getFileName(new File(fileName));
+    }
+
     public static String getFileExtension(String filePath) {
         String extension = null;
         int i = filePath.lastIndexOf('.');
