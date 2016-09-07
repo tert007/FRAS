@@ -73,9 +73,7 @@ public class SettingsManager {
         guessNumberComplexity = complexity;
     }
 
-
-
-    public static String getTempPath(){
+    public static String getTempPath() {
         return context.getApplicationInfo().dataDir + File.separator + "temp";
     }
 

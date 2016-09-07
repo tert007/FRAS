@@ -95,7 +95,7 @@ public class MyEpubParser implements MyBookParser {
 
             for (File file : files) {
                 if (file.getName().toLowerCase().equals("toc.ncx")) {
-                    Document docNcx = XmlHelper.getXmlFromFile(file);
+                    Document docNcx = XmlHelper.getXmlFromFileWithSpaceTrim(file);
                     bookChaptersPaths = getBookChaptersPaths(docNcx);
                     break;
                 }
@@ -106,7 +106,7 @@ public class MyEpubParser implements MyBookParser {
             for (String bookChapterPath : bookChaptersPaths) {
                 for (File file : files) {
                     if (file.getName().toLowerCase().equals(bookChapterPath)) {
-                        Document chapter = XmlHelper.getXmlFromFile(file);
+                        Document chapter = XmlHelper.getXmlFromFileWithSpaceTrim(file);
                         List<HtmlTag> tempChapter = parseChapter(chapter);
                         if (!tempChapter.isEmpty())
                             result.add(tempChapter);

@@ -10,22 +10,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerOnClickResponse;
+import com.example.alexander.fastreading.reader.bookparser.BookDescription;
+import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerBookAddResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFloatButtonOnClickResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFragment;
+import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryOnBookClickResponse;
 import com.example.alexander.fastreading.reader.fragment.setting.ReaderSettingFragment;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerFileExplorerFragment;
-import com.example.alexander.fastreading.reader.fragment.description.ReaderPagesReadBookResponse;
-import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragment;
 import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
-import java.io.File;
 
-
-public class ReaderActivity extends AppCompatActivity implements ReaderFileExplorerOnClickResponse,
-        /*ReaderScrollReadBookResponse, ReaderPagesReadBookResponse,*/ ReaderLibraryFloatButtonOnClickResponse {
+public class ReaderActivity extends AppCompatActivity implements /*ReaderScrollReadBookResponse, ReaderPagesReadBookResponse,*/ ReaderLibraryFloatButtonOnClickResponse,
+        ReaderLibraryOnBookClickResponse, ReaderFileExplorerBookAddResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
     private ReaderScrollFragment scrollFragment;
@@ -52,7 +50,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
         fragmentManager = getFragmentManager();
 
         readerLibraryFragment = new ReaderLibraryFragment();
-        readerLibraryFragment.delegate = this;
+        readerLibraryFragment.addBookDelegate = this;
+        readerLibraryFragment.bookClickDelegate = this;
 
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.reader_fragment_container, readerLibraryFragment);
@@ -117,17 +116,45 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
         fragmentTransaction.commit();
     }
 
-
-
     @Override
-    public void fileOnClick(File file) {
-
+    public void onBookClick(long id) {
+        /*
         bookDescriptionFragment = new ReaderBookDescriptionFragment();
         //bookDescriptionFragment.scrollDelegate = this;
         //bookDescriptionFragment.pagesDelegate = this;
 
         Bundle bundle = new Bundle();
-        bundle.putString("file_path", file.getPath());
+        bundle.putLong("book_id", id);
+
+        bookDescriptionFragment.setArguments(bundle);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.reader_fragment_container, bookDescriptionFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        */
+
+        scrollFragment = new ReaderScrollFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putLong("book_id", id);
+
+        scrollFragment.setArguments(bundle);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void bookAddPostExecute(BookDescription bookDescription) {
+        bookDescriptionFragment = new ReaderBookDescriptionFragment();
+        //bookDescriptionFragment.scrollDelegate = this;
+        //bookDescriptionFragment.pagesDelegate = this;
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("book_description", bookDescription);
 
         bookDescriptionFragment.setArguments(bundle);
 
@@ -136,33 +163,4 @@ public class ReaderActivity extends AppCompatActivity implements ReaderFileExplo
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
-/*
-    @Override
-    public void onScrollReadBookClick(Book book) {
-        scrollFragment = new ReaderScrollFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("file_path", book.getFilePath());
-
-        scrollFragment.setArguments(bundle);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onPagesReadBookClick(Book book) {
-        pagesFragment = new ReaderPagesFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("file_path", book.getFilePath());
-
-        pagesFragment.setArguments(bundle);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, pagesFragment);
-        fragmentTransaction.commit();
-    }
-    */
 }

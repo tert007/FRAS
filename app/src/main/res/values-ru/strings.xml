@@ -18,4 +18,5 @@
     <string name="text_size">Размер текста</string>
     <string name="fast_reading">Быстрое чтение</string>
     <string name="library_is_empty">Ваша библиотека пуста :(</string>
+    <string name="add_book">Добавление книги в библиотеку</string>
 </resources>

@@ -4,20 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.bookparser.BookDescription;
 import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserFactory;
-import com.example.alexander.fastreading.reader.dao.BookHuiVRotDao;
+import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
 
 /**
  * Created by Alexander on 04.09.2016.
  */
-    public class BookAddAsyncTask extends AsyncTask<String, Void, Long> {
+    public class ReaderBookAddAsyncTask extends AsyncTask<String, Void, BookDescription> {
+
+        public ReaderFileExplorerBookAddResponse delegate;
 
         private Context context;
         private ProgressDialog progressDialog;
 
-        public BookAddAsyncTask(Context context) {
+        public ReaderBookAddAsyncTask(Context context) {
             this.context = context;
         }
 
@@ -26,24 +28,26 @@ import com.example.alexander.fastreading.reader.dao.BookHuiVRotDao;
             super.onPreExecute();
 
             progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage("Black Sabbath: what can't you see,i'm no a stranger to love");
+            progressDialog.setMessage(context.getString(R.string.add_book));
             progressDialog.show();
         }
 
         @Override
-        protected Long doInBackground(String... params) {
+        protected BookDescription doInBackground(String... params) {
             String filePath = params[0];
             try {
-               return new BookHuiVRotDao(context).addBook(filePath);
+               return new DatabaseBookDao(context).addBook(filePath);
             } catch (BookParserException e){
                 return null;
             }
         }
 
         @Override
-        protected void onPostExecute(Long id) {
-            super.onPostExecute(id);
+        protected void onPostExecute(BookDescription bookDescription) {
+            super.onPostExecute(bookDescription);
             progressDialog.dismiss();
+
+            delegate.bookAddPostExecute(bookDescription);
         }
     }
 

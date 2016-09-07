@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.bookparser.BookDescription;
 import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
 
 import java.io.File;
@@ -61,18 +63,12 @@ public class ReaderBookDescriptionFragment extends Fragment {
         startPages  = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
         startFastPages  = (Button) view.findViewById(R.id.reader_book_description_fast_pages_reading_button);
 
-        /*
 
-        //Далее будет по другому
-        String filePath = getArguments().getString("file_path");
+        final BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 
-        try {
-            final Book book = BookReaderHelper.getBook(new File(filePath));
+            if (bookDescription.getType().equals(FileHelper.EPUB)) {
 
-            if (book instanceof EpubBook) {
-                EpubBook epubBook = (EpubBook) book;
-
-                Bitmap bitmap = epubBook.getCover();
+                Bitmap bitmap = null;
 
                 if (bitmap == null){
                     bookCoverImageView.setImageResource(R.drawable.book_without_title);
@@ -80,9 +76,9 @@ public class ReaderBookDescriptionFragment extends Fragment {
                     bookCoverImageView.setImageBitmap(bitmap);
                 }
 
-                bookTitleResultTextView.setText(((EpubBook) book).getTitle());
-                bookAuthorResultTextView.setText(((EpubBook) book).getAuthor());
-                bookLanguageResultTextView.setText(((EpubBook) book).getLanguage());
+                bookTitleResultTextView.setText(bookDescription.getTitle());
+                bookAuthorResultTextView.setText(bookDescription.getAuthor());
+                bookLanguageResultTextView.setText(bookDescription.getLanguage());
 
 
             } else {
@@ -97,37 +93,33 @@ public class ReaderBookDescriptionFragment extends Fragment {
                 bookLanguageTextView.setVisibility(View.GONE);
             }
 
-            bookFilePathResultTextView.setText(book.getFilePath());
+            bookFilePathResultTextView.setText(bookDescription.getFilePath());
 
             startScroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    scrollDelegate.onScrollReadBookClick(book);
+                    //scrollDelegate.onScrollReadBookClick(book);
                 }
             });
             startFastScroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    scrollDelegate.onScrollReadBookClick(book);
+                    //scrollDelegate.onScrollReadBookClick(book);
                 }
             });
             startPages.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pagesDelegate.onPagesReadBookClick(book);
+                    //pagesDelegate.onPagesReadBookClick(book);
                 }
             });
             startFastPages.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pagesDelegate.onPagesReadBookClick(book);
+                    //pagesDelegate.onPagesReadBookClick(book);
                 }
             });
 
-        } catch (BookParserException e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-        */
         return view;
     }
 }

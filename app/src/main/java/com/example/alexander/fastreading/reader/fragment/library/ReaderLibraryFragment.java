@@ -11,30 +11,26 @@ import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.dao.BookHuiVRotDao;
+import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
 
 import java.util.List;
 
 /**
  * Created by Alexander on 03.09.2016.
  */
-public class ReaderLibraryFragment extends Fragment {
+public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBookClickResponse {
 
-    public ReaderLibraryFloatButtonOnClickResponse delegate;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
+    public ReaderLibraryFloatButtonOnClickResponse addBookDelegate;
+    public ReaderLibraryOnBookClickResponse bookClickDelegate;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.reader_library_fragment, container, false);
 
         try {
-            List<BookDescription> bookDescriptions = new BookHuiVRotDao(getActivity()).getBookDescriptions();
+            List<BookDescription> bookDescriptions = new DatabaseBookDao(getActivity()).getBookDescriptions();
 
             ReaderLibraryListViewAdapter listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, bookDescriptions);
+            listAdapter.delegate = this;
 
             if (bookDescriptions.isEmpty()){
                 TextView emptyLibraryTextView = (TextView) view.findViewById(R.id.reader_library_empty_library_text_view);
@@ -48,7 +44,7 @@ public class ReaderLibraryFragment extends Fragment {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    delegate.onFloatButtonClick();
+                    addBookDelegate.onFloatButtonClick();
                 }
             });
 
@@ -59,5 +55,10 @@ public class ReaderLibraryFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onBookClick(long id) {
+        bookClickDelegate.onBookClick(id);
     }
 }

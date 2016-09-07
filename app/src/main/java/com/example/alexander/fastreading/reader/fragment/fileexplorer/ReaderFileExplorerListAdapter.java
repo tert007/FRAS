@@ -17,15 +17,15 @@ import java.io.File;
  * Created by Alexander on 03.08.2016.
  * Адаптер, позволяет создать список файлов на устройве
  */
-public class FileExplorerListAdapter extends ArrayAdapter<File> {
+public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
 
-    public ReaderFileExplorerOnClickResponse delegate;
+    public ReaderFileExplorerOnFileClickResponse delegate;
 
-    public FileExplorerListAdapter(Context context, int textViewResourceId) {
+    public ReaderFileExplorerListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
 
-    public FileExplorerListAdapter(Context context, int resource, File[] items) {
+    public ReaderFileExplorerListAdapter(Context context, int resource, File[] items) {
         super(context, resource, items);
     }
 
@@ -59,7 +59,7 @@ public class FileExplorerListAdapter extends ArrayAdapter<File> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delegate.fileOnClick(getItem(position));
+                delegate.onFileClick(getItem(position));
             }
         });
 

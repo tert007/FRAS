@@ -1,7 +1,6 @@
 package com.example.alexander.fastreading.reader.dao.bookdescription;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
@@ -15,7 +14,13 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
     private static final int DATABASE_VERSION = 1;
 
     ////////////////////////////////////////////////////
+
     public static final String BOOK_TABLE = "books";
+
+    public static final String BOOK_TITLE = "title";
+    public static final String BOOK_AUTHOR = "author";
+    public static final String BOOK_LANGUAGE = "language";
+    public static final String BOOK_COVER_NAME = "cover_name";
 
     public static final String BOOK_FILE_PATH = "file_path";
     public static final String BOOK_TYPE = "type";
@@ -24,27 +29,14 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
 
     public static final String[] BOOK_TABLE_COLUMNS = new String[]{
             BaseColumns._ID,
+            BOOK_TITLE,
+            BOOK_AUTHOR,
+            BOOK_LANGUAGE,
+            BOOK_COVER_NAME,
             BOOK_FILE_PATH,
             BOOK_TYPE,
             BOOK_FAVORITE_FLAG,
             BOOK_READING_PROGRESS
-    };
-
-    ////////////////////////////////////////////////////
-    public static final String E_BOOK_TABLE = "e_books";
-
-    public static final String E_BOOK_ID = "id";
-    public static final String E_BOOK_TITLE = "title";
-    public static final String E_BOOK_AUTHOR = "author";
-    public static final String E_BOOK_LANGUAGE = "language";
-    public static final String E_BOOK_COVER_NAME = "cover_name";
-
-    public static final String[] E_BOOK_TABLE_COLUMNS = new String[]{
-            E_BOOK_ID,
-            E_BOOK_TITLE,
-            E_BOOK_AUTHOR,
-            E_BOOK_LANGUAGE,
-            E_BOOK_COVER_NAME
     };
 
 
@@ -58,27 +50,20 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
                 "CREATE TABLE " +
                         BOOK_TABLE + "(" +
                         BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        BOOK_TITLE + " TEXT, " +
+                        BOOK_AUTHOR + " TEXT, " +
+                        BOOK_LANGUAGE + " TEXT, " +
+                        BOOK_COVER_NAME + " TEXT, " +
                         BOOK_FILE_PATH + " TEXT NOT NULL, " +
                         BOOK_TYPE + " TEXT NOT NULL, " +
                         BOOK_FAVORITE_FLAG + " INTEGER NOT NULL, " +
                         BOOK_READING_PROGRESS + " REAL NOT NULL);"
-        );
-
-        db.execSQL(
-                "CREATE TABLE " +
-                        E_BOOK_TABLE + "(" +
-                        E_BOOK_ID + " INTEGER, " +
-                        E_BOOK_TITLE + " TEXT, " +
-                        E_BOOK_AUTHOR + " TEXT, " +
-                        E_BOOK_LANGUAGE + " TEXT, " +
-                        E_BOOK_COVER_NAME + " TEXT);"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + BOOK_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + E_BOOK_TABLE);
         onCreate(db);
     }
 }

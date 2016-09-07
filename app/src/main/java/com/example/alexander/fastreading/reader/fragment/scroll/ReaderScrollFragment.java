@@ -71,9 +71,11 @@ public class ReaderScrollFragment extends Fragment implements  View.OnTouchListe
 
         String filePath = getArguments().getString("file_path");
 
+        long id = getArguments().getLong("book_id");
+
         asyncTask = new ScrollFileReadingAsyncTask(getActivity());
         asyncTask.delegate = this;
-        asyncTask.execute(filePath);
+        asyncTask.execute(id);
 
         this.view = view;
 
@@ -232,7 +234,7 @@ public class ReaderScrollFragment extends Fragment implements  View.OnTouchListe
     }
 
     @Override
-    public void onFileReadingPostExecute(CharSequence text) {
+    public void fileReadingPostExecute(CharSequence text) {
         if (text == null){
             /////FIX
             Toast.makeText(getActivity(), "File reading error", Toast.LENGTH_SHORT).show();

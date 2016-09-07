@@ -17,6 +17,8 @@ import java.util.List;
  */
 public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> {
 
+    public ReaderLibraryOnBookClickResponse delegate;
+
     public ReaderLibraryListViewAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
     }
@@ -36,6 +38,15 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
         TextView textView = (TextView) convertView.findViewById(R.id.reader_library_list_view_item_title_text_view);
         textView.setText(getItem(position).getFilePath());
         //ImageView imageView = (ImageView) convertView.findViewById(R.id.reader_file_explorer_image_view);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BookDescription a = getItem(position);
+
+                delegate.onBookClick(a.getId());
+            }
+        });
 
         return convertView;
     }

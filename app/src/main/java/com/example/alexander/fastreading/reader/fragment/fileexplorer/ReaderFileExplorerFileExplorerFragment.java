@@ -10,26 +10,22 @@ import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.bookparser.BookDescription;
 
 import java.io.File;
 
 /**
  * Created by Alexander on 03.08.2016.
  */
-public class ReaderFileExplorerFileExplorerFragment extends Fragment implements ReaderFileExplorerOnClickResponse {
+public class ReaderFileExplorerFileExplorerFragment extends Fragment implements ReaderFileExplorerOnFileClickResponse,
+        ReaderFileExplorerBookAddResponse {
 
-    public ReaderFileExplorerOnClickResponse delegate;
+    public ReaderFileExplorerBookAddResponse delegate;
 
-    private FileExplorerListAdapter adapter;
+    private ReaderFileExplorerListAdapter adapter;
     private ListView listView;
 
     private File path = new File("/");
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
 
     @Nullable
     @Override
@@ -56,24 +52,29 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements 
     }
 
     @Override
-    public void fileOnClick(File file) {
+    public void onFileClick(File file) {
         if (file.isDirectory()){
             path = file;
             update();
         } else {
-            BookAddAsyncTask bookAddAsyncTask = new BookAddAsyncTask(getActivity());
-            bookAddAsyncTask.execute(file.getPath());
+            ReaderBookAddAsyncTask readerBookAddAsyncTask = new ReaderBookAddAsyncTask(getActivity());
+            readerBookAddAsyncTask.delegate = this;
 
-            //delegate.fileOnClick(file);
+            readerBookAddAsyncTask.execute(file.getPath());
         }
     }
 
     private void update(){
         File[] files = FileHelper.readerFileFilter(path.listFiles());
 
-        adapter = new FileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
+        adapter = new ReaderFileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
         adapter.delegate = this;
 
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void bookAddPostExecute(BookDescription bookDescription) {
+        delegate.bookAddPostExecute(bookDescription);
     }
 }

@@ -1,12 +1,14 @@
 package com.example.alexander.fastreading.reader.bookparser;
 
 import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Alexander on 03.09.2016.
- */
-public class BookDescription {
-    private int id;
+ */public class BookDescription implements Parcelable {
+
+    private long id;
 
     private float progress;
 
@@ -22,11 +24,15 @@ public class BookDescription {
 
     private String coverImageName;
 
-    public int getId() {
+    public BookDescription(){
+
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -86,7 +92,6 @@ public class BookDescription {
         this.coverImageName = coverImageName;
     }
 
-
     public float getProgress() {
         return progress;
     }
@@ -95,4 +100,46 @@ public class BookDescription {
         this.progress = progress;
     }
 
+    protected BookDescription(Parcel in) {
+        id = in.readLong();
+        progress = in.readFloat();
+        title = in.readString();
+        author = in.readString();
+        language = in.readString();
+        type = in.readString();
+        filePath = in.readString();
+        itsFavorite = in.readInt() == 1;
+        coverImageName = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeFloat(progress);
+        dest.writeString(title);
+        dest.writeString(author);
+        dest.writeString(language);
+        dest.writeString(type);
+        dest.writeString(filePath);
+        dest.writeInt(itsFavorite ? 1 : 0);
+        dest.writeString(coverImageName);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<BookDescription> CREATOR = new Parcelable.Creator<BookDescription>() {
+        @Override
+        public BookDescription createFromParcel(Parcel in) {
+            return new BookDescription(in);
+        }
+
+        @Override
+        public BookDescription[] newArray(int size) {
+            return new BookDescription[size];
+        }
+    };
 }

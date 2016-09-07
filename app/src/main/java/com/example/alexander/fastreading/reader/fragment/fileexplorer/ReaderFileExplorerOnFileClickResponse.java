@@ -6,7 +6,7 @@ import java.io.File;
  * Created by Alexander on 03.08.2016.
  *
  */
-public interface ReaderFileExplorerOnClickResponse {
+public interface ReaderFileExplorerOnFileClickResponse {
     //Делегирует нажатие на файл или папку из адаптера во фрагмент
-    void fileOnClick(File file);
+    void onFileClick(File file);
 }
