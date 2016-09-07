@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 import java.util.List;
 
@@ -42,9 +42,7 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BookDescription a = getItem(position);
-
-                delegate.onBookClick(a.getId());
+                delegate.onBookClick(getItem(position));
             }
         });
 

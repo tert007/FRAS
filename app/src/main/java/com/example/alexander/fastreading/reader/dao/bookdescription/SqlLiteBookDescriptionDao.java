@@ -5,9 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 import java.util.ArrayList;
 import java.util.List;

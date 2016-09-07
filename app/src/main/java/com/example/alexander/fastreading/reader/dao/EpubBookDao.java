@@ -13,8 +13,7 @@ import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.HtmlTag;
 import com.example.alexander.fastreading.reader.XmlHelper;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
+import com.example.alexander.fastreading.reader.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
 
@@ -96,7 +95,6 @@ public class EpubBookDao implements BookDao {
 
         bookDescription = updateBookDescriptionToEpub(bookDescription);
         bookDescriptionDao.updateBookDescription(bookDescription);
-
 
         return bookDescription;
     }
@@ -284,13 +282,8 @@ public class EpubBookDao implements BookDao {
     }
 
     @Override
-    public List<BookDescription> getBookDescriptions() throws BookParserException {
-        return bookDescriptionDao.getBookDescriptions();
-    }
-
-    @Override
-    public CharSequence getScrollText(long bookId) throws BookParserException {
-        String directoryPath = booksLibraryPath + File.separator + bookId;
+    public CharSequence getScrollText(BookDescription bookDescription) throws BookParserException {
+        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
         String saveFilePath = directoryPath + File.separator + "content.xml";
 
         Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));
@@ -300,8 +293,8 @@ public class EpubBookDao implements BookDao {
     }
 
     @Override
-    public List<CharSequence> getChaptersText(long bookId) throws BookParserException {
-        String directoryPath = booksLibraryPath + File.separator + bookId;
+    public List<CharSequence> getChaptersText(BookDescription bookDescription) throws BookParserException {
+        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
         String saveFilePath = directoryPath + File.separator + "content.xml";
 
         Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));

@@ -2,9 +2,13 @@ package com.example.alexander.fastreading.reader.dao;
 
 import android.content.Context;
 
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
+import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,15 +16,31 @@ import java.util.List;
  */
 public class TxtBookDao implements BookDao {
 
-    private Context context;
+    private BookDescriptionDao bookDescriptionDao;
 
     public TxtBookDao(Context context) {
-        this.context = context;
+        bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(context).getBookDescriptionDao();
     }
 
     @Override
     public BookDescription addBook(String filePath) throws BookParserException {
-        return null;
+        BookDescription bookDescription = createBookDescription(filePath);
+
+        long id = bookDescriptionDao.addBookDescription(bookDescription);
+        bookDescription.setId(id);
+
+        return bookDescription;
+    }
+
+    private BookDescription createBookDescription(String filePath) {
+        BookDescription bookDescription = new BookDescription();
+
+        bookDescription.setFilePath(filePath);
+        bookDescription.setType(FileHelper.getFileExtension(filePath));
+        bookDescription.setProgress(0f);
+        bookDescription.setFavorite(false);
+
+        return bookDescription;
     }
 
     @Override
@@ -29,17 +49,24 @@ public class TxtBookDao implements BookDao {
     }
 
     @Override
-    public List<BookDescription> getBookDescriptions() throws BookParserException {
-        return null;
+    public CharSequence getScrollText(BookDescription bookDescription) throws BookParserException {
+        try {
+            return FileHelper.getTextFromFile(bookDescription.getFilePath());
+        } catch (IOException e){
+            throw new BookParserException(e);
+        }
     }
 
     @Override
-    public CharSequence getScrollText(long bookId) throws BookParserException {
-        return null;
-    }
+    public List<CharSequence> getChaptersText(BookDescription bookDescription) throws BookParserException {
+        try {
+            List<CharSequence> result = new ArrayList<>();
 
-    @Override
-    public List<CharSequence> getChaptersText(long bookId) throws BookParserException {
-        return null;
+            result.add(FileHelper.getTextFromFile(bookDescription.getFilePath()));
+
+            return result;
+        } catch (IOException e){
+            throw new BookParserException(e);
+        }
     }
 }

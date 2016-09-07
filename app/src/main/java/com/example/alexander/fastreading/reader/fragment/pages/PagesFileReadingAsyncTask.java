@@ -5,8 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserFactory;
+import com.example.alexander.fastreading.reader.dao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<Char
         String filePath = params[0];
 
         try {
-            return BookParserFactory.getPagesText(filePath);
-        } catch (BookParserException e) {
+            return null;// new BookDaoFactory(context).getBookDao(filePath).getChaptersText();
+        } catch (Exception e) { //
             return null;
         }
     }

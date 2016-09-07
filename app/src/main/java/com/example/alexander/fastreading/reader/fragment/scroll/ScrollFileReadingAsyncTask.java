@@ -5,13 +5,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
+import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
+import com.example.alexander.fastreading.reader.dao.BookDao;
+import com.example.alexander.fastreading.reader.dao.BookDaoFactory;
 
 /**
  * Created by Alexander on 27.08.2016.
  */
-public class ScrollFileReadingAsyncTask extends AsyncTask<Long, Void, CharSequence> {
+public class ScrollFileReadingAsyncTask extends AsyncTask<BookDescription, Void, CharSequence> {
 
     public ScrollFileReadingAsyncTaskResponse delegate;
 
@@ -32,11 +34,11 @@ public class ScrollFileReadingAsyncTask extends AsyncTask<Long, Void, CharSequen
     }
 
     @Override
-    protected CharSequence doInBackground(Long... params) {
-        long id = params[0];
+    protected CharSequence doInBackground(BookDescription... params) {
+        BookDescription bookDescription = params[0];
         try {
-            DatabaseBookDao bookDao = new DatabaseBookDao(context);
-            return bookDao.getScrollText(id);
+            BookDao bookDao = (new BookDaoFactory(context)).getBookDao(bookDescription.getFilePath());
+            return bookDao.getScrollText(bookDescription);
         } catch (BookParserException e){
             return null;
         }

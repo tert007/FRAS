@@ -9,14 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-
-import java.io.File;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 /**
  * Created by Alexander on 07.08.2016.
@@ -98,7 +94,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
             startScroll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //scrollDelegate.onScrollReadBookClick(book);
+                    scrollDelegate.onScrollReadBookClick(bookDescription);
                 }
             });
             startFastScroll.setOnClickListener(new View.OnClickListener() {

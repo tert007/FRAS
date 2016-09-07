@@ -15,7 +15,7 @@ public class BookDaoFactory {
         this.context = context;
     }
 
-    private BookDao getBookDao(String bookFilePath) {
+    public BookDao getBookDao(String bookFilePath) {
         switch (FileHelper.getFileExtension(bookFilePath)){
             case FileHelper.EPUB:
                 return new EpubBookDao(context);

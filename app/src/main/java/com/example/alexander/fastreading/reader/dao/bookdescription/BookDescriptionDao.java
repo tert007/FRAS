@@ -1,7 +1,7 @@
 package com.example.alexander.fastreading.reader.dao.bookdescription;
 
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 import java.util.List;
 

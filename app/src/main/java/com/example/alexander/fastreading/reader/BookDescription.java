@@ -1,6 +1,5 @@
-package com.example.alexander.fastreading.reader.bookparser;
+package com.example.alexander.fastreading.reader;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 

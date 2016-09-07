@@ -5,9 +5,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
-import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
+import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
 
 /**
  * Created by Alexander on 04.09.2016.
@@ -36,7 +36,7 @@ import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
         protected BookDescription doInBackground(String... params) {
             String filePath = params[0];
             try {
-               return new DatabaseBookDao(context).addBook(filePath);
+               return new BookDaoFactory(context).getBookDao(filePath).addBook(filePath);
             } catch (BookParserException e){
                 return null;
             }

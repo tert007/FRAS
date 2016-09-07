@@ -1,6 +1,6 @@
 package com.example.alexander.fastreading.reader;
 
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
+import com.example.alexander.fastreading.reader.dao.BookParserException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
+import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerBookAddResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFloatButtonOnClickResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFragment;
@@ -22,7 +22,7 @@ import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragme
 import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
 
-public class ReaderActivity extends AppCompatActivity implements /*ReaderScrollReadBookResponse, ReaderPagesReadBookResponse,*/ ReaderLibraryFloatButtonOnClickResponse,
+public class ReaderActivity extends AppCompatActivity implements ReaderScrollReadBookResponse, /*ReaderPagesReadBookResponse,*/ ReaderLibraryFloatButtonOnClickResponse,
         ReaderLibraryOnBookClickResponse, ReaderFileExplorerBookAddResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
@@ -117,40 +117,9 @@ public class ReaderActivity extends AppCompatActivity implements /*ReaderScrollR
     }
 
     @Override
-    public void onBookClick(long id) {
-        /*
+    public void onBookClick(BookDescription bookDescription) {
         bookDescriptionFragment = new ReaderBookDescriptionFragment();
-        //bookDescriptionFragment.scrollDelegate = this;
-        //bookDescriptionFragment.pagesDelegate = this;
-
-        Bundle bundle = new Bundle();
-        bundle.putLong("book_id", id);
-
-        bookDescriptionFragment.setArguments(bundle);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, bookDescriptionFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        */
-
-        scrollFragment = new ReaderScrollFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putLong("book_id", id);
-
-        scrollFragment.setArguments(bundle);
-
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    public void bookAddPostExecute(BookDescription bookDescription) {
-        bookDescriptionFragment = new ReaderBookDescriptionFragment();
-        //bookDescriptionFragment.scrollDelegate = this;
+        bookDescriptionFragment.scrollDelegate = this;
         //bookDescriptionFragment.pagesDelegate = this;
 
         Bundle bundle = new Bundle();
@@ -160,6 +129,38 @@ public class ReaderActivity extends AppCompatActivity implements /*ReaderScrollR
 
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.reader_fragment_container, bookDescriptionFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void bookAddPostExecute(BookDescription bookDescription) {
+        bookDescriptionFragment = new ReaderBookDescriptionFragment();
+        bookDescriptionFragment.scrollDelegate = this;
+        //bookDescriptionFragment.pagesDelegate = this;
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("book_description", bookDescription);
+
+        bookDescriptionFragment.setArguments(bundle);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.reader_fragment_container, bookDescriptionFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onScrollReadBookClick(BookDescription bookDescription) {
+        scrollFragment = new ReaderScrollFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("book_description", bookDescription);
+
+        scrollFragment.setArguments(bundle);
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

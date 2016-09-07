@@ -10,8 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.dao.DatabaseBookDao;
+import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
 
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBo
         final View view = inflater.inflate(R.layout.reader_library_fragment, container, false);
 
         try {
-            List<BookDescription> bookDescriptions = new DatabaseBookDao(getActivity()).getBookDescriptions();
+            BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
+            List<BookDescription> bookDescriptions = bookDescriptionDao.getBookDescriptions();
 
             ReaderLibraryListViewAdapter listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, bookDescriptions);
             listAdapter.delegate = this;
@@ -49,7 +51,7 @@ public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBo
             });
 
         } catch (Exception e){
-
+            ////
         }
 
 
@@ -58,7 +60,7 @@ public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBo
     }
 
     @Override
-    public void onBookClick(long id) {
-        bookClickDelegate.onBookClick(id);
+    public void onBookClick(BookDescription bookDescription) {
+        bookClickDelegate.onBookClick(bookDescription);
     }
 }

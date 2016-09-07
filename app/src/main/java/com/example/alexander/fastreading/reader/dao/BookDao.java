@@ -1,7 +1,6 @@
 package com.example.alexander.fastreading.reader.dao;
 
-import com.example.alexander.fastreading.reader.bookparser.BookDescription;
-import com.example.alexander.fastreading.reader.bookparser.tmp.BookParserException;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 import java.util.List;
 
@@ -12,8 +11,6 @@ public interface BookDao {
     BookDescription addBook(String filePath) throws BookParserException;
     void removeBook(long id) throws BookParserException;
 
-    List<BookDescription> getBookDescriptions() throws BookParserException;
-
-    CharSequence getScrollText(long bookId) throws BookParserException;
-    List<CharSequence> getChaptersText(long bookId) throws BookParserException;
+    CharSequence getScrollText(BookDescription bookDescription) throws BookParserException;
+    List<CharSequence> getChaptersText(BookDescription bookDescription) throws BookParserException;
 }

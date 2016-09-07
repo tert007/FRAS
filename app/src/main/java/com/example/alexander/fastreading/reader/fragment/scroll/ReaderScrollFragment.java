@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.reader.BookDescription;
 
 /**
  * Created by Alexander on 04.08.2016.
@@ -69,13 +70,11 @@ public class ReaderScrollFragment extends Fragment implements  View.OnTouchListe
         textView = (TextView) view.findViewById(R.id.reader_scroll_fragment_text_view);
         textView.setTextSize(SettingsManager.getReaderTextSize());
 
-        String filePath = getArguments().getString("file_path");
-
-        long id = getArguments().getLong("book_id");
+        BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 
         asyncTask = new ScrollFileReadingAsyncTask(getActivity());
         asyncTask.delegate = this;
-        asyncTask.execute(id);
+        asyncTask.execute(bookDescription);
 
         this.view = view;
 
