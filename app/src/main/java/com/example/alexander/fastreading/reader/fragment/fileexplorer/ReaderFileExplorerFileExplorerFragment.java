@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.io.File;
 

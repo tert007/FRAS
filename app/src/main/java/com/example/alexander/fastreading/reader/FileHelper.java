@@ -1,7 +1,5 @@
 package com.example.alexander.fastreading.reader;
 
-import android.graphics.Path;
-
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -72,6 +71,7 @@ public class FileHelper {
     }
 
     public static String getFileName(File file) {
+        //using when we need to get name from BookTitle.txt
         String fileName = file.getName();
         return fileName.substring(0, fileName.lastIndexOf(".") - 1);
     }
@@ -132,7 +132,7 @@ public class FileHelper {
         if(!rootDirectory.exists()){
             rootDirectory.mkdir();
         } else {
-            deleteDirectory(rootDirectory);
+            removeDirectory(rootDirectory);
             rootDirectory.mkdir();
         }
 
@@ -170,13 +170,34 @@ public class FileHelper {
         zipFile.close();
     }
 
-    private static boolean deleteDirectory(File directory) {
+    public static void copyFile(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            if (is != null){
+                is.close();
+            }
+            if (os != null){
+                os.close();
+            }
+        }
+    }
+
+    public static boolean removeDirectory(File directory) {
         if(directory.exists()){
             File[] files = directory.listFiles();
             if(files != null){
                 for (File file: files) {
                     if(file.isDirectory()) {
-                        deleteDirectory(file);
+                        removeDirectory(file);
                     }
                     else {
                         file.delete();

@@ -10,9 +10,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.BookDescription;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 
 import java.util.List;
 

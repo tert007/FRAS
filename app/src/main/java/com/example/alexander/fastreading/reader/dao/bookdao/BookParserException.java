@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdao;
 
 /**
  * Created by Alexander on 06.08.2016.

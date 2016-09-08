@@ -5,10 +5,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.BookDescription;
-import com.example.alexander.fastreading.reader.dao.BookParserException;
-import com.example.alexander.fastreading.reader.dao.BookDao;
-import com.example.alexander.fastreading.reader.dao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
 
 /**
  * Created by Alexander on 27.08.2016.

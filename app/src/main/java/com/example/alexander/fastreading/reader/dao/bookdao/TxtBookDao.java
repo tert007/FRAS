@@ -1,11 +1,11 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdao;
 
 import android.content.Context;
 
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.BookDescription;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class TxtBookDao implements BookDao {
         BookDescription bookDescription = new BookDescription();
 
         bookDescription.setFilePath(filePath);
+        bookDescription.setTitle(FileHelper.getFileName(filePath));
         bookDescription.setType(FileHelper.getFileExtension(filePath));
         bookDescription.setProgress(0f);
         bookDescription.setFavorite(false);

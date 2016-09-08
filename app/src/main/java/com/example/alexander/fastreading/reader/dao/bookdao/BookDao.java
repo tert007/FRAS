@@ -1,6 +1,6 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdao;
 
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.List;
 

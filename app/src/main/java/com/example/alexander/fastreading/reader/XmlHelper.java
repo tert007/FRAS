@@ -1,6 +1,6 @@
 package com.example.alexander.fastreading.reader;
 
-import com.example.alexander.fastreading.reader.dao.BookParserException;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,6 +25,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class XmlHelper {
 
     public static Document getXmlFromFileWithSpaceTrim(File file) throws BookParserException {
+        //Удаление лишних пробелов в xml документе
         try {
             InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(removeSpaces(streamReader).getBytes());
@@ -66,7 +67,7 @@ public class XmlHelper {
         }
     }
 
-    public static Document convertEpubToXml(List<List<HtmlTag>> book){
+    public static Document convertBookToXml(List<List<HtmlTag>> book){
         //goToXmlParser
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -96,7 +97,7 @@ public class XmlHelper {
         }
     }
 
-    public static List<List<HtmlTag>> readEpubFromXml(Document document){
+    public static List<List<HtmlTag>> readBookFromXml(Document document){
         NodeList chapterList = document.getElementsByTagName("chapter");
 
         List<List<HtmlTag>> result = new ArrayList<>(chapterList.getLength());

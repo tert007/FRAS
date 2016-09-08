@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.dao.bookdescription;
+package com.example.alexander.fastreading.reader.dao.bookdescriptiondao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

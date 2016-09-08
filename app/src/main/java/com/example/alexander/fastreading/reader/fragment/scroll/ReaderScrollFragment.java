@@ -4,13 +4,8 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 /**
  * Created by Alexander on 04.08.2016.

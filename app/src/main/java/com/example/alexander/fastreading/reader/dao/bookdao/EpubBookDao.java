@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdao;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -13,9 +13,9 @@ import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.HtmlTag;
 import com.example.alexander.fastreading.reader.XmlHelper;
-import com.example.alexander.fastreading.reader.BookDescription;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescription.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -119,6 +119,7 @@ public class EpubBookDao implements BookDao {
             List<File> files = FileHelper.getFilesCollection(SettingsManager.getTempPath());
 
             List<String> bookChaptersPaths = Collections.emptyList();
+            String coverPath = null;
 
             //Основная инфа о книге (автор, название...)
             for (File file : files) {
@@ -129,10 +130,7 @@ public class EpubBookDao implements BookDao {
                     bookDescription.setLanguage(getBookLanguage(contentOpf));
                     bookDescription.setAuthor(getBookAuthor(contentOpf));
 
-                    String coverPath = getCoverPath(contentOpf);
-                    if (coverPath != null){
-                        bookDescription.setCoverImageName(FileHelper.getFileName(coverPath));
-                    }
+                    coverPath = getCoverPath(contentOpf);
                 }
 
                 //Пути к файлам с главами книг
@@ -158,7 +156,7 @@ public class EpubBookDao implements BookDao {
                 }
             }
 
-            Document xml = XmlHelper.convertEpubToXml(htmlTagsList);
+            Document xml = XmlHelper.convertBookToXml(htmlTagsList);
 
             ///data/.../books/1
             String bookDirectoryPath = booksLibraryPath + File.separator + bookDescription.getId();
@@ -172,6 +170,19 @@ public class EpubBookDao implements BookDao {
             DOMSource source = new DOMSource(xml);
             StreamResult streamResult =  new StreamResult(new File(saveFilePath));
             transformer.transform(source, streamResult);
+
+            if (coverPath != null){
+                String coverName = new File(coverPath).getName();
+                String saveCoverPath = bookDirectoryPath + File.separator + coverName;
+
+                for (File file : files) {
+                    if (file.getName().equals(coverName)){
+                        FileHelper.copyFile(file, new File(saveCoverPath));
+                        bookDescription.setCoverImagePath(saveCoverPath);
+                        break;
+                    }
+                }
+            }
 
             return bookDescription;
         } catch (Exception e){
@@ -287,7 +298,7 @@ public class EpubBookDao implements BookDao {
         String saveFilePath = directoryPath + File.separator + "content.xml";
 
         Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));
-        List<List<HtmlTag>> book = XmlHelper.readEpubFromXml(document);
+        List<List<HtmlTag>> book = XmlHelper.readBookFromXml(document);
 
         return convertToScroll(book);
     }
@@ -298,7 +309,7 @@ public class EpubBookDao implements BookDao {
         String saveFilePath = directoryPath + File.separator + "content.xml";
 
         Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));
-        List<List<HtmlTag>> book = XmlHelper.readEpubFromXml(document);
+        List<List<HtmlTag>> book = XmlHelper.readBookFromXml(document);
 
         return convertToChapters(book);
     }

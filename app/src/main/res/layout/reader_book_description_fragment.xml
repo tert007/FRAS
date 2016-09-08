@@ -156,6 +156,8 @@
 
                 android:text="Быстрое"
 
+                android:visibility="invisible"
+
                 android:layout_below="@id/reader_book_description_scroll_reading_button"
 
                 android:layout_alignStart="@id/reader_book_description_scroll_reading_button"
@@ -179,6 +181,9 @@
 
                 android:text="Страницы"
 
+                android:visibility="invisible"
+
+
                 android:layout_width="125dp"
                 android:layout_height="wrap_content" />
 
@@ -186,6 +191,8 @@
                 android:id="@+id/reader_book_description_fast_pages_reading_button"
 
                 android:text="Бегунок"
+
+                android:visibility="invisible"
 
                 android:layout_below="@id/reader_book_description_pages_reading_button"
 

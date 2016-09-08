@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerBookAddResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFloatButtonOnClickResponse;

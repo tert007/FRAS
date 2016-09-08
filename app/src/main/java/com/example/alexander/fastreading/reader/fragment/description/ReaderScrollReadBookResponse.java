@@ -1,7 +1,7 @@
 package com.example.alexander.fastreading.reader.fragment.description;
 
 
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 /**
  * Created by Alexander on 08.08.2016.

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.dao.BookDaoFactory;
-import com.example.alexander.fastreading.reader.dao.BookParserException;
 
 import java.util.List;
 

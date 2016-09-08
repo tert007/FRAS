@@ -1,7 +1,7 @@
-package com.example.alexander.fastreading.reader.dao.bookdescription;
+package com.example.alexander.fastreading.reader.dao.bookdescriptiondao;
 
-import com.example.alexander.fastreading.reader.dao.BookParserException;
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.List;
 

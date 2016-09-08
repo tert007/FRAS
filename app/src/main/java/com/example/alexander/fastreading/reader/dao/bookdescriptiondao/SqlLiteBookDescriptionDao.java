@@ -1,12 +1,12 @@
-package com.example.alexander.fastreading.reader.dao.bookdescription;
+package com.example.alexander.fastreading.reader.dao.bookdescriptiondao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 
-import com.example.alexander.fastreading.reader.dao.BookParserException;
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
         values.put(BookDescriptionDatabaseHelper.BOOK_TITLE, bookDescription.getTitle());
         values.put(BookDescriptionDatabaseHelper.BOOK_AUTHOR, bookDescription.getAuthor());
         values.put(BookDescriptionDatabaseHelper.BOOK_LANGUAGE, bookDescription.getLanguage());
-        values.put(BookDescriptionDatabaseHelper.BOOK_COVER_NAME, bookDescription.getCoverImageName());
+        values.put(BookDescriptionDatabaseHelper.BOOK_COVER_NAME, bookDescription.getCoverImagePath());
         values.put(BookDescriptionDatabaseHelper.BOOK_FILE_PATH, bookDescription.getFilePath());
         values.put(BookDescriptionDatabaseHelper.BOOK_TYPE, bookDescription.getType());
         values.put(BookDescriptionDatabaseHelper.BOOK_FAVORITE_FLAG, bookDescription.itsFavorite());
@@ -84,7 +84,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
         bookDescription.setTitle(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_TITLE)));
         bookDescription.setAuthor(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_AUTHOR)));
         bookDescription.setLanguage(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_LANGUAGE)));
-        bookDescription.setCoverImageName(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_COVER_NAME)));
+        bookDescription.setCoverImagePath(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_COVER_NAME)));
 
         bookDescription.setFilePath(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_FILE_PATH)));
         bookDescription.setType(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_TYPE)));

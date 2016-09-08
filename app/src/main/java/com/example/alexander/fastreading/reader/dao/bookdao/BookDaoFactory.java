@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.dao;
+package com.example.alexander.fastreading.reader.dao.bookdao;
 
 import android.content.Context;
 

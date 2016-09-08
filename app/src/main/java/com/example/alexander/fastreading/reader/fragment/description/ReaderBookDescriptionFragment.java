@@ -2,6 +2,7 @@ package com.example.alexander.fastreading.reader.fragment.description;
 
 import android.app.Fragment;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,7 @@ import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.BookDescription;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 /**
  * Created by Alexander on 07.08.2016.
@@ -59,62 +60,62 @@ public class ReaderBookDescriptionFragment extends Fragment {
         startPages  = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
         startFastPages  = (Button) view.findViewById(R.id.reader_book_description_fast_pages_reading_button);
 
-
         final BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 
-            if (bookDescription.getType().equals(FileHelper.EPUB)) {
-
-                Bitmap bitmap = null;
-
-                if (bitmap == null){
-                    bookCoverImageView.setImageResource(R.drawable.book_without_title);
-                } else {
-                    bookCoverImageView.setImageBitmap(bitmap);
-                }
-
-                bookTitleResultTextView.setText(bookDescription.getTitle());
-                bookAuthorResultTextView.setText(bookDescription.getAuthor());
-                bookLanguageResultTextView.setText(bookDescription.getLanguage());
 
 
-            } else {
-                //TXT File
+        if (bookDescription.getType().equals(FileHelper.EPUB)) {
+
+            Bitmap bookCoverBitmap = BitmapFactory.decodeFile(bookDescription.getCoverImagePath());
+
+            if (bookCoverBitmap == null){
                 bookCoverImageView.setImageResource(R.drawable.book_without_title);
-
-                bookTitleResultTextView.setVisibility(View.GONE);
-                bookAuthorResultTextView.setVisibility(View.GONE);
-                bookLanguageResultTextView.setVisibility(View.GONE);
-                bookTitleTextView.setVisibility(View.GONE);
-                bookAuthorTextView.setVisibility(View.GONE);
-                bookLanguageTextView.setVisibility(View.GONE);
+            } else {
+                bookCoverImageView.setImageBitmap(bookCoverBitmap);
             }
 
-            bookFilePathResultTextView.setText(bookDescription.getFilePath());
+            bookTitleResultTextView.setText(bookDescription.getTitle());
+            bookAuthorResultTextView.setText(bookDescription.getAuthor());
+            bookLanguageResultTextView.setText(bookDescription.getLanguage());
 
-            startScroll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    scrollDelegate.onScrollReadBookClick(bookDescription);
-                }
-            });
-            startFastScroll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //scrollDelegate.onScrollReadBookClick(book);
-                }
-            });
-            startPages.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //pagesDelegate.onPagesReadBookClick(book);
-                }
-            });
-            startFastPages.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //pagesDelegate.onPagesReadBookClick(book);
-                }
-            });
+        } else {
+            //TXT File
+            bookCoverImageView.setImageResource(R.drawable.book_without_title);
+
+            bookTitleResultTextView.setVisibility(View.GONE);
+            bookAuthorResultTextView.setVisibility(View.GONE);
+            bookLanguageResultTextView.setVisibility(View.GONE);
+            bookTitleTextView.setVisibility(View.GONE);
+            bookAuthorTextView.setVisibility(View.GONE);
+            bookLanguageTextView.setVisibility(View.GONE);
+        }
+
+        bookFilePathResultTextView.setText(bookDescription.getFilePath());
+
+        startScroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollDelegate.onScrollReadBookClick(bookDescription);
+            }
+        });
+        startFastScroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //scrollDelegate.onScrollReadBookClick(book);
+            }
+        });
+        startPages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pagesDelegate.onPagesReadBookClick(book);
+            }
+        });
+        startFastPages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //pagesDelegate.onPagesReadBookClick(book);
+            }
+        });
 
         return view;
     }

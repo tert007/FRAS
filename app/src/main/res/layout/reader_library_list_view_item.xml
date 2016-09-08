@@ -7,16 +7,17 @@
 
     <ImageView
         android:id="@+id/reader_library_list_view_item_image_view"
+        android:layout_margin="@dimen/default_margin"
         android:layout_width="100dp"
         android:layout_height="175dp" />
 
     <TextView
         android:id="@+id/reader_library_list_view_item_title_text_view"
-        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/reader_library_list_view_item_image_view"
         android:layout_toEndOf="@id/reader_library_list_view_item_image_view"
 
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textColor="@color/black"
 
         android:layout_width="match_parent"
