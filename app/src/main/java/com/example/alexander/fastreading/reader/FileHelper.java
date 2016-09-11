@@ -32,10 +32,10 @@ public class FileHelper {
         supportedExtensions.add(TXT);
     }
 
-    public static File[] readerFileFilter(File[] files){
+    public static List<File> readerFileFilter(File[] files){
         //Пропускает только доступные форматы
         if (files == null){
-            return new File[0];
+            return Collections.emptyList();
         }
 
         List<File> acceptedFile = new ArrayList<>(files.length);
@@ -55,7 +55,7 @@ public class FileHelper {
             }
         }
 
-        return acceptedFile.toArray(new File[acceptedFile.size()]);
+        return acceptedFile;
     }
 
     public static String getFileExtension(File file) {
@@ -71,9 +71,9 @@ public class FileHelper {
     }
 
     public static String getFileName(File file) {
-        //using when we need to get name from BookTitle.txt
+        //using when we need to get name from BookTitle.txt -> BookTitle
         String fileName = file.getName();
-        return fileName.substring(0, fileName.lastIndexOf(".") - 1);
+        return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
     public static String getFileName(String fileName) {
@@ -92,12 +92,6 @@ public class FileHelper {
 
     public static String getTextFromFile(File file) throws IOException {
         InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
-
-        return getTextFromFile(streamReader);
-    }
-
-    public static String getTextFromFile(InputStream inputStream) throws IOException {
-        InputStreamReader streamReader = new InputStreamReader(inputStream, "utf8");
 
         return getTextFromFile(streamReader);
     }
@@ -208,7 +202,7 @@ public class FileHelper {
         return(directory.delete());
     }
 
-    public static List<File> getFilesCollection(String filePath){
+    public static List<File> getFilesCollection(String filePath) {
         File root = new File(filePath);
         File[] tempFiles =  root.listFiles();
         if (tempFiles == null)

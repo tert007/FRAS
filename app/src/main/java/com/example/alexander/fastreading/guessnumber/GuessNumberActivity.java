@@ -10,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.alexander.fastreading.ViewOnClickListener;
+import com.example.alexander.fastreading.shulte.ViewOnClickListener;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberMainFragment;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberSettingsFragment;

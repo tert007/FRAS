@@ -14,9 +14,15 @@
     <string name="book_title">Название книги</string>
     <string name="file_path">Путь к файлу</string>
     <string name="speed">Скорость</string>
-    <string name="file_opening">Открытие файла</string>
+    <string name="file_opening_message">Открытие файла</string>
     <string name="text_size">Размер текста</string>
     <string name="fast_reading">Быстрое чтение</string>
     <string name="library_is_empty">Ваша библиотека пуста :(</string>
-    <string name="add_book">Добавление книги в библиотеку</string>
+    <string name="add_book_message">Добавление книги в библиотеку</string>
+    <string name="library">Библиотека</string>
+    <string name="page">Страница</string>
+    <string name="book_remove_message">Вы хотите удалить данную книгу из вашей библиотеки?</string>
+    <string name="remove">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="progress">Прогресс</string>
 </resources>

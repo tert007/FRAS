@@ -20,7 +20,8 @@ import java.util.List;
  */
 public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> {
 
-    public ReaderLibraryOnBookClickResponse delegate;
+    public ReaderLibraryOnBookClickResponse bookClickDelegate;
+    public ReaderLibraryRemoveBookOnClickResponse removeBookDelegate;
 
     public ReaderLibraryListViewAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
@@ -38,25 +39,37 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
             convertView = layoutInflater.inflate(R.layout.reader_library_list_view_item, parent, false);
         }
 
-        BookDescription currentBookDescription = getItem(position);
+        final BookDescription currentBookDescription = getItem(position);
 
         TextView textView = (TextView) convertView.findViewById(R.id.reader_library_list_view_item_title_text_view);
         textView.setText(currentBookDescription.getTitle());
 
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_image_view);
+        TextView progressTextView = (TextView) convertView.findViewById(R.id.reader_library__list_view_item_progress_result_text_view);
+        String progress = String.valueOf(currentBookDescription.getProgress()) + '%';
+        progressTextView.setText(progress);
 
-        Bitmap bookCoverBitmap = BitmapFactory.decodeFile(currentBookDescription.getCoverImagePath());
+        ImageView bookCoverImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_image_view);
 
-        if (bookCoverBitmap == null){
-            imageView.setImageResource(R.drawable.book_without_title);
+        if (currentBookDescription.getCoverImagePath() != null){
+            Bitmap bookCoverBitmap = BitmapFactory.decodeFile(currentBookDescription.getCoverImagePath());
+
+            bookCoverImageView.setImageBitmap(bookCoverBitmap);
         } else {
-            imageView.setImageBitmap(bookCoverBitmap);
+            bookCoverImageView.setImageResource(R.drawable.book_without_title);
         }
+
+        ImageView removeImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_remove_image_view);
+        removeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeBookDelegate.onBookRemoveClick(currentBookDescription);
+            }
+        });
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delegate.onBookClick(getItem(position));
+                bookClickDelegate.onBookClick(getItem(position));
             }
         });
 

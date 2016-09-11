@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader.fragment.fileexplorer;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Alexander on 03.08.2016.
@@ -65,7 +67,9 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements 
     }
 
     private void update(){
-        File[] files = FileHelper.readerFileFilter(path.listFiles());
+        List<File> files = FileHelper.readerFileFilter(path.listFiles());
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(path.getPath());
 
         adapter = new ReaderFileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
         adapter.delegate = this;

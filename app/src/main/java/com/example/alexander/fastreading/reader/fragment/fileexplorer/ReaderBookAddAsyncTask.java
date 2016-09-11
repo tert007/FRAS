@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
@@ -28,7 +30,7 @@ import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
             super.onPreExecute();
 
             progressDialog = new ProgressDialog(context);
-            progressDialog.setMessage(context.getString(R.string.add_book));
+            progressDialog.setMessage(context.getString(R.string.add_book_message));
             progressDialog.show();
         }
 
@@ -36,7 +38,8 @@ import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
         protected BookDescription doInBackground(String... params) {
             String filePath = params[0];
             try {
-               return new BookDaoFactory(context).getBookDao(filePath).addBook(filePath);
+                BookDao bookDao = new BookDaoFactory(context).getBookDao(FileHelper.getFileExtension(filePath));
+                return bookDao.addBook(filePath);
             } catch (BookParserException e){
                 return null;
             }

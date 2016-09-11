@@ -11,7 +11,7 @@ import android.text.style.StyleSpan;
 
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.HtmlTag;
+import com.example.alexander.fastreading.reader.entity.HtmlTag;
 import com.example.alexander.fastreading.reader.XmlHelper;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
@@ -77,9 +77,11 @@ public class EpubBookDao implements BookDao {
 
     private BookDescriptionDao bookDescriptionDao;
     private final String booksLibraryPath;
+    private final String unzipTempPath;
 
     public EpubBookDao(Context context) {
         bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(context).getBookDescriptionDao();
+        unzipTempPath = context.getApplicationInfo().dataDir + File.separator + "temp";
         booksLibraryPath = context.getApplicationInfo().dataDir + File.separator + "books";
 
         File bookLibraryDirectory = new File(booksLibraryPath);
@@ -114,9 +116,9 @@ public class EpubBookDao implements BookDao {
         //Когда у нас есть основные данные о книги мы должны добавить специфические данные и сохранить их на диск
         //А также сохранить сам текст в нужном нам формате в папку с приложением
         try {
-            FileHelper.unZip(bookDescription.getFilePath(), SettingsManager.getTempPath());
+            FileHelper.unZip(bookDescription.getFilePath(), unzipTempPath);
 
-            List<File> files = FileHelper.getFilesCollection(SettingsManager.getTempPath());
+            List<File> files = FileHelper.getFilesCollection(unzipTempPath);
 
             List<String> bookChaptersPaths = Collections.emptyList();
             String coverPath = null;
@@ -240,15 +242,15 @@ public class EpubBookDao implements BookDao {
         return chapter;
     }
 
-    private String getBookTitle(Document document) throws BookParserException{
+    private String getBookTitle(Document document) {
         return document.getElementsByTagName("dc:title").item(0).getTextContent();
     }
 
-    private String getBookLanguage(Document document) throws BookParserException {
+    private String getBookLanguage(Document document) {
         return document.getElementsByTagName("dc:language").item(0).getTextContent();
     }
 
-    private String getBookAuthor(Document document) throws BookParserException{
+    private String getBookAuthor(Document document) {
         return document.getElementsByTagName("dc:creator").item(0).getTextContent();
     }
 
@@ -288,8 +290,11 @@ public class EpubBookDao implements BookDao {
     }
 
     @Override
-    public void removeBook(long id) throws BookParserException {
+    public void removeBook(BookDescription bookDescription) {
+        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
+        FileHelper.removeDirectory(new File(directoryPath));
 
+        bookDescriptionDao.removeBookDescription(bookDescription.getId());
     }
 
     @Override

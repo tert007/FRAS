@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface BookDao {
     BookDescription addBook(String filePath) throws BookParserException;
-    void removeBook(long id) throws BookParserException;
+    void removeBook(BookDescription bookDescription);
 
     CharSequence getScrollText(BookDescription bookDescription) throws BookParserException;
     List<CharSequence> getChaptersText(BookDescription bookDescription) throws BookParserException;

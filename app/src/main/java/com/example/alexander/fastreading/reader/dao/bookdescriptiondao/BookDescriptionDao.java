@@ -11,8 +11,8 @@ import java.util.List;
 public interface BookDescriptionDao {
     long addBookDescription(BookDescription bookDescription) throws BookParserException;
     BookDescription findBookDescription(long id) throws BookParserException;
-    void removeBookDescription(long id) throws BookParserException;
-    long updateBookDescription(BookDescription newValue) throws BookParserException;
+    void removeBookDescription(long id);
+    void updateBookDescription(BookDescription newValue);
 
     List<BookDescription> getBookDescriptions() throws BookParserException;
 }

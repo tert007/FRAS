@@ -1,5 +1,6 @@
 package com.example.alexander.fastreading.reader;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
@@ -11,11 +12,13 @@ import android.view.MenuItem;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.fragment.description.ReaderReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderScrollReadBookResponse;
 import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerBookAddResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFloatButtonOnClickResponse;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryFragment;
 import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryOnBookClickResponse;
+import com.example.alexander.fastreading.reader.fragment.pages.PageSplitter;
 import com.example.alexander.fastreading.reader.fragment.setting.ReaderSettingFragment;
 import com.example.alexander.fastreading.reader.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.fragment.fileexplorer.ReaderFileExplorerFileExplorerFragment;
@@ -23,7 +26,7 @@ import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragme
 import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
 
-public class ReaderActivity extends AppCompatActivity implements ReaderScrollReadBookResponse, /*ReaderPagesReadBookResponse,*/ ReaderLibraryFloatButtonOnClickResponse,
+public class ReaderActivity extends AppCompatActivity implements ReaderReadBookResponse, ReaderLibraryFloatButtonOnClickResponse,
         ReaderLibraryOnBookClickResponse, ReaderFileExplorerBookAddResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
@@ -120,7 +123,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderScrollRea
     @Override
     public void onBookClick(BookDescription bookDescription) {
         bookDescriptionFragment = new ReaderBookDescriptionFragment();
-        bookDescriptionFragment.scrollDelegate = this;
+        bookDescriptionFragment.delegate = this;
         //bookDescriptionFragment.pagesDelegate = this;
 
         Bundle bundle = new Bundle();
@@ -137,7 +140,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderScrollRea
     @Override
     public void bookAddPostExecute(BookDescription bookDescription) {
         bookDescriptionFragment = new ReaderBookDescriptionFragment();
-        bookDescriptionFragment.scrollDelegate = this;
+        bookDescriptionFragment.delegate = this;
         //bookDescriptionFragment.pagesDelegate = this;
 
         Bundle bundle = new Bundle();
@@ -152,16 +155,23 @@ public class ReaderActivity extends AppCompatActivity implements ReaderScrollRea
     }
 
     @Override
-    public void onScrollReadBookClick(BookDescription bookDescription) {
-        scrollFragment = new ReaderScrollFragment();
+    public void onReadBookClick(BookDescription bookDescription, boolean itsScrollReading, boolean itsFastReading) {
+        Fragment fragment = null;
+
+        if (itsScrollReading) {
+            fragment = new ReaderScrollFragment();
+        } else {
+            fragment = new ReaderPagesFragment();
+        }
 
         Bundle bundle = new Bundle();
+        bundle.putInt("fast_reading", itsFastReading ? 1 : 0);
         bundle.putParcelable("book_description", bookDescription);
 
-        scrollFragment.setArguments(bundle);
+        fragment.setArguments(bundle);
 
         fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.reader_fragment_container, scrollFragment);
+        fragmentTransaction.replace(R.id.reader_fragment_container, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }

@@ -12,6 +12,7 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Alexander on 03.08.2016.
@@ -25,7 +26,7 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
         super(context, textViewResourceId);
     }
 
-    public ReaderFileExplorerListAdapter(Context context, int resource, File[] items) {
+    public ReaderFileExplorerListAdapter(Context context, int resource, List<File> items) {
         super(context, resource, items);
     }
 

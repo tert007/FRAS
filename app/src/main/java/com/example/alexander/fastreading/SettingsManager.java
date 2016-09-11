@@ -72,9 +72,4 @@ public class SettingsManager {
         sharedPreferences.edit().putInt(GUESS_NUMBER_COMPLEXITY_KEY, complexity).apply();
         guessNumberComplexity = complexity;
     }
-
-    public static String getTempPath() {
-        return context.getApplicationInfo().dataDir + File.separator + "temp";
-    }
-
 }

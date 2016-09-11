@@ -45,8 +45,8 @@ public class TxtBookDao implements BookDao {
     }
 
     @Override
-    public void removeBook(long id) throws BookParserException {
-
+    public void removeBook(BookDescription bookDescription) {
+        bookDescriptionDao.removeBookDescription(bookDescription.getId());
     }
 
     @Override

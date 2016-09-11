@@ -51,20 +51,18 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
     }
 
     @Override
-    public long updateBookDescription(BookDescription newValue) throws BookParserException {
-        return database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "=" + newValue.getId(), null);
+    public void updateBookDescription(BookDescription newValue) {
+        database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "=" + newValue.getId(), null);
     }
 
     @Override
-    public void removeBookDescription(long id) throws BookParserException {
-
+    public void removeBookDescription(long id) {
+        database.delete(BookDescriptionDatabaseHelper.BOOK_TABLE, BaseColumns._ID + "=" + id, null);
     }
-
-
 
     @Override
     public List<BookDescription> getBookDescriptions() {
-        Cursor cursor = database.query(BookDescriptionDatabaseHelper.BOOK_TABLE, BookDescriptionDatabaseHelper.BOOK_TABLE_COLUMNS, null, null, null, null, null);
+        Cursor cursor = database.query(BookDescriptionDatabaseHelper.BOOK_TABLE, BookDescriptionDatabaseHelper.BOOK_TABLE_COLUMNS, null, null, null, null, BookDescriptionDatabaseHelper.BOOK_TITLE);
         List<BookDescription> bookDescriptions = new ArrayList<>();
 
         if (cursor.moveToFirst()) {

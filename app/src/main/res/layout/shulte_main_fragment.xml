@@ -12,7 +12,7 @@
         android:layout_height="75dp"
         android:padding="@dimen/default_margin">
 
-        <com.example.alexander.fastreading.SquareTextView
+        <com.example.alexander.fastreading.shulte.SquareTextView
             android:id="@+id/shulte_next_item"
             android:text="12"
             android:layout_alignParentLeft="true"
@@ -23,7 +23,7 @@
             android:background="@drawable/default_background"
             android:textColor="@color/color_primary_main"
             android:textSize="20sp">
-        </com.example.alexander.fastreading.SquareTextView>
+        </com.example.alexander.fastreading.shulte.SquareTextView>
 
         <TextView
             android:id="@+id/shulte_record"

@@ -5,13 +5,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.List;
 
 /**
  * Created by Alexander on 22.08.2016.
  */
-public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<CharSequence> > {
+public class PagesFileReadingAsyncTask extends AsyncTask<BookDescription, Void, List<CharSequence> > {
 
     public PagesFileReaderAsyncTaskResponse delegate;
 
@@ -27,17 +31,18 @@ public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<Char
         super.onPreExecute();
 
         progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage(context.getString(R.string.file_opening));
+        progressDialog.setMessage(context.getString(R.string.file_opening_message));
         progressDialog.show();
     }
 
     @Override
-    protected List<CharSequence> doInBackground(String... params) {
-        String filePath = params[0];
+    protected List<CharSequence> doInBackground(BookDescription... params) {
+        BookDescription bookDescription = params[0];
 
         try {
-            return null;// new BookDaoFactory(context).getBookDao(filePath).getChaptersText();
-        } catch (Exception e) { //
+            BookDao bookDao = new BookDaoFactory(context).getBookDao(bookDescription.getType());
+            return bookDao.getChaptersText(bookDescription);
+        } catch (BookParserException e) {
             return null;
         }
     }
@@ -45,7 +50,6 @@ public class PagesFileReadingAsyncTask extends AsyncTask<String, Void, List<Char
     @Override
     protected void onPostExecute(List<CharSequence> chapters) {
         super.onPostExecute(chapters);
-        //EXCEPTION (NULL)
         progressDialog.dismiss();
         delegate.onFileReadingPostExecute(chapters);
     }

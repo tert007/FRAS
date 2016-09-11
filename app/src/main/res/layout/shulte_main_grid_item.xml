@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
-        <com.example.alexander.fastreading.SquareTextView
+        <com.example.alexander.fastreading.shulte.SquareTextView
             android:id="@+id/shulte_grid_item_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -11,5 +11,5 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="20sp">
-        </com.example.alexander.fastreading.SquareTextView>
+        </com.example.alexander.fastreading.shulte.SquareTextView>
 </RelativeLayout>

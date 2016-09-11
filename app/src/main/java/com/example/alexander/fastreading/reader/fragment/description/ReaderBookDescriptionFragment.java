@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ import com.example.alexander.fastreading.reader.entity.BookDescription;
  */
 public class ReaderBookDescriptionFragment extends Fragment {
 
-    public ReaderScrollReadBookResponse scrollDelegate;
-    public ReaderPagesReadBookResponse pagesDelegate;
+   // public ReaderScrollReadBookResponse scrollDelegate;
+    public ReaderReadBookResponse delegate;
 
     private TextView bookTitleResultTextView;
     private TextView bookAuthorResultTextView;
@@ -62,7 +63,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
 
         final BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 
-
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
 
         if (bookDescription.getType().equals(FileHelper.EPUB)) {
 
@@ -95,25 +96,25 @@ public class ReaderBookDescriptionFragment extends Fragment {
         startScroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                scrollDelegate.onScrollReadBookClick(bookDescription);
+                delegate.onReadBookClick(bookDescription, true, false);
             }
         });
         startFastScroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //scrollDelegate.onScrollReadBookClick(book);
+                delegate.onReadBookClick(bookDescription, true, true);
             }
         });
         startPages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //pagesDelegate.onPagesReadBookClick(book);
+                delegate.onReadBookClick(bookDescription, false, false);
             }
         });
         startFastPages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //pagesDelegate.onPagesReadBookClick(book);
+                delegate.onReadBookClick(bookDescription, false, true);
             }
         });
 

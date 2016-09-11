@@ -23,7 +23,7 @@ import android.os.Parcelable;
 
     private String coverImagePath;
 
-    public BookDescription(){
+    public BookDescription() {
 
     }
 

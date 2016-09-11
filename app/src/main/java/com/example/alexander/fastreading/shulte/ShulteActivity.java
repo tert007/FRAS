@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.shulte.fragment.ShulteMainFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShulteSettingsFragment;

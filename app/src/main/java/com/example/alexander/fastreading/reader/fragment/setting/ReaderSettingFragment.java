@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader.fragment.setting;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,10 @@ public class ReaderSettingFragment extends Fragment {
 
     Spinner textSizeSpinner;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_settings_fragment, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
 
         textSizeSpinner = (Spinner)view.findViewById(R.id.reader_settings_text_size_spinner);
 

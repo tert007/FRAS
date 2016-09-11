@@ -1,6 +1,7 @@
 package com.example.alexander.fastreading.reader;
 
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.HtmlTag;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,7 +26,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class XmlHelper {
 
     public static Document getXmlFromFileWithSpaceTrim(File file) throws BookParserException {
-        //Удаление лишних пробелов в xml документе
+        //Использует удаление лишних пробелов в xml документе
         try {
             InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(removeSpaces(streamReader).getBytes());
@@ -67,7 +68,7 @@ public class XmlHelper {
         }
     }
 
-    public static Document convertBookToXml(List<List<HtmlTag>> book){
+    public static Document convertBookToXml(List<List<HtmlTag>> book) throws BookParserException {
         //goToXmlParser
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -93,7 +94,7 @@ public class XmlHelper {
             return document;
 
         } catch (Exception e){
-            return null;
+            throw new BookParserException(e);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader;
+package com.example.alexander.fastreading.reader.entity;
 
 /**
  * Created by Alexander on 24.08.2016.

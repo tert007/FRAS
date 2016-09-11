@@ -6,8 +6,10 @@
     <ImageView
         android:id="@+id/reader_book_description_cover_image_view"
         android:layout_gravity="center"
-        android:layout_width="225dp"
+
+        android:layout_width="wrap_content"
         android:layout_height="275dp"
+        android:scaleType="centerInside"
         android:layout_marginTop="@dimen/default_margin" />
 
     <RelativeLayout
@@ -156,8 +158,6 @@
 
                 android:text="Быстрое"
 
-                android:visibility="invisible"
-
                 android:layout_below="@id/reader_book_description_scroll_reading_button"
 
                 android:layout_alignStart="@id/reader_book_description_scroll_reading_button"
@@ -181,9 +181,6 @@
 
                 android:text="Страницы"
 
-                android:visibility="invisible"
-
-
                 android:layout_width="125dp"
                 android:layout_height="wrap_content" />
 
@@ -191,8 +188,6 @@
                 android:id="@+id/reader_book_description_fast_pages_reading_button"
 
                 android:text="Бегунок"
-
-                android:visibility="invisible"
 
                 android:layout_below="@id/reader_book_description_pages_reading_button"
 

@@ -29,7 +29,7 @@ public class ScrollFileReadingAsyncTask extends AsyncTask<BookDescription, Void,
         super.onPreExecute();
 
         progressDialog = new ProgressDialog(context);
-        progressDialog.setMessage(context.getString(R.string.file_opening));
+        progressDialog.setMessage(context.getString(R.string.file_opening_message));
         progressDialog.show();
     }
 
@@ -37,7 +37,7 @@ public class ScrollFileReadingAsyncTask extends AsyncTask<BookDescription, Void,
     protected CharSequence doInBackground(BookDescription... params) {
         BookDescription bookDescription = params[0];
         try {
-            BookDao bookDao = (new BookDaoFactory(context)).getBookDao(bookDescription.getFilePath());
+            BookDao bookDao = new BookDaoFactory(context).getBookDao(bookDescription.getType());
             return bookDao.getScrollText(bookDescription);
         } catch (BookParserException e){
             return null;
