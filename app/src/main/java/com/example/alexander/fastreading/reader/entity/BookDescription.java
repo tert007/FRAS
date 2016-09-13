@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
     private long id;
 
-    private float progress;
+    private int bookOffset;
 
     private String title;
     private String author;
@@ -91,17 +91,17 @@ import android.os.Parcelable;
         this.coverImagePath = coverImagePath;
     }
 
-    public float getProgress() {
-        return progress;
+    public int getBookOffset() {
+        return bookOffset;
     }
 
-    public void setProgress(float progress) {
-        this.progress = progress;
+    public void setBookOffset(int bookOffset) {
+        this.bookOffset = bookOffset;
     }
 
     protected BookDescription(Parcel in) {
         id = in.readLong();
-        progress = in.readFloat();
+        bookOffset = in.readInt();
         title = in.readString();
         author = in.readString();
         language = in.readString();
@@ -119,7 +119,7 @@ import android.os.Parcelable;
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeFloat(progress);
+        dest.writeInt(bookOffset);
         dest.writeString(title);
         dest.writeString(author);
         dest.writeString(language);

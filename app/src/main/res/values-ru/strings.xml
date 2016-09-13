@@ -24,5 +24,5 @@
     <string name="book_remove_message">Вы хотите удалить данную книгу из вашей библиотеки?</string>
     <string name="remove">Удалить</string>
     <string name="cancel">Отмена</string>
-    <string name="progress">Прогресс</string>
+    <string name="bookOffset">Прогресс</string>
 </resources>

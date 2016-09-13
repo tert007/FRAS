@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 /**
@@ -24,7 +26,15 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
 
     private LockableScrollView lockableScrollView;
     private TextView textView;
-    private TextView statisticTextView;
+
+    private TextView speedTextView;
+    private TextView speedResultTextView;
+
+    private TextView progressTextView;
+    private TextView progressResultTextView;
+
+    private boolean itsFastReading;
+    private BookDescription bookDescription;
 
     private volatile boolean itsScrolling;
     private volatile int speed = 10;
@@ -39,43 +49,60 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
     private ObjectAnimator animator;
     long length;
 
-    private ScrollFileReadingAsyncTask asyncTask;
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_scroll_fragment, container, false);
 
         lockableScrollView = (LockableScrollView) view.findViewById(R.id.reader_scroll_lockable_scroll_view);
 
-        statisticTextView = (TextView) view.findViewById(R.id.reader_scroll_speed_text_view);
-        //statisticTextView.setText(String.valueOf(speed));
+        speedTextView = (TextView) view.findViewById(R.id.reader_scroll_speed_text_view);
+        speedResultTextView = (TextView) view.findViewById(R.id.reader_scroll_speed_result_text_view);
 
-        textView = (TextView) view.findViewById(R.id.reader_scroll_fragment_text_view);
+        progressTextView = (TextView) view.findViewById(R.id.reader_scroll_progress_text_view);
+        progressResultTextView = (TextView) view.findViewById(R.id.reader_scroll_progress_result_text_view);
+
+        textView = (TextView) view.findViewById(R.id.reader_scroll_text_view);
         textView.setTextSize(SettingsManager.getReaderTextSize());
 
-        BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
-        boolean itsFastReading = getArguments().getInt("fast_reading") == 1;
+        bookDescription = (BookDescription) getArguments().getParcelable("book_description");
+        itsFastReading = getArguments().getInt("fast_reading") == 1;
 
-        lockableScrollView.setScrollingEnabled(!itsFastReading);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
+
+        ScrollFileReadingAsyncTask asyncTask;
 
         asyncTask = new ScrollFileReadingAsyncTask(getActivity());
         asyncTask.delegate = this;
         asyncTask.execute(bookDescription);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
-
-        if (itsFastReading) {
-            textView.setOnTouchListener(onTouchListener);
-        }
-
         return view;
+    }
+
+    private int getBookOffset() {
+        int lineIndex = textView.getLayout().getLineForVertical(lockableScrollView.getScrollY());
+        return textView.getLayout().getLineStart(lineIndex);
+    }
+
+    private void setBookOffset() {
+        int lineForOffset = textView.getLayout().getLineForOffset(bookDescription.getBookOffset());
+        int vertical = textView.getLayout().getLineTop(lineForOffset);
+
+        lockableScrollView.scrollTo(0, vertical);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+
         if (animator != null) {
             animator.cancel();
         }
+
+        bookDescription.setBookOffset(getBookOffset());
+
+        BookDescriptionDaoFactory daoFactory = BookDescriptionDaoFactory.getDaoFactory(getActivity());
+        BookDescriptionDao bookDescriptionDao = daoFactory.getBookDescriptionDao();
+
+        bookDescriptionDao.updateBookDescription(bookDescription);
     }
 
     @Override
@@ -86,10 +113,29 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
         } else {
             textView.setText(text);
 
+            lockableScrollView.setScrollingEnabled(!itsFastReading);
+
+            progressTextView.setVisibility(View.VISIBLE);
+            progressResultTextView.setVisibility(View.VISIBLE);
+
+            if (itsFastReading) {
+                speedTextView.setVisibility(View.VISIBLE);
+                speedResultTextView.setVisibility(View.VISIBLE);
+
+                textView.setOnTouchListener(onTouchListener);
+            }
+
             length = text.length(); // fix
+
+
+            textView.post(new Runnable() {
+                @Override
+                public void run() {
+                    setBookOffset();
+                }
+            });
         }
     }
-
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
         @Override
@@ -162,13 +208,13 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
                         if (distanceInDp > MAX_CLICK_DISTANCE) {
                             if (dy < movedOldY) {
                                 speed++;
-                                statisticTextView.setText(String.valueOf(speed));
+                                //speedTextView.setText(String.valueOf(speed));
                             }
 
                             if (dy > movedOldY) {
                                 if (speed > 1){
                                     speed--;
-                                    statisticTextView.setText(String.valueOf(speed));
+                                    //speedTextView.setText(String.valueOf(speed));
                                 }
                             }
                         }

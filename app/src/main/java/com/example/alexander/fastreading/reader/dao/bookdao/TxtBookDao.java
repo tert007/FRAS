@@ -38,8 +38,6 @@ public class TxtBookDao implements BookDao {
         bookDescription.setFilePath(filePath);
         bookDescription.setTitle(FileHelper.getFileName(filePath));
         bookDescription.setType(FileHelper.getFileExtension(filePath));
-        bookDescription.setProgress(0f);
-        bookDescription.setFavorite(false);
 
         return bookDescription;
     }

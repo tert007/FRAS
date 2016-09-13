@@ -1,9 +1,12 @@
 package com.example.alexander.fastreading.reader.fragment.pages;
 
 import android.text.Layout;
+import android.text.Spannable;
 import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 
 import com.example.alexander.fastreading.reader.entity.HtmlTag;
 
@@ -45,17 +48,55 @@ public class PageSplitter {
         List<CharSequence> result = new ArrayList<>();
 
         for (CharSequence chapter : chapters) {
-            int currentPage = 1;
-            int lastLine = 0;
+            //int currentPage = 1;
+
+            int usedHeight = 0;
 
             int startIndex = 0;
             int endIndex = 0;
 
             StaticLayout tempLayout = new StaticLayout(chapter, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
-            int lineCount = tempLayout.getLineCount();
+            int lastLineIndex = tempLayout.getLineCount() - 1;
 
+            //Log.d("width", String.valueOf(tempLayout.getWidth()));
+            //Log.d("sub", chapter.subSequence(tempLayout.getLineStart(6), tempLayout.getLineEnd(6)).toString());
+
+            int selectedLine = 0;
+            while (selectedLine != lastLineIndex) {
+                int verticalOffset = usedHeight + pageHeight;
+
+                selectedLine = tempLayout.getLineForVertical(verticalOffset);
+
+                if (tempLayout.getLineBottom(selectedLine) > verticalOffset){
+                    selectedLine--;
+                }
+
+                usedHeight = tempLayout.getLineBottom(selectedLine);
+
+
+                endIndex = tempLayout.getLineEnd(selectedLine);
+                result.add(chapter.subSequence(startIndex, endIndex));
+                startIndex = endIndex;
+            }
+            /*
+            //int lastLineIndex = tempLayout.getLineForVertical(tempLayout.getHeight());
+
+            int currentLineIndex;
+            while ((currentLineIndex = tempLayout.getLineForVertical(pageHeight * currentPage)) != lastLineIndex) {
+                currentLineIndex--;
+                //tempLayout.getLineTop(currentLineIndex);
+
+                endIndex = tempLayout.getLineVisibleEnd(currentLineIndex);
+                result.add(chapter.subSequence(startIndex, endIndex));
+                startIndex = endIndex;
+
+                currentPage++;
+            }
+
+            result.add(chapter.subSequence(startIndex, chapter.length()));
+
+            /*
             for (int i = 0; i < lineCount; i++) {
-
                 if (i == lineCount - 1) {
                     //Последнюю страницу можно добавить и не запоненную :)
                     result.add(chapter.subSequence(startIndex, chapter.length()));
@@ -67,16 +108,18 @@ public class PageSplitter {
                 } else {
                     currentPage++;
 
-                    endIndex = tempLayout.getLineEnd(lastLine);
-                    result.add(chapter.subSequence(startIndex, endIndex));
-                    startIndex = tempLayout.getLineStart(lastLine + 1);
+                    lastLine--;
 
-                    if (Character.isSpaceChar(chapter.charAt(startIndex))) {
-                        startIndex++;  //МБ исключение?
-                    }
+                    //if (itsSpanned) {
+                    //    int countRelativeSpans = ((Spanned) chapter).getSpans(startIndex, tempLayout.getLineEnd(lastLine), RelativeSizeSpan.class).length;
+                    //    lastLine -= countRelativeSpans * 5;
+                    //}
+
+
                 }
+                */
 
-            }
+
         }
         return result;
     }

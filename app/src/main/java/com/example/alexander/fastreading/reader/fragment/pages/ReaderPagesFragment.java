@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
@@ -77,19 +78,44 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         return view;
     }
 
+    private int getBookOffset() {
+        int index = 0;
+        for (int i = 0; i < currentPage; i++){
+            index += pages.get(i).length();
+        }
+
+        return index;
+    }
+
+    private void setCurrentPage() {
+        int bookLength = 0;
+
+        if (bookDescription.getBookOffset() < pages.get(0).length()){
+            return;
+        }
+
+        for (CharSequence page : pages) {
+            bookLength += page.length();
+
+            if (bookLength < bookDescription.getBookOffset()){
+                currentPage++;
+            } else {
+                break;
+            }
+        }
+    }
+
     @Override
     public void onFileReadingPostExecute(List<CharSequence> response) {
-        PageSplitter textSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
-
-        pages = textSplitter.getPages(response);
-
-        if (bookDescription.getProgress() == 0f) {
-            currentPage = 0;
-        } else if (bookDescription.getProgress() == 100f){
-            currentPage = pages.size() - 1;
-        } else {
-            currentPage = (Math.round(pages.size() * (bookDescription.getProgress() / 100f ))) - 1;
+        if (response == null){
+            Toast.makeText(getActivity(), "File reading error", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        PageSplitter pageSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
+        pages = pageSplitter.getPages(response);
+
+        setCurrentPage();
 
         textView.setText(pages.get(currentPage));
 
@@ -177,15 +203,7 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
     public void onPause() {
         super.onPause();
 
-        float progress;
-        if (currentPage == 0){
-            progress = 0f;
-        } else if (currentPage == pages.size() - 1){
-            progress = 100f;
-        } else {
-            progress = (currentPage + 1) * 100f / (float) pages.size();
-        }
-        bookDescription.setProgress(progress);
+        bookDescription.setBookOffset(getBookOffset());
         BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao().updateBookDescription(bookDescription);
     }
 }

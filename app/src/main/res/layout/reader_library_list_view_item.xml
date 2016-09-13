@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/reader_library__list_view_item_progress_text_view"
-        android:text="@string/progress"
+        android:text="@string/bookOffset"
 
         android:textSize="12sp"
         android:textColor="@color/black"

@@ -9,7 +9,6 @@ import android.text.style.AlignmentSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 
-import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.entity.HtmlTag;
 import com.example.alexander.fastreading.reader.XmlHelper;
@@ -67,12 +66,22 @@ public class EpubBookDao implements BookDao {
         supportedNestedTags.add("br");
 
         headers = new HashMap<>();
+
         headers.put(HEAD_1_TAG, 1.5f);
         headers.put(HEAD_2_TAG, 1.4f);
         headers.put(HEAD_3_TAG, 1.3f);
         headers.put(HEAD_4_TAG, 1.2f);
         headers.put(HEAD_5_TAG, 1.1f);
         headers.put(HEAD_6_TAG, 1f);
+
+/*
+        headers.put(HEAD_1_TAG, 1f);
+        headers.put(HEAD_2_TAG, 1f);
+        headers.put(HEAD_3_TAG, 1f);
+        headers.put(HEAD_4_TAG, 1f);
+        headers.put(HEAD_5_TAG, 1f);
+        headers.put(HEAD_6_TAG, 1f);
+        */
     }
 
     private BookDescriptionDao bookDescriptionDao;
@@ -106,8 +115,6 @@ public class EpubBookDao implements BookDao {
 
         bookDescription.setFilePath(filePath);
         bookDescription.setType(FileHelper.getFileExtension(filePath));
-        bookDescription.setProgress(0f);
-        bookDescription.setFavorite(false);
 
         return bookDescription;
     }

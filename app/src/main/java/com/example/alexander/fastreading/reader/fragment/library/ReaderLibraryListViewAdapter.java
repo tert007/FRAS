@@ -45,8 +45,8 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
         textView.setText(currentBookDescription.getTitle());
 
         TextView progressTextView = (TextView) convertView.findViewById(R.id.reader_library__list_view_item_progress_result_text_view);
-        String progress = String.valueOf(currentBookDescription.getProgress()) + '%';
-        progressTextView.setText(progress);
+        //String progress = String.valueOf(Math.round(currentBookDescription.getBookOffset() * 100)) + '%';
+        //progressTextView.setText(progress);
 
         ImageView bookCoverImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_image_view);
 

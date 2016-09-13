@@ -39,5 +39,5 @@
     <string name="book_remove_message">Do you want to remove the book from your library?</string>
     <string name="remove">Remove</string>
     <string name="cancel">cancel</string>
-    <string name="progress">Progress</string>
+    <string name="bookOffset">Progress</string>
 </resources>

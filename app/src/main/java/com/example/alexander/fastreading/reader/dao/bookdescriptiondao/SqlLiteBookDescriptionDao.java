@@ -31,7 +31,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
         values.put(BookDescriptionDatabaseHelper.BOOK_FILE_PATH, bookDescription.getFilePath());
         values.put(BookDescriptionDatabaseHelper.BOOK_TYPE, bookDescription.getType());
         values.put(BookDescriptionDatabaseHelper.BOOK_FAVORITE_FLAG, bookDescription.itsFavorite());
-        values.put(BookDescriptionDatabaseHelper.BOOK_READING_PROGRESS, bookDescription.getProgress());
+        values.put(BookDescriptionDatabaseHelper.BOOK_OFFSET, bookDescription.getBookOffset());
         return values;
     }
 
@@ -86,7 +86,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
 
         bookDescription.setFilePath(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_FILE_PATH)));
         bookDescription.setType(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_TYPE)));
-        bookDescription.setProgress(cursor.getFloat(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_READING_PROGRESS)));
+        bookDescription.setBookOffset(cursor.getInt(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_OFFSET)));
 
         int favorite = cursor.getInt(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_FAVORITE_FLAG));
         boolean favoriteFlag = favorite == 1;
