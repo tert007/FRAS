@@ -73,15 +73,6 @@ public class EpubBookDao implements BookDao {
         headers.put(HEAD_4_TAG, 1.2f);
         headers.put(HEAD_5_TAG, 1.1f);
         headers.put(HEAD_6_TAG, 1f);
-
-/*
-        headers.put(HEAD_1_TAG, 1f);
-        headers.put(HEAD_2_TAG, 1f);
-        headers.put(HEAD_3_TAG, 1f);
-        headers.put(HEAD_4_TAG, 1f);
-        headers.put(HEAD_5_TAG, 1f);
-        headers.put(HEAD_6_TAG, 1f);
-        */
     }
 
     private BookDescriptionDao bookDescriptionDao;
