@@ -21,6 +21,8 @@ public class BookDaoFactory {
                 return new EpubBookDao(context);
             case FileHelper.TXT:
                 return new TxtBookDao(context);
+            case FileHelper.FB2:
+                return new Fb2BookDao(context);
         }
 
         return null;

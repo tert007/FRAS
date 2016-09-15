@@ -22,6 +22,7 @@ public class FileHelper {
 
     public static final String EPUB = "epub";
     public static final String TXT = "txt";
+    public static final String FB2 = "fb2";
 
     private static final List<String> supportedExtensions;
 
@@ -30,6 +31,7 @@ public class FileHelper {
 
         supportedExtensions.add(EPUB);
         supportedExtensions.add(TXT);
+        supportedExtensions.add(FB2);
     }
 
     public static List<File> readerFileFilter(File[] files){
