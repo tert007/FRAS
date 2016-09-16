@@ -18,7 +18,6 @@ public class BookChapter {
         this.title = title;
         this.epigraph = epigraph;
         this.content = content;
-        this.childChapters = new ArrayList<>();
     }
 
     public BookChapter(){
@@ -37,8 +36,12 @@ public class BookChapter {
         return childChapters;
     }
 
-    public void addChildChapter(BookChapter bookChapter) {
-        childChapters.add(bookChapter);
+    public void setChildChapters(List<BookChapter> childChapters) {
+        this.childChapters = childChapters;
+    }
+
+    public void addChildChapter(BookChapter childChapter) {
+        this.childChapters.add(childChapter);
     }
 
     public CharSequence getContent() {

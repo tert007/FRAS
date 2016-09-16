@@ -134,6 +134,7 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
                     setBookOffset();
                 }
             });
+
         }
     }
 

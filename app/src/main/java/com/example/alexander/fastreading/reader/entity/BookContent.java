@@ -3,7 +3,6 @@ package com.example.alexander.fastreading.reader.entity;
 import android.text.SpannableStringBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class BookContent {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         for (BookChapter chapter : chapters) {
-            builder.append(recursive(chapter));
+            builder.append(recursiveScroll(chapter));
         }
 
         return builder;
@@ -39,13 +38,41 @@ public class BookContent {
         List<CharSequence> result = new ArrayList<>();
 
         for (BookChapter chapter : chapters) {
-            result.add(recursive(chapter));
+            recursiveChapters(chapter, result);
         }
 
         return result;
     }
 
-    private CharSequence recursive(BookChapter bookChapter){
+    private void recursiveChapters(BookChapter bookChapter, List<CharSequence> result){
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        CharSequence title = bookChapter.getTitle();
+        CharSequence epigraph = bookChapter.getEpigraph();
+        CharSequence content = bookChapter.getContent();
+
+        if (title != null) {
+            builder.append(title);
+        }
+
+        if (epigraph != null) {
+            builder.append(epigraph);
+        }
+
+        if (content != null) {
+            builder.append(content);
+        }
+
+        result.add(builder);
+
+        for (BookChapter chapter : bookChapter.getChildChapters()) {
+            recursiveChapters(chapter, result);
+        }
+
+        //return result;
+    }
+
+    private CharSequence recursiveScroll(BookChapter bookChapter){
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         CharSequence title = bookChapter.getTitle();
@@ -65,7 +92,7 @@ public class BookContent {
         }
 
         for (BookChapter chapter : bookChapter.getChildChapters()) {
-            builder.append(recursive(chapter));
+            builder.append(recursiveScroll(chapter));
         }
 
         return builder;
