@@ -22,6 +22,7 @@ import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescr
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBo
     private ListView listView;
     private ReaderLibraryListViewAdapter listAdapter;
 
-    private List<BookDescription> bookDescriptions;
+    private List<BookDescription> bookDescriptions = Collections.emptyList();
 
     private TextView emptyLibraryTextView;
 

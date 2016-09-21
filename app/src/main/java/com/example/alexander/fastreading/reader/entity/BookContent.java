@@ -10,91 +10,33 @@ import java.util.List;
  */
 public class BookContent {
 
-    List<BookChapter> chapters;
+    List<BookChapter> bookChapterList;
 
-    public BookContent() {
-        this.chapters = new ArrayList<>();
+    public List<BookChapter> getBookChapterList() {
+        return bookChapterList;
     }
 
-    public List<BookChapter> getChapters() {
-        return chapters;
-    }
-
-    public void addBookChapter(BookChapter bookChapter) {
-        chapters.add(bookChapter);
+    public void setBookChapterList(List<BookChapter> bookChapterList) {
+        this.bookChapterList = bookChapterList;
     }
 
     public CharSequence getScrollContent() {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
 
-        for (BookChapter chapter : chapters) {
-            builder.append(recursiveScroll(chapter));
+        for (BookChapter chapter : bookChapterList) {
+            builder.append(chapter.getBookChapter());
         }
 
         return builder;
     }
 
     public List<CharSequence> getChaptersText() {
-        List<CharSequence> result = new ArrayList<>();
+        final List<CharSequence> result = new ArrayList<>(bookChapterList.size());
 
-        for (BookChapter chapter : chapters) {
-            recursiveChapters(chapter, result);
+        for (BookChapter chapter : bookChapterList) {
+            result.add(chapter.getBookChapter());
         }
 
         return result;
-    }
-
-    private void recursiveChapters(BookChapter bookChapter, List<CharSequence> result){
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-
-        CharSequence title = bookChapter.getTitle();
-        CharSequence epigraph = bookChapter.getEpigraph();
-        CharSequence content = bookChapter.getContent();
-
-        if (title != null) {
-            builder.append(title);
-        }
-
-        if (epigraph != null) {
-            builder.append(epigraph);
-        }
-
-        if (content != null) {
-            builder.append(content);
-        }
-
-        result.add(builder);
-
-        for (BookChapter chapter : bookChapter.getChildChapters()) {
-            recursiveChapters(chapter, result);
-        }
-
-        //return result;
-    }
-
-    private CharSequence recursiveScroll(BookChapter bookChapter){
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-
-        CharSequence title = bookChapter.getTitle();
-        CharSequence epigraph = bookChapter.getEpigraph();
-        CharSequence content = bookChapter.getContent();
-
-        if (title != null) {
-            builder.append(title);
-        }
-
-        if (epigraph != null) {
-            builder.append(epigraph);
-        }
-
-        if (content != null) {
-            builder.append(content);
-        }
-
-        for (BookChapter chapter : bookChapter.getChildChapters()) {
-            builder.append(recursiveScroll(chapter));
-        }
-
-        return builder;
     }
 }

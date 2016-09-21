@@ -5,6 +5,13 @@ import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.SpannedString;
+import android.text.StaticLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,12 +24,16 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookChapter;
+import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
+
+import java.util.List;
 
 /**
  * Created by Alexander on 04.08.2016.
  */
-public class ReaderScrollFragment extends Fragment implements ScrollFileReadingAsyncTaskResponse {
+public class ReaderScrollFragment extends Fragment implements ScrollFileReadingAsyncTaskResponse, ScrollChanged {
 
     private LockableScrollView lockableScrollView;
     private TextView textView;
@@ -35,6 +46,16 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
 
     private boolean itsFastReading;
     private BookDescription bookDescription;
+
+    DynamicTextSplitter dynamicTextSplitter;
+
+    int offset;
+    int distance;
+    int height;
+
+    int centerHeight;
+    int backDownloadLimit;
+    int forwardDownloadLimit;
 
     private volatile boolean itsScrolling;
     private volatile int speed = 10;
@@ -97,7 +118,7 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
             animator.cancel();
         }
 
-        bookDescription.setBookOffset(getBookOffset());
+        //bookDescription.setBookOffset(getBookOffset());
 
         BookDescriptionDaoFactory daoFactory = BookDescriptionDaoFactory.getDaoFactory(getActivity());
         BookDescriptionDao bookDescriptionDao = daoFactory.getBookDescriptionDao();
@@ -106,14 +127,23 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
     }
 
     @Override
-    public void fileReadingPostExecute(CharSequence text) {
-        if (text == null){
+    public void fileReadingPostExecute(final CharSequence result) {
+        if (result == null){
             /////FIX
             Toast.makeText(getActivity(), "File reading error", Toast.LENGTH_SHORT).show();
         } else {
-            textView.setText(text);
+            /*
+            height = lockableScrollView.getHeight();
+
+            centerHeight = height * 3;
+            backDownloadLimit = height;
+            forwardDownloadLimit = height * 8;
+            */
+            //dynamicTextSplitter = new DynamicTextSplitter(result.getScrollContent(), textView.getPaint(), lockableScrollView.getWidth(), lockableScrollView.getHeight());
+            textView.setText(result);
 
             lockableScrollView.setScrollingEnabled(!itsFastReading);
+            lockableScrollView.setScrollChanged(this);
 
             progressTextView.setVisibility(View.VISIBLE);
             progressResultTextView.setVisibility(View.VISIBLE);
@@ -125,17 +155,52 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
                 textView.setOnTouchListener(onTouchListener);
             }
 
-            length = text.length(); // fix
 
 
             textView.post(new Runnable() {
                 @Override
                 public void run() {
-                    setBookOffset();
+                    //lockableScrollView.scrollTo(0 , centerHeight);
+                    length = result.length();
+                    //setBookOffset();
                 }
             });
 
         }
+    }
+
+
+    @Override
+    public void onScrollChanged(int distance) {
+        /*
+        int verticalOffset = lockableScrollView.getScrollY();
+
+        int line = textView.getLayout().getLineForVertical(verticalOffset);
+        int offset = textView.getLayout().getLineStart(line);
+
+        if (distance > 0) {
+            this.offset += offset;
+        } else {
+            this.offset -= offset;
+        }
+
+        if (verticalOffset <= backDownloadLimit && distance < 0) {
+            Log.d("verticalOffset -", String.valueOf(verticalOffset));
+
+            lockableScrollView.scrollTo(0, backDownloadLimit - verticalOffset + centerHeight);
+            textView.setText(dynamicTextSplitter.getShortText(this.offset));
+
+            Log.d("after scrool -", String.valueOf(backDownloadLimit - verticalOffset + centerHeight));
+
+        } else if (verticalOffset >= forwardDownloadLimit && distance > 0) {
+            Log.d("verticalOffset +", String.valueOf(verticalOffset));
+
+            lockableScrollView.scrollTo(0, verticalOffset - forwardDownloadLimit + centerHeight);
+            textView.setText(dynamicTextSplitter.getShortText(this.offset));
+
+            Log.d("after scrool +", String.valueOf(forwardDownloadLimit - verticalOffset + centerHeight));
+        }
+        */
     }
 
     private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
@@ -168,8 +233,10 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
                                 animator.setTarget(lockableScrollView);
                                 animator.setIntValues(lockableScrollView.getScrollY(), textView.getBottom());
                                 animator.setPropertyName("scrollY");
-                                //long duration = ((length - lockableScrollView.getScrollY()) * 100) / speed;
-                                animator.setDuration(((length - lockableScrollView.getScrollY()) * 100) / speed);
+
+                                long duration = ((length - lockableScrollView.getScrollY()) * 100) / speed;
+
+                                animator.setDuration(duration);
                                 animator.setInterpolator(new LinearInterpolator());
                                 animator.addListener(new Animator.AnimatorListener() {
                                     @Override

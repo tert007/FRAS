@@ -2,7 +2,6 @@ package com.example.alexander.fastreading.reader.dao.bookdao;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -12,6 +11,7 @@ import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.text.style.SubscriptSpan;
 import android.text.style.SuperscriptSpan;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.alexander.fastreading.reader.FileHelper;
@@ -21,20 +21,20 @@ import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescr
 import com.example.alexander.fastreading.reader.entity.BookChapter;
 import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.entity.HtmlTag;
 
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Alexander on 14.09.2016.
@@ -69,8 +69,11 @@ public class Fb2BookDao implements BookDao {
 
     private BookDescriptionDao bookDescriptionDao;
 
+    private final String booksLibraryPath;
+
     public Fb2BookDao(Context context) {
         bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(context).getBookDescriptionDao();
+        booksLibraryPath = context.getApplicationInfo().dataDir + File.separator + "books";
     }
 
     @Override
@@ -96,8 +99,6 @@ public class Fb2BookDao implements BookDao {
     }
 
     private BookDescription updateBookDescriptionToFb2(BookDescription bookDescription) throws BookParserException  {
-        Log.d("parse start", "Start");
-
         Document bookDocument = XmlHelper.getXmlFromFile(new File(bookDescription.getFilePath()));
 
         Element description = (Element) bookDocument.getElementsByTagName("description").item(0);
@@ -111,9 +112,90 @@ public class Fb2BookDao implements BookDao {
         bookDescription.setLanguage(bookLanguage);
         bookDescription.setAuthor(authors.get(0)); ////////FIX
 
-        Log.d("parse end", "end");
+        bookDescription.setCoverImagePath(getCoverImagePath(bookDocument, bookDescription.getId()));
 
         return bookDescription;
+    }
+
+    private String getCoverImagePath(Document bookDocument, long id) throws BookParserException {
+        NodeList coverPageTags = bookDocument.getElementsByTagName("coverpage");
+        if (coverPageTags.getLength() == 0)
+            return null;
+
+        NodeList coverPageNestedTags = coverPageTags.item(0).getChildNodes();
+        int coverPageNestedTagsCount= coverPageNestedTags.getLength();
+
+        Element imageTag = null;
+
+        for (int i = 0; i < coverPageNestedTagsCount; i++) {
+            if (coverPageNestedTags.item(i).getNodeType() == Node.ELEMENT_NODE){
+                imageTag = (Element) coverPageNestedTags.item(i);
+                break;
+            }
+        }
+
+        if (imageTag == null)
+            return null;
+
+
+        NamedNodeMap imageAttributes = imageTag.getAttributes();
+        int imageAttributesCount = imageAttributes.getLength();
+
+        String coverId = null;
+
+        for (int i = 0; i < imageAttributesCount; i++) {
+            if (imageAttributes.item(i).getNodeName().indexOf("href") > 0) {
+                coverId = imageAttributes.item(i).getNodeValue();
+                break;
+            }
+        }
+
+        if (coverId == null)
+            return null;
+
+        if (coverId.charAt(0) == '#') {
+            coverId = coverId.substring(1, coverId.length());
+        }
+        //Найдено имя картнки-обложки (id)
+
+        NodeList binaryTags = bookDocument.getElementsByTagName("binary");
+        int binaryTagsCount = binaryTags.getLength();
+
+        Log.d("b-count", String.valueOf(binaryTagsCount));
+
+        for (int i = 0; i < binaryTagsCount; i++) {
+            Element binaryTag = (Element) binaryTags.item(i);
+
+            String attribute = binaryTag.getAttribute("id");
+            if (attribute != null){
+                if (attribute.equals(coverId)){
+                    try {
+                        String binary = binaryTag.getTextContent();
+                        //binary = binary.replace("\n", "");
+
+                        byte[] imageByte = Base64.decode(binary, Base64.DEFAULT);
+
+                        String imagePath = booksLibraryPath + File.separator + String.valueOf(id) + coverId;
+
+                        File imageFile = new File(imagePath);
+                        imageFile.getParentFile().mkdirs();
+
+                        imageFile.createNewFile();
+
+                        FileOutputStream fos = new FileOutputStream(imageFile);
+
+                        fos.write(imageByte);
+
+                        fos.close();
+
+                        return imagePath;
+                    } catch (IOException e) {
+                        throw new BookParserException(e);
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     private String getBookTitle(Element titleInfo) {
@@ -125,12 +207,14 @@ public class Fb2BookDao implements BookDao {
     }
 
     private List<String> getBookAuthors(Element titleInfo) {
-        NodeList authors = titleInfo.getElementsByTagName("author");
+        NodeList authorTags = titleInfo.getElementsByTagName("author");
+        int authorTagsCount = authorTags.getLength();
 
-        List<String> result = new ArrayList<>(authors.getLength());
+        List<String> result = new ArrayList<>(authorTags.getLength());
 
-        for (int i = 0; i < authors.getLength(); i++) {
-            NodeList authorsTags = authors.item(i).getChildNodes();
+        for (int i = 0; i < authorTagsCount; i++) {
+            NodeList authorNestedTags = authorTags.item(i).getChildNodes();
+            int authorNestedTagsCount = authorNestedTags.getLength();
 
             String firstName = null;
             String middleName = null;
@@ -138,21 +222,22 @@ public class Fb2BookDao implements BookDao {
 
             String nickName = null;
 
-            for (int j = 0; j < authorsTags.getLength(); j++) {
-                String nodeName = authorsTags.item(j).getNodeName();
+            for (int j = 0; j < authorNestedTagsCount; j++) {
+                Node currentAuthorNestedTag = authorNestedTags.item(j);
+                String nodeName = currentAuthorNestedTag.getNodeName();
 
                 switch (nodeName) {
                     case "first-name":
-                        firstName = authorsTags.item(j).getTextContent();
+                        firstName = currentAuthorNestedTag.getTextContent();
                         break;
                     case "middle-name":
-                        middleName = authorsTags.item(j).getTextContent();
+                        middleName = currentAuthorNestedTag.getTextContent();
                         break;
                     case "last-name":
-                        lastName = authorsTags.item(j).getTextContent();
+                        lastName = currentAuthorNestedTag.getTextContent();
                         break;
                     case "nickname":
-                        nickName = authorsTags.item(j).getTextContent();
+                        nickName = currentAuthorNestedTag.getTextContent();
                         break;
                 }
             }
@@ -173,64 +258,82 @@ public class Fb2BookDao implements BookDao {
     private BookContent parseBook(Document bookDocument) {
         BookContent bookContent = new BookContent();
 
+        int chaptersCount = bookDocument.getElementsByTagName("section").getLength();
+
         NodeList bodyTags = bookDocument.getElementsByTagName("body");
-        for (int i = 0; i < bodyTags.getLength(); i++) {
-            bookContent.addBookChapter(parseBody(bodyTags.item(i)));
+        int bodyTagsCount = bodyTags.getLength();
+
+        List<BookChapter> bookChapterList = new ArrayList<>(chaptersCount + bodyTagsCount);
+
+        for (int i = 0; i < bodyTagsCount; i++) {
+            NodeList sectionTags = ((Element) bodyTags.item(i)).getElementsByTagName("section");
+            int sectionTagsCount = sectionTags.getLength();
+
+            bookChapterList.add(parseBody(bodyTags.item(i)));
+
+            for (int j = 0; j < sectionTagsCount; j++) {
+                bookChapterList.add(parseSection(sectionTags.item(j)));
+            }
+
         }
+
+        bookContent.setBookChapterList(bookChapterList);
 
         return bookContent;
     }
 
     private BookChapter parseBody(Node body) {
-        NodeList bodyChildList = body.getChildNodes();
+        BookChapter bookChapter = new BookChapter();
 
-        BookChapter bookBodyChapter = new BookChapter();
+        NodeList bodyNestedTags = body.getChildNodes();
+        int bodyNestedTagsCount = bodyNestedTags.getLength();
 
-        for (int i = 0; i < bodyChildList.getLength(); i++) {
-            String tagName = bodyChildList.item(i).getNodeName();
+        for (int i = 0; i < bodyNestedTagsCount; i++) {
+            Node currentTag = bodyNestedTags.item(i);
+            String currentTagName = currentTag.getNodeName();
 
-            switch (tagName){
+            switch (currentTagName){
                 case TITLE_TAG:
-                    CharSequence title = parseTag(bodyChildList.item(i));
-                    bookBodyChapter.setTitle(title);
+                    CharSequence title = parseTag(currentTag);
+                    bookChapter.setTitle(title);
                     break;
                 case EPIGRAPH_TAG:
-                    CharSequence epigraph = parseTag(bodyChildList.item(i));
-                    bookBodyChapter.setEpigraph(epigraph);
+                    CharSequence epigraph = parseTag(currentTag);
+                    bookChapter.setContent(epigraph);
                     break;
-                case SECTION_TAG:
-                    bookBodyChapter.addChildChapter(parseSection(bodyChildList.item(i)));
-                    break;
+                //case SECTION_TAG:
+                    //parseSection(currentTag);
+                    //break;
             }
         }
 
-
-        return bookBodyChapter;
+        return bookChapter;
     }
 
     private BookChapter parseSection(Node section) {
-        NodeList nestedTags = section.getChildNodes();
+        NodeList sectionNestedTags = section.getChildNodes();
+        int sectionNestedTagsCount = sectionNestedTags.getLength();
 
         BookChapter bookChapter = new BookChapter();
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
-        for (int i = 0; i < nestedTags.getLength(); i++) {
-            String tagName = nestedTags.item(i).getNodeName();
+        for (int i = 0; i < sectionNestedTagsCount; i++) {
+            Node currentTag = sectionNestedTags.item(i);
+            String currentTagName = currentTag.getNodeName();
 
-            switch (tagName){
+            switch (currentTagName){
                 case TITLE_TAG:
-                    CharSequence title = parseTag(nestedTags.item(i));
+                    CharSequence title = parseTag(currentTag);
                     bookChapter.setTitle(title);
                     break;
                 case EPIGRAPH_TAG:
-                    CharSequence epigraph = parseTag(nestedTags.item(i));
-                    bookChapter.setEpigraph(epigraph);
+                    builder.append(parseTag(currentTag));
                     break;
                 case SECTION_TAG:
-                    bookChapter.addChildChapter(parseSection(nestedTags.item(i)));
+                    //
                     break;
                 default:
-                    builder.append(parseTag(nestedTags.item(i)));
+                    builder.append(parseTag(currentTag));
                     break;
             }
         }
@@ -244,9 +347,11 @@ public class Fb2BookDao implements BookDao {
 
     private CharSequence parseTag(Node tag) {
         if (tag.getNodeType() == Node.TEXT_NODE){
+            String tagNodeValue = tag.getNodeValue();
+
             //Если это самый внутренни тег и при этом не "левый" \n
-            if (!tag.getNodeValue().trim().isEmpty()){
-                return tag.getNodeValue();
+            if (!tagNodeValue.trim().isEmpty()){
+                return tagNodeValue;
             } else {
                 return "";
             }
@@ -255,7 +360,9 @@ public class Fb2BookDao implements BookDao {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         NodeList nestedTags = tag.getChildNodes();
-        for (int i = 0; i < nestedTags.getLength(); i++) {
+        int nestedTagsCount = nestedTags.getLength();
+
+        for (int i = 0; i < nestedTagsCount; i++) {
             builder.append(parseTag(nestedTags.item(i)));
         }
 
@@ -334,22 +441,45 @@ public class Fb2BookDao implements BookDao {
 
     @Override
     public void removeBook(BookDescription bookDescription) {
+        //String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
+        //FileHelper.removeDirectory(new File(directoryPath));
 
+        bookDescriptionDao.removeBookDescription(bookDescription.getId());
+    }
+
+    private void saveBook(BookContent bookContent) {
+        /*
+        Document xml = XmlHelper.convertBookToXml(htmlTagsList);
+
+        ///data/.../books/1
+        String bookDirectoryPath = booksLibraryPath + File.separator + bookDescription.getId();
+        File bookDirectory = new File(bookDirectoryPath);
+        bookDirectory.mkdir();
+
+        String saveFilePath = bookDirectoryPath + File.separator + "content.xml";
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(xml);
+        StreamResult streamResult =  new StreamResult(new File(saveFilePath));
+        transformer.transform(source, streamResult);
+        */
     }
 
     @Override
     public CharSequence getScrollText(BookDescription bookDescription) throws BookParserException {
-        Log.d("scroll start", "Start");
-
         Document bookDocument = XmlHelper.getXmlFromFile(new File(bookDescription.getFilePath()));
 
+        Log.d("MYTAG", "parse book start");
         BookContent bookContent = parseBook(bookDocument);
+        Log.d("MYTAG", "parse book finish");
 
+        Log.d("MYTAG", "getScrollContent start");
         CharSequence reslt = bookContent.getScrollContent();
-
-        Log.d("scroll end", "end");
+        Log.d("MYTAG", "getScrollContent finish");
 
         return reslt;
+
     }
 
     @Override

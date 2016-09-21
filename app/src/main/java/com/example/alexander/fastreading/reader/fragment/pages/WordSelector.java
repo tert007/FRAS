@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.UnderlineSpan;
 
@@ -27,15 +28,17 @@ public class WordSelector {
         this.matcher = pattern.matcher(page.toString());
     }
 
-
-    public CharSequence getNextSelectedWord(){
+    public WorldSelectorPage getNextSelectedWord(){
         if (matcher.find()){
             SpannableString spannableString;
 
-            spannableString = new SpannableString(page);
-            spannableString.setSpan(new ForegroundColorSpan(Color.BLUE), matcher.start(), matcher.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            int startIndex = matcher.start();
+            int endIndex = matcher.end();
 
-            return spannableString;
+            spannableString = new SpannableString(page);
+            spannableString.setSpan(new BackgroundColorSpan(Color.CYAN), startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            return new WorldSelectorPage(spannableString, endIndex - startIndex);
         }
 
         return null;

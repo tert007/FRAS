@@ -3,8 +3,11 @@ package com.example.alexander.fastreading.reader.fragment.scroll;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.dao.bookdao.Fb2BookDao;
+import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
@@ -38,16 +41,18 @@ public class ScrollFileReadingAsyncTask extends AsyncTask<BookDescription, Void,
         BookDescription bookDescription = params[0];
         try {
             BookDao bookDao = new BookDaoFactory(context).getBookDao(bookDescription.getType());
+
             return bookDao.getScrollText(bookDescription);
+
         } catch (BookParserException e){
             return null;
         }
     }
 
     @Override
-    protected void onPostExecute(CharSequence text) {
-        super.onPostExecute(text);
+    protected void onPostExecute(CharSequence result) {
+        super.onPostExecute(result);
         progressDialog.dismiss();
-        delegate.fileReadingPostExecute(text);
+        delegate.fileReadingPostExecute(result);
     }
 }

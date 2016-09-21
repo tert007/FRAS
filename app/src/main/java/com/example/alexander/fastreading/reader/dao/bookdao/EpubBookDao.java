@@ -43,7 +43,7 @@ public class EpubBookDao implements BookDao {
     private final static List<String> supportedNestedTags;
     private final static Map<String, Float> headers;
 
-    private final static Pattern xmlPattern = Pattern.compile("\\w+\\.x?html");
+    private final static Pattern xmlPattern = Pattern.compile(".+\\.x?html");
 
     public final static String HEAD_1_TAG = "h1";
     public final static String HEAD_2_TAG = "h2";
@@ -200,6 +200,11 @@ public class EpubBookDao implements BookDao {
 
             if (matcher.find()){
                 contentPath = matcher.group();
+                int index;
+                if ((index = contentPath.lastIndexOf('/')) > -1){
+                    contentPath = contentPath.substring(index + 1);
+                }
+
                 if (!bookChaptersContentPath.contains(contentPath)){
                     bookChaptersContentPath.add(contentPath);
                 }

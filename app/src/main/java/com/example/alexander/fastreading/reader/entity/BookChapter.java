@@ -1,5 +1,7 @@
 package com.example.alexander.fastreading.reader.entity;
 
+import android.text.SpannableStringBuilder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,19 +11,15 @@ import java.util.List;
  */
 public class BookChapter {
     private CharSequence title;
-    private CharSequence epigraph;
     private CharSequence content;
 
-    private List<BookChapter> childChapters;
+    public BookChapter() {
 
-    public BookChapter(CharSequence title, CharSequence epigraph, CharSequence content) {
-        this.title = title;
-        this.epigraph = epigraph;
-        this.content = content;
     }
 
-    public BookChapter(){
-        this.childChapters = new ArrayList<>();
+    public BookChapter(CharSequence title, CharSequence content) {
+        this.title = title;
+        this.content = content;
     }
 
     public CharSequence getTitle() {
@@ -32,18 +30,6 @@ public class BookChapter {
         this.title = title;
     }
 
-    public List<BookChapter> getChildChapters() {
-        return childChapters;
-    }
-
-    public void setChildChapters(List<BookChapter> childChapters) {
-        this.childChapters = childChapters;
-    }
-
-    public void addChildChapter(BookChapter childChapter) {
-        this.childChapters.add(childChapter);
-    }
-
     public CharSequence getContent() {
         return content;
     }
@@ -52,11 +38,17 @@ public class BookChapter {
         this.content = content;
     }
 
-    public CharSequence getEpigraph() {
-        return epigraph;
-    }
+    public CharSequence getBookChapter() {
+        final SpannableStringBuilder builder = new SpannableStringBuilder();
 
-    public void setEpigraph(CharSequence epigraph) {
-        this.epigraph = epigraph;
+        if (title != null) {
+            builder.append(title);
+        }
+
+        if (content != null) {
+            builder.append(content);
+        }
+
+        return builder;
     }
 }

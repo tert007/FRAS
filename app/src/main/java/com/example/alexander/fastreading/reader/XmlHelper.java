@@ -1,6 +1,11 @@
 package com.example.alexander.fastreading.reader;
 
+import android.text.Spannable;
+import android.text.Spanned;
+
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.BookChapter;
+import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.HtmlTag;
 
 import org.w3c.dom.Document;
@@ -16,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -64,6 +70,69 @@ public class XmlHelper {
                 result.append(line.trim());
             return result.toString();
         } catch (IOException e) {
+            throw new BookParserException(e);
+        }
+    }
+
+    public static Document convertBookToXml(BookContent bookContent) throws BookParserException {
+        //goToXmlParser
+        try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+            // root elements
+            Document document = docBuilder.newDocument();
+
+            Element rootElement = document.createElement("book");
+            document.appendChild(rootElement);
+
+            List<BookChapter> chapters = bookContent.getBookChapterList();
+            int chaptersCount = chapters.size();
+
+            for (int i = 0; i < chaptersCount; i++) {
+                Element chapterElement = document.createElement("chapter");
+                rootElement.appendChild(chapterElement);
+
+                Spanned title = (Spanned) chapters.get(i).getTitle();
+                Spanned content = (Spanned) chapters.get(i).getContent();
+
+                if (title != null) {
+
+                    Element titleElement = document.createElement("title");
+                    titleElement.setTextContent(title.toString());
+
+                    chapterElement.appendChild(titleElement);
+
+                    Object[] spans = title.getSpans(0, title.length(), Objects.class);
+                    int spansCount = spans.length;
+
+                    if (spansCount > 0){
+                        Element titleElementSpans = document.createElement("title-span");
+
+                        for (int j = 0; j < spansCount; j++) {
+                            Object a = (spans[j].getClass());
+                        }
+                    }
+
+                }
+
+                if (content != null) {
+                    Element contentElement = document.createElement("content");
+                    contentElement.setTextContent(content.toString());
+                }
+
+
+
+
+
+                //chapterElement.appendChild(tagElement);
+
+            }
+
+
+            return document;
+
+        } catch (Exception e){
             throw new BookParserException(e);
         }
     }

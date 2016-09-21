@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader.fragment.pages;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,7 +41,15 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
 
     //Will be recreated
     private boolean itsStarted;
-    private int delay = 150;
+
+    private int widthDevidedByTree;
+    private int width;
+
+    private static final int defaultPageChangeDelay = 200;
+
+    private static final int wordLength = 6;
+    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 650, 700, 750, 800, 850, 900, 950, 1000};
+    private int currentSpeedIndex;
 
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_pages_fragment, container, false);
@@ -60,6 +69,7 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         if (itsFastReading) {
             speedTextView.setVisibility(View.VISIBLE);
             speedResultTextView.setVisibility(View.VISIBLE);
+            speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
             textView.setOnTouchListener(fastReadingOnTouchListener);
         } else {
             speedTextView.setVisibility(View.GONE);
@@ -79,16 +89,23 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
     }
 
     private int getBookOffset() {
+        /*
         int index = 0;
         for (int i = 0; i < currentPage; i++){
             index += pages.get(i).length();
         }
 
         return index;
+        */
+        return 0;
     }
 
     private void setCurrentPage() {
-        int bookLength = 0;
+        /*
+        if (pages.isEmpty())
+            return;
+
+        long bookLength = 0;
 
         if (bookDescription.getBookOffset() < pages.get(0).length()){
             return;
@@ -103,6 +120,7 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
                 break;
             }
         }
+        */
     }
 
     @Override
@@ -118,6 +136,9 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         setCurrentPage();
 
         textView.setText(pages.get(currentPage));
+
+        width = textView.getWidth();
+        widthDevidedByTree = width / 3;
 
         currentPageTextView.setVisibility(View.VISIBLE);
         currentPageResultTextView.setVisibility(View.VISIBLE);
@@ -138,19 +159,24 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         @Override
         public void run() {
             if (itsStarted){
-                CharSequence str;
+                WorldSelectorPage worldSelectorPage;
 
-                if ((str = wordSelector.getNextSelectedWord()) != null){
-                    textView.setText(str);
-                    textView.postDelayed(this, delay);
+                if ((worldSelectorPage = wordSelector.getNextSelectedWord()) != null){
+                    textView.setText(worldSelectorPage.getPage());
+
+                    //Log.d("LENGTH", String.valueOf(worldSelectorPage.getSelectedWordLength()));
+                    double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (speed[currentSpeedIndex] * wordLength / 60);
+                    //Log.d("SPEED", String.valueOf(delay));
+
+                    textView.postDelayed(this, (int) delay);
                 } else {
                     if (currentPage <  pages.size() - 1){
                         currentPage++;
                         wordSelector = new WordSelector(pages.get(currentPage));
-                        textView.postDelayed(this, delay);
 
-                        String currentPageText = String.valueOf(currentPage + 1) + '/' + pages.size();
-                        currentPageResultTextView.setText(currentPageText);
+                        textView.postDelayed(this, defaultPageChangeDelay);
+
+                        currentPageResultTextView.setText(getCurrentPage());
                     } else {
                         itsStarted = false;
                     }
@@ -188,10 +214,24 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                itsStarted = !itsStarted;
+                int x = (int) event.getX();
 
-                if (itsStarted) {
-                    textView.post(wordSelectorThread);
+                if (x < widthDevidedByTree) {
+                    if (currentSpeedIndex > 0){
+                        currentSpeedIndex--;
+                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                    }
+                } else if ( widthDevidedByTree <= x && x <= width - widthDevidedByTree){
+                    itsStarted = !itsStarted;
+
+                    if (itsStarted) {
+                        textView.post(wordSelectorThread);
+                    }
+                } else {
+                    if (currentSpeedIndex < speed.length - 1){
+                        currentSpeedIndex++;
+                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                    }
                 }
             }
 

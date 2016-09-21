@@ -65,7 +65,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
 
-        if (bookDescription.getType().equals(FileHelper.EPUB)) {
+        if (bookDescription.getType().equals(FileHelper.EPUB) || bookDescription.getType().equals(FileHelper.FB2) ) {
 
             Bitmap bookCoverBitmap = BitmapFactory.decodeFile(bookDescription.getCoverImagePath());
 
