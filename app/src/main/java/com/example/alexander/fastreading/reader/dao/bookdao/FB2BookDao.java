@@ -81,6 +81,9 @@ public class Fb2BookDao implements BookDao {
         BookDescription bookDescription = createBookDescription(filePath);
 
         long id = bookDescriptionDao.addBookDescription(bookDescription);
+        if (id == -1)
+            return null;
+
         bookDescription.setId(id);
 
         bookDescription = updateBookDescriptionToFb2(bookDescription);
@@ -441,9 +444,6 @@ public class Fb2BookDao implements BookDao {
 
     @Override
     public void removeBook(BookDescription bookDescription) {
-        //String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
-        //FileHelper.removeDirectory(new File(directoryPath));
-
         bookDescriptionDao.removeBookDescription(bookDescription.getId());
     }
 
@@ -470,15 +470,9 @@ public class Fb2BookDao implements BookDao {
     public CharSequence getScrollText(BookDescription bookDescription) throws BookParserException {
         Document bookDocument = XmlHelper.getXmlFromFile(new File(bookDescription.getFilePath()));
 
-        Log.d("MYTAG", "parse book start");
         BookContent bookContent = parseBook(bookDocument);
-        Log.d("MYTAG", "parse book finish");
 
-        Log.d("MYTAG", "getScrollContent start");
-        CharSequence reslt = bookContent.getScrollContent();
-        Log.d("MYTAG", "getScrollContent finish");
-
-        return reslt;
+        return bookContent.getScrollContent();
 
     }
 

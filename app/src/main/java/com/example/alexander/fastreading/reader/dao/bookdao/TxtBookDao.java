@@ -27,6 +27,9 @@ public class TxtBookDao implements BookDao {
         BookDescription bookDescription = createBookDescription(filePath);
 
         long id = bookDescriptionDao.addBookDescription(bookDescription);
+        if (id == -1)
+            return null;
+
         bookDescription.setId(id);
 
         return bookDescription;

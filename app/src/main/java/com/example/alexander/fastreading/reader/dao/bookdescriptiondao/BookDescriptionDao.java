@@ -9,10 +9,13 @@ import java.util.List;
  * Created by Alexander on 05.09.2016.
  */
 public interface BookDescriptionDao {
-    long addBookDescription(BookDescription bookDescription) throws BookParserException;
-    BookDescription findBookDescription(long id) throws BookParserException;
+    long addBookDescription(BookDescription bookDescription);
+
+    BookDescription findBookDescription(long id);
+    BookDescription findBookDescription(String filePath);
+
     void removeBookDescription(long id);
     void updateBookDescription(BookDescription newValue);
 
-    List<BookDescription> getBookDescriptions() throws BookParserException;
+    List<BookDescription> getBookDescriptions();
 }

@@ -25,4 +25,7 @@
     <string name="remove">Удалить</string>
     <string name="cancel">Отмена</string>
     <string name="bookOffset">Прогресс</string>
+    <string name="book_in_library">Книга уже в бибилотеке</string>
+    <string name="open_book">Открыть книгу</string>
+    <string name="library_was_changed">Библиотека была изменена</string>
 </resources>

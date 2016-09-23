@@ -36,13 +36,23 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
     }
 
     @Override
-    public long addBookDescription(BookDescription bookDescription) throws BookParserException {
+    public long addBookDescription(BookDescription bookDescription) {
         return database.insert(BookDescriptionDatabaseHelper.BOOK_TABLE, null, getValues(bookDescription));
     }
 
     @Override
-    public BookDescription findBookDescription(long id) throws BookParserException {
+    public BookDescription findBookDescription(long id) {
         Cursor cursor = database.rawQuery("SELECT * FROM " + BookDescriptionDatabaseHelper.BOOK_TABLE + " WHERE " + BaseColumns._ID + "='" + id + "'" , null);
+        if (cursor.moveToFirst()) {
+            return getBookDescription(cursor);
+        }
+
+        return null;
+    }
+
+    @Override
+    public BookDescription findBookDescription(String filePath) {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + BookDescriptionDatabaseHelper.BOOK_TABLE + " WHERE " + BookDescriptionDatabaseHelper.BOOK_FILE_PATH + "='" + filePath + "'" , null);
         if (cursor.moveToFirst()) {
             return getBookDescription(cursor);
         }
@@ -63,7 +73,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
     @Override
     public List<BookDescription> getBookDescriptions() {
         Cursor cursor = database.query(BookDescriptionDatabaseHelper.BOOK_TABLE, BookDescriptionDatabaseHelper.BOOK_TABLE_COLUMNS, null, null, null, null, BookDescriptionDatabaseHelper.BOOK_TITLE);
-        List<BookDescription> bookDescriptions = new ArrayList<>();
+        List<BookDescription> bookDescriptions = new ArrayList<>(cursor.getCount());
 
         if (cursor.moveToFirst()) {
             do {

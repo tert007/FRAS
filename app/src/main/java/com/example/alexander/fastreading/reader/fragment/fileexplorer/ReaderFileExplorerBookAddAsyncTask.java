@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
@@ -14,14 +16,14 @@ import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 /**
  * Created by Alexander on 04.09.2016.
  */
-    public class ReaderBookAddAsyncTask extends AsyncTask<String, Void, BookDescription> {
+    public class ReaderFileExplorerBookAddAsyncTask extends AsyncTask<String, Void, BookDescription> {
 
         public ReaderFileExplorerBookAddResponse delegate;
 
         private Context context;
         private ProgressDialog progressDialog;
 
-        public ReaderBookAddAsyncTask(Context context) {
+        public ReaderFileExplorerBookAddAsyncTask(Context context) {
             this.context = context;
         }
 

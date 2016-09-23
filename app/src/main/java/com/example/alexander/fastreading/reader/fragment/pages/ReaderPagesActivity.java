@@ -1,8 +1,10 @@
 package com.example.alexander.fastreading.reader.fragment.pages;
 
-import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,13 +17,15 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryOnBookClickResponse;
+import com.example.alexander.fastreading.reader.fragment.library.ReaderLibraryRemoveBookOnClickResponse;
 
 import java.util.List;
 
 /**
- * Created by Alexander on 19.08.2016.
+ * Created by Alexander on 23.09.2016.
  */
-public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyncTaskResponse {
+public class ReaderPagesActivity extends AppCompatActivity implements PagesFileReaderAsyncTaskResponse {
 
     private TextView textView;
     private TextView speedTextView;
@@ -46,32 +50,39 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
     private static final int wordLength = 6;
 
     private int currentSpeedIndex;
-    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 650, 700, 750, 800, 850, 900, 950, 1000};
+    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000};
 
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reader_pages_fragment, container, false);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.reader_pages_fragment);
 
-        textView = (TextView) view.findViewById(R.id.reader_pages_text_view);
+        Intent intent = getIntent();
+
+        bookDescription = intent.getParcelableExtra("book_description");
+        itsFastReading = intent.getIntExtra("fast_reading", 0) == 1;
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setTitle(bookDescription.getTitle());
+            setSupportActionBar(toolbar);
+        }
+
+        textView = (TextView) findViewById(R.id.reader_pages_text_view);
         textView.setTextSize(SettingsManager.getReaderTextSize());
 
-        speedTextView = (TextView) view.findViewById(R.id.reader_pages_speed_text_view);
-        speedResultTextView = (TextView) view.findViewById(R.id.reader_pages_speed_result_text_view);
+        speedTextView = (TextView) findViewById(R.id.reader_pages_speed_text_view);
+        speedResultTextView = (TextView) findViewById(R.id.reader_pages_speed_result_text_view);
 
-        currentPageTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_text_view);
-        currentPageResultTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_result_text_view);
-
-        bookDescription = (BookDescription) getArguments().getParcelable("book_description");
-        itsFastReading = getArguments().getInt("fast_reading") == 1;
-
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
+        currentPageTextView = (TextView) findViewById(R.id.reader_pages_current_page_text_view);
+        currentPageResultTextView = (TextView) findViewById(R.id.reader_pages_current_page_result_text_view);
 
         PagesFileReadingAsyncTask pagesFileReadingAsyncTask;
 
-        pagesFileReadingAsyncTask = new PagesFileReadingAsyncTask(getActivity());
+        pagesFileReadingAsyncTask = new PagesFileReadingAsyncTask(this);
         pagesFileReadingAsyncTask.delegate = this;
         pagesFileReadingAsyncTask.execute(bookDescription);
-
-        return view;
     }
 
     private int getBookOffset() {
@@ -104,12 +115,12 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
     @Override
     public void onFileReadingPostExecute(List<CharSequence> response) {
         if (response == null){
-            Toast.makeText(getActivity(), "File reading error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "File reading error", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (response.isEmpty()) {
-            Toast.makeText(getActivity(), "Empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -241,6 +252,6 @@ public class ReaderPagesFragment extends Fragment implements PagesFileReaderAsyn
         super.onPause();
 
         bookDescription.setBookOffset(getBookOffset());
-        BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao().updateBookDescription(bookDescription);
+        BookDescriptionDaoFactory.getDaoFactory(this).getBookDescriptionDao().updateBookDescription(bookDescription);
     }
 }

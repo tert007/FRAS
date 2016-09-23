@@ -149,7 +149,7 @@
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/reader_book_description_scroll_reading_button"

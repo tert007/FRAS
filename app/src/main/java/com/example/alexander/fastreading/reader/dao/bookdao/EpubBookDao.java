@@ -93,6 +93,9 @@ public class EpubBookDao implements BookDao {
         BookDescription bookDescription = createBookDescription(filePath);
 
         long id = bookDescriptionDao.addBookDescription(bookDescription);
+        if (id == -1)
+            return null;
+
         bookDescription.setId(id);
 
         bookDescription = updateBookDescriptionToEpub(bookDescription);

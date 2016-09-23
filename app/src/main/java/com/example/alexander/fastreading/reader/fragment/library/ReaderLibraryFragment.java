@@ -21,6 +21,7 @@ import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -45,36 +46,50 @@ public class ReaderLibraryFragment extends Fragment implements ReaderLibraryOnBo
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.library));
 
-        try {
-            BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
-            bookDescriptions = bookDescriptionDao.getBookDescriptions();
+        BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
+        bookDescriptions = bookDescriptionDao.getBookDescriptions();
 
-            emptyLibraryTextView = (TextView) view.findViewById(R.id.reader_library_empty_library_text_view);
-            listView = (ListView) view.findViewById(R.id.reader_library_list_view);
+        ////Pomoika
+        BookDaoFactory bookDaoFactory = new BookDaoFactory(getActivity());
+        ////
 
-            listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, bookDescriptions);
-            listAdapter.bookClickDelegate = this;
-            listAdapter.removeBookDelegate = this;
+        boolean bookLibraryWasChanged = false;
 
-            if (bookDescriptions.isEmpty()){
-                emptyLibraryTextView.setVisibility(View.VISIBLE);
-                listView.setEmptyView(emptyLibraryTextView);
-            } else {
-                emptyLibraryTextView.setVisibility(View.GONE);
-                listView.setAdapter(listAdapter);
+        for (int i = 0; i < bookDescriptions.size(); i++) {
+            if (! (new File(bookDescriptions.get(i).getFilePath())).exists()) {
+                bookDaoFactory.getBookDao(bookDescriptions.get(i).getType()).removeBook(bookDescriptions.get(i));
+                bookDescriptions.remove(i);
+
+                bookLibraryWasChanged = true;
             }
-
-            FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.reader_library_floating_button);
-            floatingActionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    addBookDelegate.onFloatButtonClick();
-                }
-            });
-
-        } catch (BookParserException e){
-            Snackbar.make(view, "Error", Snackbar.LENGTH_SHORT).show();
         }
+
+        if (bookLibraryWasChanged) {
+            Snackbar.make(view, getString(R.string.library_was_changed), Snackbar.LENGTH_LONG).show();
+        }
+
+        emptyLibraryTextView = (TextView) view.findViewById(R.id.reader_library_empty_library_text_view);
+        listView = (ListView) view.findViewById(R.id.reader_library_list_view);
+
+        listAdapter = new ReaderLibraryListViewAdapter(getActivity(), R.layout.reader_library_list_view_item, bookDescriptions);
+        listAdapter.bookClickDelegate = this;
+        listAdapter.removeBookDelegate = this;
+
+        if (bookDescriptions.isEmpty()){
+            emptyLibraryTextView.setVisibility(View.VISIBLE);
+            listView.setEmptyView(emptyLibraryTextView);
+        } else {
+            emptyLibraryTextView.setVisibility(View.GONE);
+            listView.setAdapter(listAdapter);
+        }
+
+        FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.reader_library_floating_button);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addBookDelegate.onFloatButtonClick();
+            }
+        });
 
         return view;
     }

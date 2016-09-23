@@ -26,7 +26,8 @@ import com.example.alexander.fastreading.reader.fragment.pages.ReaderPagesFragme
 import com.example.alexander.fastreading.reader.fragment.scroll.ReaderScrollFragment;
 
 
-public class ReaderActivity extends AppCompatActivity implements ReaderReadBookResponse, ReaderLibraryFloatButtonOnClickResponse,
+public class ReaderActivity extends AppCompatActivity implements
+        ReaderReadBookResponse, ReaderLibraryFloatButtonOnClickResponse,
         ReaderLibraryOnBookClickResponse, ReaderFileExplorerBookAddResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
@@ -139,6 +140,8 @@ public class ReaderActivity extends AppCompatActivity implements ReaderReadBookR
 
     @Override
     public void bookAddPostExecute(BookDescription bookDescription) {
+
+
         bookDescriptionFragment = new ReaderBookDescriptionFragment();
         bookDescriptionFragment.delegate = this;
         //bookDescriptionFragment.pagesDelegate = this;
@@ -156,7 +159,7 @@ public class ReaderActivity extends AppCompatActivity implements ReaderReadBookR
 
     @Override
     public void onReadBookClick(BookDescription bookDescription, boolean itsScrollReading, boolean itsFastReading) {
-        Fragment fragment = null;
+        Fragment fragment;
 
         if (itsScrollReading) {
             fragment = new ReaderScrollFragment();

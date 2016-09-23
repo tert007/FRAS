@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader.fragment.fileexplorer;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.io.File;
@@ -19,8 +22,8 @@ import java.util.List;
 /**
  * Created by Alexander on 03.08.2016.
  */
-public class ReaderFileExplorerFileExplorerFragment extends Fragment implements ReaderFileExplorerOnFileClickResponse,
-        ReaderFileExplorerBookAddResponse {
+public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
+        ReaderFileExplorerOnFileClickResponse, ReaderFileExplorerBookAddResponse {
 
     public ReaderFileExplorerBookAddResponse delegate;
 
@@ -47,6 +50,7 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements 
             return true;
         } else {
             path = path.getParentFile();
+
             update();
 
             return false;
@@ -59,10 +63,23 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements 
             path = file;
             update();
         } else {
-            ReaderBookAddAsyncTask readerBookAddAsyncTask = new ReaderBookAddAsyncTask(getActivity());
-            readerBookAddAsyncTask.delegate = this;
 
-            readerBookAddAsyncTask.execute(file.getPath());
+            BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
+            final BookDescription bookDescription = bookDescriptionDao.findBookDescription(file.getPath());
+
+            if (bookDescription == null) {
+                ReaderFileExplorerBookAddAsyncTask bookAddAsyncTask = new ReaderFileExplorerBookAddAsyncTask(getActivity());
+                bookAddAsyncTask.delegate = this;
+
+                bookAddAsyncTask.execute(file.getPath());
+            } else {
+                Snackbar.make(getView(), getString(R.string.book_in_library), Snackbar.LENGTH_LONG).setAction(getString(R.string.open_book), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        delegate.bookAddPostExecute(bookDescription);
+                    }
+                }).show();
+            }
         }
     }
 

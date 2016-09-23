@@ -29,15 +29,18 @@
 
     <string name="file_path">File path</string>
     <string name="speed">Speed</string>
-    <string name="file_opening_message">File opening</string>
+    <string name="file_opening_message">File\'s opening</string>
     <string name="text_size">Text size</string>
     <string name="fast_reading">Fast readin</string>
-    <string name="library_is_empty">Your library is free now :(</string>
+    <string name="library_is_empty">Your library is empty now :(</string>
     <string name="add_book_message">Book\'s adding to library</string>
     <string name="library">Library</string>
     <string name="page">Page</string>
     <string name="book_remove_message">Do you want to remove the book from your library?</string>
     <string name="remove">Remove</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">Cancel</string>
     <string name="bookOffset">Progress</string>
+    <string name="book_in_library">The book in the library already</string>
+    <string name="open_book">Open the book</string>
+    <string name="library_was_changed">The library was changed</string>
 </resources>

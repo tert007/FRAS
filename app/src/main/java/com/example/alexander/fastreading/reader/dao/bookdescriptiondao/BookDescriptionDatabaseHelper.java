@@ -11,9 +11,7 @@ import android.provider.BaseColumns;
 public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME = "books_database.db";
-    private static final int DATABASE_VERSION = 2;
-
-    ////////////////////////////////////////////////////
+    private static final int DATABASE_VERSION = 1;
 
     public static final String BOOK_TABLE = "books";
 
