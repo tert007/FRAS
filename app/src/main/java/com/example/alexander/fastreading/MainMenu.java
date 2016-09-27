@@ -1,28 +1,15 @@
 package com.example.alexander.fastreading;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.text.style.AlignmentSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.example.alexander.fastreading.reader.ReaderActivity;
+import com.example.alexander.fastreading.reader.library.LibraryActivity;
 import com.example.alexander.fastreading.trainingmenu.TrainingMenuActivity;
 
 public class MainMenu extends AppCompatActivity implements View.OnClickListener {
@@ -66,7 +53,7 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
                 startActivity(new Intent(this, TrainingMenuActivity.class));
                 break;
             case R.id.main_menu_start_reader_text_view :
-                startActivity(new Intent(this, ReaderActivity.class));
+                startActivity(new Intent(this, LibraryActivity.class));
                 break;
         }
     }

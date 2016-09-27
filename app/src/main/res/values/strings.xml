@@ -25,6 +25,16 @@
         <item>16</item>
         <item>18</item>
         <item>20</item>
+        <item>22</item>
+        <item>24</item>
+        <item>26</item>
+    </string-array>
+
+    <string name="text_size_default_value" translatable="false">12</string>
+
+    <string-array name="reading_type">
+        <item>Reading</item>
+        <item>Fast reading</item>
     </string-array>
 
     <string name="file_path">File path</string>
@@ -43,4 +53,6 @@
     <string name="book_in_library">The book in the library already</string>
     <string name="open_book">Open the book</string>
     <string name="library_was_changed">The library was changed</string>
+    <string name="change_text_size">Change the text size</string>
+    <string name="reading_type">Chose type of reading</string>
 </resources>

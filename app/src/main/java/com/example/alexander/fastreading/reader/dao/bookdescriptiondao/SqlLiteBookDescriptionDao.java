@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
@@ -62,7 +63,9 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
 
     @Override
     public void updateBookDescription(BookDescription newValue) {
-        database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "=" + newValue.getId(), null);
+        int a = database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "='" + newValue.getId() + "'", null);
+        Log.d("up_count", String.valueOf(a));
+        Log.d("id", String.valueOf(newValue.getId()));
     }
 
     @Override

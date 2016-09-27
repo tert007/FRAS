@@ -34,7 +34,10 @@
             android:name="com.example.alexander.fastreading.trainingmenu.TrainingMenuActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".reader.ReaderActivity"
+        <activity android:name=".reader.library.LibraryActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".reader.reader.ReaderActivity"
             android:screenOrientation="portrait"/>
     </application>
 

@@ -138,76 +138,12 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:baselineAligned="false"
-        android:layout_marginTop="@dimen/default_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <Button
+        android:id="@+id/reader_book_description_pages_reading_button"
 
-        <RelativeLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
+        android:text="Читать"
 
-            <Button
-                android:id="@+id/reader_book_description_scroll_reading_button"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:text="Чтение"
-
-                android:layout_width="125dp"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/reader_book_description_fast_scroll_reading_button"
-
-                android:text="Быстрое"
-
-                android:layout_below="@id/reader_book_description_scroll_reading_button"
-
-                android:layout_alignStart="@id/reader_book_description_scroll_reading_button"
-                android:layout_alignLeft="@id/reader_book_description_scroll_reading_button"
-
-                android:layout_marginTop="@dimen/default_margin"
-
-                android:layout_width="125dp"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/reader_book_description_pages_reading_button"
-                android:layout_centerHorizontal="true"
-
-                android:text="Страницы"
-
-                android:layout_width="125dp"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/reader_book_description_fast_pages_reading_button"
-
-                android:text="Бегунок"
-
-                android:layout_below="@id/reader_book_description_pages_reading_button"
-
-                android:layout_alignStart="@id/reader_book_description_pages_reading_button"
-                android:layout_alignLeft="@id/reader_book_description_pages_reading_button"
-
-                android:layout_marginTop="@dimen/default_margin"
-
-                android:layout_width="125dp"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
-    </LinearLayout>
+        android:layout_width="125dp"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

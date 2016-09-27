@@ -47,10 +47,11 @@ public class SettingsManager {
         return shulteTableType;
     }
 
+    /*
     public static void setReaderTextSize(int textSize) {
         sharedPreferences.edit().putInt(READER_TEXT_SIZE_KEY, textSize).apply();
         readerTextSize = textSize;
-    }
+    }*/
 
     public static int getReaderTextSize() {
         if (readerTextSize == 0){
@@ -59,6 +60,7 @@ public class SettingsManager {
 
         return readerTextSize;
     }
+
 
     public static int getGuessNumberComplexity() {
         if (guessNumberComplexity == 0){
