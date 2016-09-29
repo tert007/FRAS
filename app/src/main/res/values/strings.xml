@@ -55,4 +55,8 @@
     <string name="library_was_changed">The library was changed</string>
     <string name="change_text_size">Change the text size</string>
     <string name="reading_type">Chose type of reading</string>
+    <string name="choose_reading_mode">Choose a reading mode</string>
+    <string name="exit">Exit</string>
+    <string name="exit_message">Do you want to exit?</string>
+    <string name="file_reading_error">File reading error</string>
 </resources>

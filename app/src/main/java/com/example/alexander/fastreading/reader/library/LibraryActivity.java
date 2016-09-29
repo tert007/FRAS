@@ -51,14 +51,6 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
                 commit();
     }
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.reader_toolbar, menu);  //Fix
-        return true;
-    }
-    */
-
     @Override
     public void onBackPressed() {
         if (currentFragmentFragmentState == FragmentState.LIBRARY) {

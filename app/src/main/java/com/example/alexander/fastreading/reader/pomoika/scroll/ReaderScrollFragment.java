@@ -93,10 +93,10 @@ public class ReaderScrollFragment extends Fragment implements ScrollFileReadingA
     }
 
     private void setBookOffset() {
-        int lineForOffset = textView.getLayout().getLineForOffset(bookDescription.getBookOffset());
-        int vertical = textView.getLayout().getLineTop(lineForOffset);
+        //int lineForOffset = textView.getLayout().getLineForOffset(bookDescription.getBookOffset());
+        //int vertical = textView.getLayout().getLineTop(lineForOffset);
 
-        lockableScrollView.scrollTo(0, vertical);
+        //lockableScrollView.scrollTo(0, vertical);
     }
 
     @Override

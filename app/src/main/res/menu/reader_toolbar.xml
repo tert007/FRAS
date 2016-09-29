@@ -4,9 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/format_list"
+        android:icon="@drawable/format_list"
+        android:title="@string/choose_reading_mode"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/settings"
         android:icon="@drawable/settings"
         android:title="@string/settings"
-        android:orderInCategory="100"
+        android:orderInCategory="200"
         app:showAsAction="ifRoom" />
 </menu>

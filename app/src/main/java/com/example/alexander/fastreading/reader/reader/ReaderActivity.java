@@ -1,15 +1,19 @@
 package com.example.alexander.fastreading.reader.reader;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
@@ -27,7 +31,7 @@ import java.util.List;
  * Created by Alexander on 23.09.2016.
  */
 public class ReaderActivity extends AppCompatActivity implements FileReaderAsyncTaskResponse,
-        ReaderFragmentOnPauseResponse {
+        ReaderFragmentOnPauseResponse, Finish {
 
     private FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
@@ -36,6 +40,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     private BookDescription bookDescription;
 
     private BookDescriptionDao bookDescriptionDao;
+
+    private ReaderFragment readerFragment;
 
     private enum ReaderState {READER, SETTINGS};
     private ReaderState currentState = ReaderState.READER;
@@ -73,12 +79,30 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         fileReadingAsyncTask.execute(bookDescription);
     }
 
+    @Override
+    public void onFinish() {
+        progressDialog.dismiss();
+    }
 
     @Override
     public void onFileReadingPostExecute(List<CharSequence> response) {
         if (response == null){
             progressDialog.dismiss();
-            Toast.makeText(this, "File reading error", Toast.LENGTH_SHORT).show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setMessage(R.string.file_reading_error);
+
+            builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    ReaderActivity.super.onBackPressed();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
             return;
         }
 
@@ -94,7 +118,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         bundle.putParcelable("book_description", bookDescription);
         bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) bookChapters);
 
-        ReaderFragment readerFragment = new ReaderFragment();
+        readerFragment = new ReaderFragment();
         readerFragment.setArguments(bundle);
         readerFragment.onPauseDelegate = this;
 
@@ -104,8 +128,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 beginTransaction().
                 replace(R.id.reader_fragment_container, readerFragment).
                 commit();
-
-        progressDialog.dismiss();
     }
 
     @Override
@@ -126,6 +148,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                             commit();
                     return true;
                 }
+            case R.id.format_list:
+                if (currentState == ReaderState.READER) {
+                    readerFragment.showReadingDialog();
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -134,11 +161,16 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     @Override
     public void onBackPressed() {
         if (currentState == ReaderState.SETTINGS) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage(getString(R.string.file_opening_message));
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
             Bundle bundle = new Bundle();
             bundle.putParcelable("book_description", bookDescription);
             bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) bookChapters);
 
-            ReaderFragment readerFragment = new ReaderFragment();
+            readerFragment = new ReaderFragment();
             readerFragment.setArguments(bundle);
             readerFragment.onPauseDelegate = this;
 
@@ -149,8 +181,32 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     replace(R.id.reader_fragment_container, readerFragment).
                     commit();
         } else {
-            super.onBackPressed();
+            closeDialog();
         }
+    }
+
+    private void closeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(false);
+        builder.setMessage(R.string.exit_message);
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                ReaderActivity.super.onBackPressed();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override

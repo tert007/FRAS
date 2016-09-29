@@ -63,14 +63,47 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/reader_pages_text_view"
-
-        android:textColor="@color/black"
-
+    <RelativeLayout
         android:layout_margin="@dimen/default_margin"
-
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/reader_pages_text_view"
+
+            android:textColor="@color/black"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:background="?android:colorBackground"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:visibility="gone"
+                android:id="@+id/reader_pages_seek_bar"
+                android:paddingTop="@dimen/default_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/reader_pages_seek_text_view"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+
 
 </LinearLayout>

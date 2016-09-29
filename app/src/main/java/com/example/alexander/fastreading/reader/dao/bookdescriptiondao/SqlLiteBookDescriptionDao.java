@@ -63,9 +63,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
 
     @Override
     public void updateBookDescription(BookDescription newValue) {
-        int a = database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "='" + newValue.getId() + "'", null);
-        Log.d("up_count", String.valueOf(a));
-        Log.d("id", String.valueOf(newValue.getId()));
+        database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "='" + newValue.getId() + "'", null);
     }
 
     @Override
@@ -99,7 +97,7 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
 
         bookDescription.setFilePath(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_FILE_PATH)));
         bookDescription.setType(cursor.getString(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_TYPE)));
-        bookDescription.setBookOffset(cursor.getInt(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_OFFSET)));
+        bookDescription.setBookOffset(cursor.getLong(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_OFFSET)));
 
         int favorite = cursor.getInt(cursor.getColumnIndex(BookDescriptionDatabaseHelper.BOOK_FAVORITE_FLAG));
         boolean favoriteFlag = favorite == 1;

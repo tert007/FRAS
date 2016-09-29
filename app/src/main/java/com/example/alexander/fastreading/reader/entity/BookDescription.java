@@ -2,6 +2,7 @@ package com.example.alexander.fastreading.reader.entity;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 /**
  * Created by Alexander on 03.09.2016.
@@ -9,7 +10,7 @@ import android.os.Parcelable;
 
     private long id;
 
-    private int bookOffset;
+    private long bookOffset;
 
     private String title;
     private String author;
@@ -24,7 +25,6 @@ import android.os.Parcelable;
     private String coverImagePath;
 
     public BookDescription() {
-
     }
 
     public long getId() {
@@ -91,17 +91,17 @@ import android.os.Parcelable;
         this.coverImagePath = coverImagePath;
     }
 
-    public int getBookOffset() {
+    public long getBookOffset() {
         return bookOffset;
     }
 
-    public void setBookOffset(int bookOffset) {
+    public void setBookOffset(long bookOffset) {
         this.bookOffset = bookOffset;
     }
 
     protected BookDescription(Parcel in) {
         id = in.readLong();
-        bookOffset = in.readInt();
+        bookOffset = in.readLong();
         title = in.readString();
         author = in.readString();
         language = in.readString();
@@ -119,7 +119,7 @@ import android.os.Parcelable;
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeInt(bookOffset);
+        dest.writeLong(bookOffset);
         dest.writeString(title);
         dest.writeString(author);
         dest.writeString(language);

@@ -64,7 +64,6 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
             path = file;
             update();
         } else {
-
             BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
             final BookDescription bookDescription = bookDescriptionDao.findBookDescription(file.getPath());
 
@@ -95,9 +94,13 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
         listView.setAdapter(adapter);
     }
 
-    //BookAdd
+    //Добавление книги, а также нажатие на ту что уже добавлена
     @Override
     public void bookResponse(BookDescription bookDescription) {
-        delegate.bookResponse(bookDescription);
+        if (bookDescription == null) {
+            Snackbar.make(getView(), R.string.file_reading_error, Snackbar.LENGTH_LONG).show();
+        } else {
+            delegate.bookResponse(bookDescription);
+        }
     }
 }

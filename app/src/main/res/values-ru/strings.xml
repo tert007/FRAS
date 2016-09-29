@@ -35,5 +35,9 @@
         <item>Чтение</item>
         <item>Быстрое чтение</item>
     </string-array>
+    <string name="choose_reading_mode">Выберите режим чтения</string>
+    <string name="exit">Выход</string>
+    <string name="exit_message">Вы действительно хотите выйти?</string>
+    <string name="file_reading_error">Ошибка при открытии файла</string>
 
 </resources>

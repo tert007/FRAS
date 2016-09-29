@@ -1,22 +1,22 @@
 package com.example.alexander.fastreading.reader.reader.fragment.reader;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.reader.Finish;
 
 import java.util.List;
 
@@ -27,13 +27,13 @@ public class ReaderFragment extends Fragment {
 
     public ReaderFragmentOnPauseResponse onPauseDelegate;
 
-    private ProgressDialog progressDialog;
-
     private TextView textView;
     private TextView speedTextView;
     private TextView speedResultTextView;
     private TextView currentPageTextView;
     private TextView currentPageResultTextView;
+    private AppCompatSeekBar seekBar;
+    private TextView currentPageSeekTextView;
 
     private BookDescription bookDescription;
     private List<CharSequence> bookChapters;
@@ -41,25 +41,25 @@ public class ReaderFragment extends Fragment {
     private int currentPageIndex;
     private List<CharSequence> pages;
 
+    private boolean itsSeekPause = true; // Seek Bar start status
+
     private boolean itsFastReading;
     private boolean fastReadingStarted;
     private WordSelector wordSelector;
 
     private int pageWidth;
-    private int halfPartOfWidth;
     private int thirdPartOfPageWidth;
 
     private static final int defaultPageChangeDelay = 200;
     private static final int wordLength = 6;
 
     private int currentSpeedIndex;
-    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100};
+    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500};
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment, container, false);
 
         bookDescription = getArguments().getParcelable("book_description");
-        //itsFastReading = getArguments().getBoolean("fast_reading");
         bookChapters = getArguments().getCharSequenceArrayList("book");
 
         textView = (TextView) view.findViewById(R.id.reader_pages_text_view);
@@ -72,11 +72,13 @@ public class ReaderFragment extends Fragment {
         currentPageTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_text_view);
         currentPageResultTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_result_text_view);
 
-        view.post(new Runnable() {
+        currentPageSeekTextView = (TextView) view.findViewById(R.id.reader_pages_seek_text_view);
+        seekBar = (AppCompatSeekBar) view.findViewById(R.id.reader_pages_seek_bar);
+
+        textView.post(new Runnable() {
             @Override
             public void run() {
                 pageWidth = textView.getWidth();
-                halfPartOfWidth = pageWidth / 2;
                 thirdPartOfPageWidth = pageWidth / 3;
 
                 PageSplitter pageSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
@@ -90,10 +92,17 @@ public class ReaderFragment extends Fragment {
                 currentPageResultTextView.setVisibility(View.VISIBLE);
                 currentPageResultTextView.setText(getCurrentPageByString());
 
+                speedTextView.setVisibility(View.GONE);
+                speedResultTextView.setVisibility(View.GONE);
+
+                textView.setOnTouchListener(onTouchListener);
+                seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+
+                ((Finish)getActivity()).onFinish(); // KOSTIL??!
+
                 showDialog();
             }
         });
-
 
         return view;
     }
@@ -116,14 +125,14 @@ public class ReaderFragment extends Fragment {
 
         long bookLength = 0;
 
-        if (bookDescription.getBookOffset() < pages.get(0).length()){
+        if (bookDescription.getBookOffset() <= pages.get(0).length()){
             return;
         }
 
         for (CharSequence page : pages) {
             bookLength += page.length();
 
-            if (bookLength < bookDescription.getBookOffset()){
+            if (bookLength <= bookDescription.getBookOffset()){
                 currentPageIndex++;
             } else {
                 break;
@@ -136,11 +145,22 @@ public class ReaderFragment extends Fragment {
     }
 
     private void showDialog() {
+        final boolean itWasFastReading = itsFastReading;
+
+        fastReadingStarted = false;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.reading_type));
-        builder.setItems(R.array.reading_type, new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog, int which) {
-                itsFastReading = which != 0;
+
+        int index = 0;
+        if (itsFastReading) {
+            index = 1;
+        }
+
+        builder.setSingleChoiceItems(R.array.reading_type, index, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                itsFastReading = i != 0;
 
                 if (itsFastReading) {
                     speedTextView.setVisibility(View.VISIBLE);
@@ -148,20 +168,31 @@ public class ReaderFragment extends Fragment {
                     speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
 
                     textView.setOnTouchListener(fastReadingOnTouchListener);
-                    fastReadingStarted = false;
-                    wordSelector = new WordSelector(pages.get(currentPageIndex));
+                    seekBar.setOnSeekBarChangeListener(fastReadingSeekBarChangeListener);
+
+                    if (!itWasFastReading) {
+                        wordSelector = new WordSelector(pages.get(currentPageIndex));
+                    }
                 } else {
                     speedTextView.setVisibility(View.GONE);
                     speedResultTextView.setVisibility(View.GONE);
 
+                    textView.setText(pages.get(currentPageIndex));
+
                     textView.setOnTouchListener(onTouchListener);
+                    seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
                 }
+
+                dialogInterface.dismiss();
             }
         });
 
-
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    public void showReadingDialog() {
+        showDialog();
     }
 
     private Runnable wordSelectorThread = new Runnable() {
@@ -176,7 +207,6 @@ public class ReaderFragment extends Fragment {
                     double delay = 60_000 / speed[currentSpeedIndex];
                     //Log.d("LENGTH", String.valueOf(worldSelectorPage.getSelectedWordLength()));
                     //double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (speed[currentSpeedIndex] * wordLength / 60);
-                    Log.d("SPEED", String.valueOf(delay));
 
                     textView.postDelayed(this, (int) delay);
                 } else {
@@ -201,15 +231,37 @@ public class ReaderFragment extends Fragment {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int x = (int) event.getX();
 
-                if (halfPartOfWidth < x){
-                    if (currentPageIndex < pages.size() - 1){
-                        currentPageIndex++;
+                if (x < thirdPartOfPageWidth) {
+                    itsSeekPause = true;
+                    seekBar.setVisibility(View.GONE);
+                    currentPageSeekTextView.setVisibility(View.GONE);
+
+                    if (currentPageIndex > 0){
+                        currentPageIndex--;
                         textView.setText(pages.get(currentPageIndex));
                         currentPageResultTextView.setText(getCurrentPageByString());
                     }
+                } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
+
+                    itsSeekPause = !itsSeekPause;
+
+                    if (!itsSeekPause) {
+                        seekBar.setMax(pages.size() - 1);
+                        seekBar.setProgress(currentPageIndex);
+                        currentPageSeekTextView.setText(getCurrentPageByString());
+                        seekBar.setVisibility(View.VISIBLE);
+                        currentPageSeekTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        seekBar.setVisibility(View.GONE);
+                        currentPageSeekTextView.setVisibility(View.GONE);
+                    }
                 } else {
-                    if (currentPageIndex > 0){
-                        currentPageIndex--;
+                    itsSeekPause = true;
+                    seekBar.setVisibility(View.GONE);
+                    currentPageSeekTextView.setVisibility(View.GONE);
+
+                    if (currentPageIndex < pages.size() - 1){
+                        currentPageIndex++;
                         textView.setText(pages.get(currentPageIndex));
                         currentPageResultTextView.setText(getCurrentPageByString());
                     }
@@ -232,10 +284,21 @@ public class ReaderFragment extends Fragment {
                         speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
                     }
                 } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
+                    //itsSeekPause = !itsSeekPause;
+
                     fastReadingStarted = !fastReadingStarted;
 
                     if (fastReadingStarted) {
+                        seekBar.setVisibility(View.GONE);
+                        currentPageSeekTextView.setVisibility(View.GONE);
+
                         textView.post(wordSelectorThread);
+                    } else {
+                        seekBar.setMax(pages.size() - 1);
+                        seekBar.setProgress(currentPageIndex);
+                        currentPageSeekTextView.setText(getCurrentPageByString());
+                        seekBar.setVisibility(View.VISIBLE);
+                        currentPageSeekTextView.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if (currentSpeedIndex < speed.length - 1){
@@ -249,9 +312,54 @@ public class ReaderFragment extends Fragment {
         }
     };
 
+    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser){
+                currentPageIndex = progress;
+                currentPageSeekTextView.setText(getCurrentPageByString());
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            textView.setText(pages.get(currentPageIndex));
+            currentPageResultTextView.setText(getCurrentPageByString());
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener fastReadingSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser){
+                currentPageIndex = progress;
+                currentPageSeekTextView.setText(getCurrentPageByString());
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            textView.setText(pages.get(currentPageIndex));
+            wordSelector = new WordSelector(pages.get(currentPageIndex));
+            currentPageResultTextView.setText(getCurrentPageByString());
+        }
+    };
+
+
     @Override
     public void onPause() {
         super.onPause();
+
         bookDescription.setBookOffset(getBookOffset());
         onPauseDelegate.readerFragmentOnPauseResponse(bookDescription);
     }
