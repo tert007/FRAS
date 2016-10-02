@@ -1,14 +1,8 @@
 package com.example.alexander.fastreading.reader.reader.fragment.reader;
 
 import android.text.Layout;
-import android.text.Spannable;
-import android.text.Spanned;
 import android.text.StaticLayout;
 import android.text.TextPaint;
-import android.text.style.RelativeSizeSpan;
-import android.util.Log;
-
-import com.example.alexander.fastreading.reader.entity.HtmlTag;
 
 import java.util.ArrayList;
 import java.util.Collections;

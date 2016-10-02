@@ -5,22 +5,22 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
+import com.example.alexander.fastreading.reader.dao.BookController;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookHasBeenAddedException;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
-import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
 
 /**
  * Created by Alexander on 04.09.2016.
  */
     public class ReaderFileExplorerBookAddAsyncTask extends AsyncTask<String, Void, BookDescription> {
 
-        public ReaderBookDescriptionResponse delegate;
+        public ReaderFileExplorerBookAddAsyncTaskResponse delegate;
 
         private Context context;
         private ProgressDialog progressDialog;
+
+        private boolean bookHasBeenAdded;
 
         public ReaderFileExplorerBookAddAsyncTask(Context context) {
             this.context = context;
@@ -38,10 +38,13 @@ import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionRes
         @Override
         protected BookDescription doInBackground(String... params) {
             String filePath = params[0];
+            BookController bookController = new BookController(context);
             try {
-                BookDao bookDao = new BookDaoFactory(context).getBookDao(FileHelper.getFileExtension(filePath));
-                return bookDao.addBook(filePath);
-            } catch (BookParserException e){
+                return bookController.addBook(filePath);
+            } catch (BookHasBeenAddedException e){
+                bookHasBeenAdded = true;
+                return bookController.findBookDescription(filePath);
+            } catch (BookParserException e) {
                 return null;
             }
         }
@@ -51,7 +54,7 @@ import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionRes
             super.onPostExecute(bookDescription);
             progressDialog.dismiss();
 
-            delegate.bookResponse(bookDescription);
+            delegate.bookResponse(bookDescription, bookHasBeenAdded);
         }
     }
 

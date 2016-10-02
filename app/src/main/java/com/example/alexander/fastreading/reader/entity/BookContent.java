@@ -20,16 +20,6 @@ public class BookContent {
         this.bookChapterList = bookChapterList;
     }
 
-    public CharSequence getScrollContent() {
-        final SpannableStringBuilder builder = new SpannableStringBuilder();
-
-        for (BookChapter chapter : bookChapterList) {
-            builder.append(chapter.getBookChapter());
-        }
-
-        return builder;
-    }
-
     public List<CharSequence> getChaptersText() {
         final List<CharSequence> result = new ArrayList<>(bookChapterList.size());
 

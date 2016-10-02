@@ -12,8 +12,7 @@ import android.widget.ListView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
 
@@ -24,9 +23,13 @@ import java.util.List;
  * Created by Alexander on 03.08.2016.
  */
 public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
-        ReaderFileExplorerOnFileClickResponse, ReaderBookDescriptionResponse {
+        ReaderFileExplorerBookAddAsyncTaskResponse,
+        ReaderFileExplorerOnFileClickResponse,
+        ReaderBookDescriptionResponse {
 
     public ReaderBookDescriptionResponse delegate;
+
+    private BookController bookController;
 
     private ReaderFileExplorerListAdapter adapter;
     private ListView listView;
@@ -38,9 +41,11 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_file_explorer_fragment, container, false);
 
+        bookController = new BookController(getActivity());
+
         listView = (ListView) view.findViewById(R.id.reader_file_explorer_list_view);
 
-        update();
+        listViewUpdate();
 
         return view;
     }
@@ -52,7 +57,7 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
         } else {
             path = path.getParentFile();
 
-            update();
+            listViewUpdate();
 
             return false;
         }
@@ -62,28 +67,42 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
     public void onFileClick(File file) {
         if (file.isDirectory()){
             path = file;
-            update();
+            listViewUpdate();
         } else {
-            BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
-            final BookDescription bookDescription = bookDescriptionDao.findBookDescription(file.getPath());
+            ReaderFileExplorerBookAddAsyncTask bookAddAsyncTask = new ReaderFileExplorerBookAddAsyncTask(getActivity());
+            bookAddAsyncTask.delegate = this;
 
-            if (bookDescription == null) {
-                ReaderFileExplorerBookAddAsyncTask bookAddAsyncTask = new ReaderFileExplorerBookAddAsyncTask(getActivity());
-                bookAddAsyncTask.delegate = this;
-
-                bookAddAsyncTask.execute(file.getPath());
-            } else {
-                Snackbar.make(getView(), getString(R.string.book_in_library), Snackbar.LENGTH_LONG).setAction(getString(R.string.open_book), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        delegate.bookResponse(bookDescription);
-                    }
-                }).show();
-            }
+            bookAddAsyncTask.execute(file.getPath());
         }
     }
 
-    private void update(){
+    //После добавления книги:
+    //
+    //null - Ошибка
+    //bookHasBeenAdded - true -- уже такая была
+    @Override
+    public void bookResponse(final BookDescription bookDescription, boolean bookHasBeenAdded) {
+        if (bookDescription == null) {
+            Snackbar.make(getView(), R.string.file_reading_error, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (bookHasBeenAdded) {
+            Snackbar.make(getView(), R.string.book_has_been_added, Snackbar.LENGTH_LONG).
+                    setAction(R.string.open_book, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            delegate.bookResponse(bookDescription);
+                        }
+                    }).
+                    show();
+            return;
+        }
+
+        delegate.bookResponse(bookDescription);
+    }
+
+    private void listViewUpdate(){
         List<File> files = FileHelper.readerFileFilter(path.listFiles());
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(path.getPath());
@@ -97,10 +116,6 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
     //Добавление книги, а также нажатие на ту что уже добавлена
     @Override
     public void bookResponse(BookDescription bookDescription) {
-        if (bookDescription == null) {
-            Snackbar.make(getView(), R.string.file_reading_error, Snackbar.LENGTH_LONG).show();
-        } else {
-            delegate.bookResponse(bookDescription);
-        }
+        delegate.bookResponse(bookDescription);
     }
 }

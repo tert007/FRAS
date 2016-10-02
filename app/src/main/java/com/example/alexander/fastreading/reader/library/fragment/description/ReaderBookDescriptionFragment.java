@@ -34,10 +34,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
 
     private ImageView bookCoverImageView;
 
-    private Button startScroll;
-    private Button startFastScroll;
     private Button startPages;
-    private Button startFastPages;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_book_description_fragment, container, false);
@@ -55,10 +52,7 @@ public class ReaderBookDescriptionFragment extends Fragment {
 
         bookCoverImageView = (ImageView) view.findViewById(R.id.reader_book_description_cover_image_view);
 
-        //startScroll = (Button) view.findViewById(R.id.reader_book_description_scroll_reading_button);
-        //startFastScroll = (Button) view.findViewById(R.id.reader_book_description_fast_scroll_reading_button);
         startPages  = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
-        //startFastPages  = (Button) view.findViewById(R.id.reader_book_description_fast_pages_reading_button);
 
         final BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 

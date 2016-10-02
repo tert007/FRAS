@@ -7,21 +7,30 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.AlignmentSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
+import android.text.style.UnderlineSpan;
 
 import com.example.alexander.fastreading.reader.FileHelper;
-import com.example.alexander.fastreading.reader.entity.HtmlTag;
 import com.example.alexander.fastreading.reader.XmlHelper;
-import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookChapter;
+import com.example.alexander.fastreading.reader.entity.EpubBookChapter;
+import com.example.alexander.fastreading.reader.entity.BookContent;
+import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,42 +38,51 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Created by Alexander on 07.09.2016.
+ * Created by Alexander on 30.09.2016.
  */
-public class EpubBookDao implements BookDao {
-
-    private final static List<String> supportedNestedTags;
-    private final static Map<String, Float> headers;
+public class EpubBookDao extends AbstractBookDao {
 
     private final static Pattern xmlPattern = Pattern.compile(".+\\.x?html");
 
-    public final static String HEAD_1_TAG = "h1";
-    public final static String HEAD_2_TAG = "h2";
-    public final static String HEAD_3_TAG = "h3";
-    public final static String HEAD_4_TAG = "h4";
-    public final static String HEAD_5_TAG = "h5";
-    public final static String HEAD_6_TAG = "h6";
-    public final static String NEW_LINE_TAG = "br";
+    private final static String EMPTY_LINE_TAG = "br";
+
+    private final static String STRONG_TAG_1 = "strong"; //b
+    private final static String STRONG_TAG_2 = "b";
+
+    private final static String EMPHASIS_TAG_1 = "em"; //i
+    private final static String EMPHASIS_TAG_2 = "i";
+
+    private final static String STRIKE_THROUGH_TAG = "strike"; //Перечеркнутый
+    private final static String UNDERLINE_TAG = "u"; //Подчеркнутый
+
+    private final static String SUB_TAG = "sub";
+    private final static String SUP_TAG = "sup";
+
+    private final static String PARAGRAPH_TAG_1 = "p";
+    private final static String PARAGRAPH_TAG_2 = "div";
+
+    //LI - СДЕЛАТЬ
+
+    private final static String HEAD_1_TAG = "h1";
+    private final static String HEAD_2_TAG = "h2";
+    private final static String HEAD_3_TAG = "h3";
+    private final static String HEAD_4_TAG = "h4";
+    private final static String HEAD_5_TAG = "h5";
+    private final static String HEAD_6_TAG = "h6";
+
+    public final static float SUB_FONT_HEIGHT = 0.5f;
+
+    private final static Map<String, Float> headers;
 
     static {
-        supportedNestedTags = new ArrayList<>();
-        supportedNestedTags.add("i");
-        supportedNestedTags.add("b");
-        supportedNestedTags.add("pre");
-        supportedNestedTags.add("em");
-        supportedNestedTags.add("strong");
-        supportedNestedTags.add("sup");
-        supportedNestedTags.add("sub");
-        supportedNestedTags.add("a");
-        supportedNestedTags.add("br");
-
         headers = new HashMap<>();
 
         headers.put(HEAD_1_TAG, 1.5f);
@@ -75,59 +93,39 @@ public class EpubBookDao implements BookDao {
         headers.put(HEAD_6_TAG, 1f);
     }
 
-    private BookDescriptionDao bookDescriptionDao;
     private final String booksLibraryPath;
-    private final String unzipTempPath;
 
-    public EpubBookDao(Context context) {
-        bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(context).getBookDescriptionDao();
-        unzipTempPath = context.getApplicationInfo().dataDir + File.separator + "temp";
+    public EpubBookDao(BookDescriptionDao bookDescriptionDao, Context context) {
+        super(bookDescriptionDao);
         booksLibraryPath = context.getApplicationInfo().dataDir + File.separator + "books";
-
-        File bookLibraryDirectory = new File(booksLibraryPath);
-        bookLibraryDirectory.mkdir();
     }
 
     @Override
-    public BookDescription addBook(String filePath) throws BookParserException {
-        BookDescription bookDescription = createBookDescription(filePath);
+    public BookDescription addBook(String filePath) throws BookParserException, BookHasBeenAddedException {
+        if (bookDescriptionDao.findBookDescription(filePath) != null) {
+            throw new BookHasBeenAddedException("The book has been added");
+        }
 
-        long id = bookDescriptionDao.addBookDescription(bookDescription);
-        if (id == -1)
-            return null;
+        long id = bookDescriptionDao.getNextItemId();
 
-        bookDescription.setId(id);
-
-        bookDescription = updateBookDescriptionToEpub(bookDescription);
-        bookDescriptionDao.updateBookDescription(bookDescription);
-
-        return bookDescription;
-    }
-
-    private BookDescription createBookDescription(String filePath) {
         BookDescription bookDescription = new BookDescription();
 
-        bookDescription.setFilePath(filePath);
-        bookDescription.setType(FileHelper.getFileExtension(filePath));
+        ZipFile zipFile = null;
 
-        return bookDescription;
-    }
-
-    private BookDescription updateBookDescriptionToEpub(BookDescription bookDescription) throws BookParserException {
-        //Когда у нас есть основные данные о книги мы должны добавить специфические данные и сохранить их на диск
-        //А также сохранить сам текст в нужном нам формате в папку с приложением
         try {
-            FileHelper.unZip(bookDescription.getFilePath(), unzipTempPath);
+            zipFile = new ZipFile(filePath);
 
-            List<File> files = FileHelper.getFilesCollection(unzipTempPath);
+            List<? extends ZipEntry> zipEntries = Collections.list(zipFile.entries());
 
             List<String> bookChaptersPaths = Collections.emptyList();
             String coverPath = null;
 
-            //Основная инфа о книге (автор, название...)
-            for (File file : files) {
-                if (file.getName().toLowerCase().equals("content.opf")) {
-                    Document contentOpf = XmlHelper.getXmlFromFileWithSpaceTrim(file);
+            for (ZipEntry zipEntry : zipEntries) {
+                String fileName = new File(zipEntry.getName()).getName();
+
+                //Основная инфа о книге (автор, название...)
+                if (fileName.toLowerCase().equals("content.opf")) {
+                    Document contentOpf = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
 
                     bookDescription.setTitle(getBookTitle(contentOpf));
                     bookDescription.setLanguage(getBookLanguage(contentOpf));
@@ -135,117 +133,43 @@ public class EpubBookDao implements BookDao {
 
                     coverPath = getCoverPath(contentOpf);
                 }
-
-                //Пути к файлам с главами книг
-                if (file.getName().toLowerCase().equals("toc.ncx")) {
-                    Document docNcx = XmlHelper.getXmlFromFileWithSpaceTrim(file);
-                    bookChaptersPaths = getBookChaptersPaths(docNcx);
-                    break;
-                }
             }
 
-            //Сами главы
-            List<List<HtmlTag>> htmlTagsList = new ArrayList<>(bookChaptersPaths.size());
-
-            for (String bookChapterPath : bookChaptersPaths) {
-                for (File file : files) {
-                    if (file.getName().equals(bookChapterPath)) {
-                        Document chapter = XmlHelper.getXmlFromFileWithSpaceTrim(file);
-                        List<HtmlTag> tempChapter = parseChapter(chapter);
-                        if (!tempChapter.isEmpty())
-                            htmlTagsList.add(tempChapter);
-                        break;
-                    }
-                }
-            }
-
-            Document xml = XmlHelper.convertBookToXml(htmlTagsList);
-
-            ///data/.../books/1
-            String bookDirectoryPath = booksLibraryPath + File.separator + bookDescription.getId();
-            File bookDirectory = new File(bookDirectoryPath);
-            bookDirectory.mkdir();
-
-            String saveFilePath = bookDirectoryPath + File.separator + "content.xml";
-
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(xml);
-            StreamResult streamResult =  new StreamResult(new File(saveFilePath));
-            transformer.transform(source, streamResult);
-
-            if (coverPath != null){
+            if (coverPath != null) {
                 String coverName = new File(coverPath).getName();
-                String saveCoverPath = bookDirectoryPath + File.separator + coverName;
+                String imagePath = booksLibraryPath + File.separator + String.valueOf(id) + File.separator + coverName;
 
-                for (File file : files) {
-                    if (file.getName().equals(coverName)){
-                        FileHelper.copyFile(file, new File(saveCoverPath));
-                        bookDescription.setCoverImagePath(saveCoverPath);
+                File imageFile = new File(imagePath);
+                imageFile.getParentFile().mkdirs();
+
+                for (ZipEntry zipEntry : zipEntries) {
+                    String fileName = new File(zipEntry.getName()).getName();
+
+                    if (fileName.equals(coverName)){
+                        FileHelper.copyFile(zipFile.getInputStream(zipEntry), imageFile);
+                        bookDescription.setCoverImagePath(imagePath);
                         break;
                     }
                 }
             }
-
-            return bookDescription;
-        } catch (Exception e){
+        } catch (IOException e){
             throw new BookParserException(e);
-        }
-    }
-
-    private List<String> getBookChaptersPaths(Document docNcx) {
-        NodeList navPoints = docNcx.getElementsByTagName("content");
-        List<String> bookChaptersContentPath = new ArrayList<>(navPoints.getLength());
-
-        for (int i = 0; i < navPoints.getLength(); i++) {
-            String contentPath = ((Element) navPoints.item(i)).getAttribute("src");
-            Matcher matcher = xmlPattern.matcher(contentPath);
-
-            if (matcher.find()){
-                contentPath = matcher.group();
-                int index;
-                if ((index = contentPath.lastIndexOf('/')) > -1){
-                    contentPath = contentPath.substring(index + 1);
-                }
-
-                if (!bookChaptersContentPath.contains(contentPath)){
-                    bookChaptersContentPath.add(contentPath);
-                }
-            }
-        }
-        return bookChaptersContentPath;
-    }
-
-    private List<HtmlTag> parseChapter(Document document) {
-        Node body = document.getElementsByTagName("body").item(0);
-        NodeList nodeList = ((Element)body).getElementsByTagName("*");
-
-        List<HtmlTag> chapter = new ArrayList<>(nodeList.getLength());
-
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            if (nodeList.item(i).hasChildNodes()) {
-                NodeList childNodes = nodeList.item(i).getChildNodes();
-                boolean flag = true;
-                for (int j = 0; j < childNodes.getLength(); j++) {
-                    if (childNodes.item(j).getNodeType() != Node.TEXT_NODE && !supportedNestedTags.contains(childNodes.item(j).getNodeName())) {
-                        flag = false;
-                    }
-                }
-
-                if (flag) {
-                    if (!supportedNestedTags.contains(nodeList.item(i).getNodeName())){
-                        String nodeName = nodeList.item(i).getNodeName();
-                        String nodeValue = nodeList.item(i).getTextContent();
-
-                        if(!nodeValue.replaceAll("\\s+", "").isEmpty()){ // удаление пустых тегов
-                            chapter.add(new HtmlTag(nodeName, nodeValue));
-                        }
-                    }
-                }
+        } finally {
+            try {
+                if (zipFile != null)
+                    zipFile.close();
+            } catch (IOException e) {
+                throw new BookParserException(e);
             }
         }
 
-        return chapter;
+        bookDescription.setId(id);
+        bookDescription.setFilePath(filePath);
+        bookDescription.setType(FileHelper.getFileExtension(filePath));
+
+        bookDescriptionDao.addBookDescription(bookDescription);
+
+        return bookDescription;
     }
 
     private String getBookTitle(Document document) {
@@ -296,93 +220,440 @@ public class EpubBookDao implements BookDao {
     }
 
     @Override
-    public void removeBook(BookDescription bookDescription) {
-        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
-        FileHelper.removeDirectory(new File(directoryPath));
+    public BookContent getBookContent(String filePath) throws BookParserException {
+        try {
+            ZipFile zipFile = new ZipFile(filePath);
+            List<? extends ZipEntry> zipEntries = Collections.list(zipFile.entries());
+            List<NavigationPoint> navigationPoints = Collections.emptyList();
 
-        bookDescriptionDao.removeBookDescription(bookDescription.getId());
-    }
+            for (ZipEntry zipEntry : zipEntries) {
+                String fileName = new File(zipEntry.getName()).getName();
 
-    @Override
-    public CharSequence getScrollText(BookDescription bookDescription) throws BookParserException {
-        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
-        String saveFilePath = directoryPath + File.separator + "content.xml";
-
-        Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));
-        List<List<HtmlTag>> book = XmlHelper.readBookFromXml(document);
-
-        return convertToScroll(book);
-    }
-
-    @Override
-    public List<CharSequence> getChaptersText(BookDescription bookDescription) throws BookParserException {
-        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
-        String saveFilePath = directoryPath + File.separator + "content.xml";
-
-        Document document = XmlHelper.getXmlFromFile(new File(saveFilePath));
-        List<List<HtmlTag>> book = XmlHelper.readBookFromXml(document);
-
-        return convertToChapters(book);
-    }
-
-    private CharSequence convertToScroll(List<List<HtmlTag>> pages) {
-        SpannableStringBuilder chapter = new SpannableStringBuilder();
-
-        for (List<HtmlTag> htmlPage : pages) {
-
-            for (HtmlTag htmlTag : htmlPage) {
-                if (htmlTag.getTagName().equals(NEW_LINE_TAG)) {
-                    chapter.append("\n");
+                //Основная инфа о книге (автор, название...)
+                if (fileName.toLowerCase().equals("toc.ncx")) {
+                    Document docNcx = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
+                    navigationPoints = getBookNavigationPoints(docNcx);
                     break;
                 }
+            }
 
-                int spanStartPosition = chapter.length();
-                int spanEndPosition = spanStartPosition + htmlTag.getTagContent().length();
-                chapter.append(htmlTag.getTagContent());
-                if (headers.containsKey(htmlTag.getTagName())){
-                    chapter.setSpan(new RelativeSizeSpan(headers.get(htmlTag.getTagName())),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    chapter.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    chapter.setSpan(new StyleSpan(Typeface.BOLD),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            BookContent bookContent = new BookContent();
+            List<BookChapter> bookChapters = new ArrayList<>(navigationPoints.size());
+
+            for (int i = 0; i < navigationPoints.size(); i++) {
+                String bookChapterId = navigationPoints.get(i).getBookChapterId();
+                String bookChapterPath = navigationPoints.get(i).getBookChapterPath();
+                String bookChapterTitle = navigationPoints.get(i).getBookChapterTitle();
+
+                for (ZipEntry zipEntry : zipEntries) {
+                    String fileName = new File(zipEntry.getName()).getName();
+
+                    if (bookChapterPath.equals(fileName)) {
+                        if (bookChapterId == null) {
+                            Document chapterDocument = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
+                            CharSequence bookChapterContent = parseChapter(chapterDocument);
+
+                            bookChapters.add(new EpubBookChapter(bookChapterTitle, bookChapterContent));
+                            break;
+                        } else {
+                            List<String> ids = new ArrayList<>();
+                            List<String> titles = new ArrayList<>();
+
+                            ids.add(bookChapterId);
+                            titles.add(bookChapterTitle);
+
+                            for (int j = i + 1; j < navigationPoints.size(); j++) {
+                                if (bookChapterPath.equals(navigationPoints.get(j).getBookChapterPath())) {
+                                    ids.add(navigationPoints.get(j).getBookChapterId());
+                                    titles.add(navigationPoints.get(j).getBookChapterTitle());
+                                    i++;
+                                }
+                            }
+
+                            String html = FileHelper.getTextFromFile(zipFile.getInputStream(zipEntry));
+                            Document chapterDocument = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
+
+                            List<BookChapter> combineChapters = parseCombineChapter(chapterDocument, html, ids, titles);
+                            bookChapters.addAll(combineChapters);
+                        }
+                    }
+                }
+            }
+
+            bookContent.setBookChapterList(bookChapters);
+            return bookContent;
+        } catch (IOException e) {
+            throw new BookParserException(e);
+        }
+    }
+
+    private List<BookChapter> parseCombineChapter (Document combineChapterDocument, String html, List<String> ids, List<String> titles) throws BookParserException {
+        //Парсим страницы в которых одновременно несколько глав
+            CharSequence combineChapter = parseChapter(combineChapterDocument);
+
+            String bodyRegex = "<body[\\s\\S]+</body>";
+
+            Pattern bodyPattern = Pattern.compile(bodyRegex);
+            Matcher matcher = bodyPattern.matcher(html);
+
+            String body = html;
+
+            if (matcher.find()) {
+                body = html.substring(matcher.start(), matcher.end());
+                body = body.replaceAll("\n", ""); ///   \r
+            }
+
+            int chaptersCount = ids.size();
+            int[] startIndexes = new int[chaptersCount];
+            List<BookChapter> bookChapters = new ArrayList<>(chaptersCount);
+
+            for (int i = 0; i < chaptersCount; i++) {
+                StringBuilder request = new StringBuilder();
+                request.append("id=\"");
+                request.append(ids.get(i));
+                request.append("\"");
+                //request.append("[\\s\\S]");
+
+                Pattern pattern = Pattern.compile(request.toString());
+                matcher = pattern.matcher(body);
+
+                if (matcher.find()) {
+                    int bodyLength = body.length();
+
+                    int startIndex = 0;
+                    int endIndex = bodyLength;
+
+                    boolean itsTag = false;
+
+                    for (int j = matcher.start(); j < bodyLength; j++) {
+                        if (body.charAt(j) == '>') {
+                            startIndex = j + 1;
+                            break;
+                        }
+                    }
+
+                    for (int j = startIndex; j < bodyLength; j++) {
+                        if (body.charAt(j) == '<') {
+                            itsTag = true;
+                        } else if (body.charAt(j) == '>') {
+                            if (itsTag)
+                                itsTag = false;
+                        } else {
+                            if (!itsTag) {
+                                startIndex = j;
+                                break;
+                            }
+                        }
+                    }
+
+                    for (int j = startIndex; j < bodyLength; j++) {
+                        if (body.charAt(j) == '<') {
+                            endIndex = j - 1;
+                            break;
+                        }
+                    }
+
+                    String partOfContent = body.substring(startIndex, endIndex + 1).trim(); //ТО, ЧТО ЕСТЬ В ГЛАВЕ
+                    body = body.substring(endIndex + 1);
+
+                    Pattern combinePattern = Pattern.compile(partOfContent);
+                    Matcher combineMatcher = combinePattern.matcher(combineChapter);
+
+                    if (i > 0) {
+                        if (combineMatcher.find(startIndexes[i - 1])) {
+                            startIndexes[i] = combineMatcher.start();
+                        }
+                    } else {
+                        if (combineMatcher.find()) {
+                            startIndexes[i] = combineMatcher.start();
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < chaptersCount - 1; i++) {
+                bookChapters.add(new EpubBookChapter(titles.get(i), combineChapter.subSequence(startIndexes[i], startIndexes[i + 1])));
+            }
+            bookChapters.add(new EpubBookChapter(titles.get(chaptersCount - 1), combineChapter.subSequence(startIndexes[chaptersCount - 1], combineChapter.length())));
+
+            return bookChapters;
+    }
+
+    private class NavigationPoint {
+        private String bookChapterTitle;
+        private String bookChapterPath;
+        private String bookChapterId;
+
+        public NavigationPoint(String bookChapterTitle, String bookChapterPath) {
+            this.bookChapterTitle = bookChapterTitle;
+            this.bookChapterPath = bookChapterPath;
+        }
+
+        public NavigationPoint(String bookChapterTitle, String bookChapterPath, String bookChapterId) {
+            this.bookChapterTitle = bookChapterTitle;
+            this.bookChapterPath = bookChapterPath;
+            this.bookChapterId = bookChapterId;
+        }
+
+        public String getBookChapterTitle() {
+            return bookChapterTitle;
+        }
+
+        public String getBookChapterPath() {
+            return bookChapterPath;
+        }
+
+        public String getBookChapterId() {
+            return bookChapterId;
+        }
+    }
+
+    private List<NavigationPoint> getBookNavigationPoints(Document docNcx) {
+        NodeList navPoints = docNcx.getElementsByTagName("navPoint");
+        int navPointsCount = navPoints.getLength();
+
+        List<String> bookChapterContentPaths = new ArrayList<>(navPointsCount);
+        List<String> bookChapterTitles = new ArrayList<>(navPointsCount);
+        List<String> bookChapterId = new ArrayList<>(navPointsCount);
+
+        for (int i = 0; i < navPointsCount; i++) {
+            NodeList navPointChildNodes = navPoints.item(i).getChildNodes();
+            int navPointChildNodesCount = navPointChildNodes.getLength();
+
+            String contentPath = null;
+            String contentTitle = null;
+            String contentId = null;
+
+            for (int j = 0; j < navPointChildNodesCount; j++) {
+                if (navPointChildNodes.item(j).getNodeName().equals("content")) {
+
+                    contentPath = ((Element) navPointChildNodes.item(j)).getAttribute("src");
+                    Matcher matcher = xmlPattern.matcher(contentPath);
+                    ////РАссмотреть случай когда # в имени, а не в конце...
+                    int sharpIndex = contentPath.lastIndexOf('#');
+                    if (sharpIndex > 0) {
+                        contentId = contentPath.substring(sharpIndex + 1);
+                    }
+
+                    if (matcher.find()){
+                        contentPath = matcher.group();
+                        int index;
+                        if ((index = contentPath.lastIndexOf('/')) > -1){
+                            contentPath = contentPath.substring(index + 1);
+                        }
+                    }
                 }
 
-                chapter.append("\n\n");
+                if (navPointChildNodes.item(j).getNodeName().equals("navLabel")) {
+                    NodeList navLabelChildNodes = navPointChildNodes.item(j).getChildNodes();
+                    int navLabelChildNodesCount = navLabelChildNodes.getLength();
+
+                    for (int k = 0; k < navLabelChildNodesCount; k++) {
+                        if (navLabelChildNodes.item(k).getNodeName().equals("text")){
+                            contentTitle = navLabelChildNodes.item(k).getTextContent();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            bookChapterContentPaths.add(contentPath);
+            bookChapterTitles.add(contentTitle);
+            bookChapterId.add(contentId);
+        }
+
+        List<NavigationPoint> navigationPoints = new ArrayList<>(navPointsCount);
+        for (int i = 0; i < navPointsCount; i++) {
+            navigationPoints.add(new NavigationPoint(bookChapterTitles.get(i), bookChapterContentPaths.get(i), bookChapterId.get(i)));
+        }
+
+        return navigationPoints;
+    }
+
+    private CharSequence parseChapter(Document bookDocument) {
+        Node body = bookDocument.getElementsByTagName("body").item(0);
+
+        return parseBody(body);
+    }
+
+    private CharSequence parseBody(Node body) {
+        NodeList bodyChildNotes = body.getChildNodes();
+        int bodyChildNotesCount = bodyChildNotes.getLength();
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        for (int i = 0; i < bodyChildNotesCount; i++) {
+            Node currentTag = bodyChildNotes.item(i);
+
+            if (currentTag.getNodeType() == Node.ELEMENT_NODE) {
+                builder.append(parseTag(currentTag));
             }
         }
 
-        return chapter;
+        return builder;
     }
 
-    public List<CharSequence> convertToChapters(List<List<HtmlTag>> pages) {
-        List<CharSequence> result = new ArrayList<>(pages.size());
+    private CharSequence parseTag(Node tag) {
 
-        for (List<HtmlTag> htmlPage : pages) {
-            SpannableStringBuilder chapter = new SpannableStringBuilder();
-            for (HtmlTag htmlTag : htmlPage) {
-                if (htmlTag.getTagName().equals(NEW_LINE_TAG)) {
-                    chapter.append("\n");
+        if (tag.getNodeType() == Node.TEXT_NODE){
+            String tagNodeValue = tag.getNodeValue().trim();
+            //Если это самый внутренни тег и при этом не "левый" \n
+            if (!tagNodeValue.isEmpty()){
+                return tagNodeValue;
+            } else {
+                return "";
+            }
+        }
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+
+        NodeList nestedTags = tag.getChildNodes();
+        int nestedTagsCount = nestedTags.getLength();
+
+        for (int i = 0; i < nestedTagsCount; i++) {
+            builder.append(parseTag(nestedTags.item(i)));
+        }
+
+        switch (tag.getNodeName()) {
+            case HEAD_1_TAG: {
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_1_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                int builderLength = builder.length();
+                if (builderLength < 1) {
                     break;
                 }
 
-                int spanStartPosition = chapter.length();
-                int spanEndPosition = spanStartPosition + htmlTag.getTagContent().length();
-                chapter.append(htmlTag.getTagContent());
-                if (headers.containsKey(htmlTag.getTagName())){
-                    chapter.setSpan(new RelativeSizeSpan(headers.get(htmlTag.getTagName())),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    chapter.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    chapter.setSpan(new StyleSpan(Typeface.BOLD),
-                            spanStartPosition, spanEndPosition, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                    builder.append("\n\n");
                 }
 
-                chapter.append("\n\n");
+                break;
             }
-            result.add(chapter);
+            case HEAD_2_TAG: {
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_2_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
+                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                    builder.append("\n\n");
+                }
+
+                break;
+            }
+            case HEAD_3_TAG:
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_3_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case HEAD_4_TAG:
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_4_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case HEAD_5_TAG:
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_5_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case HEAD_6_TAG:
+                builder.setSpan(new RelativeSizeSpan(headers.get(HEAD_6_TAG)),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case PARAGRAPH_TAG_1: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
+                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                    builder.append("\n\n");
+                }
+                break;
+            }
+            case PARAGRAPH_TAG_2: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
+                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                    builder.append("\n\n");
+                }
+                break;
+            }
+            case EMPHASIS_TAG_1:
+                builder.setSpan(new StyleSpan(Typeface.ITALIC),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case EMPHASIS_TAG_2:
+                builder.setSpan(new StyleSpan(Typeface.ITALIC),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case STRONG_TAG_1:
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case STRONG_TAG_2:
+                builder.setSpan(new StyleSpan(Typeface.BOLD),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case SUB_TAG:
+                builder.setSpan(new RelativeSizeSpan(SUB_FONT_HEIGHT),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new SubscriptSpan(),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case SUP_TAG:
+                builder.setSpan(new RelativeSizeSpan(SUB_FONT_HEIGHT),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new SuperscriptSpan(),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case STRIKE_THROUGH_TAG:
+                builder.setSpan(new StrikethroughSpan(),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case UNDERLINE_TAG:
+                builder.setSpan(new UnderlineSpan(),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                break;
+            case EMPTY_LINE_TAG:
+                builder.append("\n");
+                break;
         }
 
-        return result;
+        return builder;
+    }
+
+    @Override
+    public void removeBook(long id) {
+        bookDescriptionDao.removeBookDescription(id);
+        FileHelper.removeDirectory(new File(booksLibraryPath + File.separator + String.valueOf(id)));
     }
 }

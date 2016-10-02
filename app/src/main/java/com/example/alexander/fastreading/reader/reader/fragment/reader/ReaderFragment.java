@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.reader.Finish;
 
@@ -24,6 +25,8 @@ import java.util.List;
  * Created by Alexander on 25.09.2016.
  */
 public class ReaderFragment extends Fragment {
+
+    private BookController bookController;
 
     public ReaderFragmentOnPauseResponse onPauseDelegate;
 
@@ -58,6 +61,8 @@ public class ReaderFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.reader_fragment, container, false);
+
+        bookController = new BookController(getActivity());
 
         bookDescription = getArguments().getParcelable("book_description");
         bookChapters = getArguments().getCharSequenceArrayList("book");

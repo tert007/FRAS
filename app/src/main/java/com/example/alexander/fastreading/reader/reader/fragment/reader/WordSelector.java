@@ -22,7 +22,7 @@ public class WordSelector {
 
     public WordSelector(CharSequence page){
         this.page = page;
-        this.matcher = pattern.matcher(page.toString());
+        this.matcher = pattern.matcher(page);
     }
 
     public WorldSelectorPage getNextSelectedWord(){

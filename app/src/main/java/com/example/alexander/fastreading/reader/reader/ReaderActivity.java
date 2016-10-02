@@ -5,19 +5,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
+import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.reader.fragment.reader.ReaderFragment;
@@ -33,13 +30,13 @@ import java.util.List;
 public class ReaderActivity extends AppCompatActivity implements FileReaderAsyncTaskResponse,
         ReaderFragmentOnPauseResponse, Finish {
 
+    private BookController bookController;
+
     private FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
 
     private List<CharSequence> bookChapters;
     private BookDescription bookDescription;
-
-    private BookDescriptionDao bookDescriptionDao;
 
     private ReaderFragment readerFragment;
 
@@ -56,12 +53,13 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         progressDialog.setCancelable(false);
         progressDialog.show();
 
-        Intent intent = getIntent();
+        bookController = new BookController(this);
 
+        Intent intent = getIntent();
         bookDescription = intent.getParcelableExtra("book_description");
 
-        bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(this).getBookDescriptionDao();
-        bookDescription = bookDescriptionDao.findBookDescription(bookDescription.getId());
+        //Обновление, прогресса страниц
+        bookDescription = bookController.findBookDescription(bookDescription.getFilePath());
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -217,7 +215,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     @Override
     protected void onStop() {
         super.onStop();
-
-        bookDescriptionDao.updateBookDescription(bookDescription);
+        bookController.updateBookDescription(bookDescription);
     }
 }

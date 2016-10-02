@@ -14,11 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
-import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
 
 import java.io.File;
@@ -29,6 +26,8 @@ import java.util.List;
  * Created by Alexander on 03.09.2016.
  */
 public class ReaderLibraryFragment extends Fragment implements ReaderBookDescriptionResponse, ReaderLibraryRemoveBookOnClickResponse {
+
+    private BookController bookController;
 
     public ReaderLibraryFloatButtonOnClickResponse addBookDelegate;
     public ReaderBookDescriptionResponse bookClickDelegate;
@@ -45,18 +44,14 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.library));
 
-        BookDescriptionDao bookDescriptionDao = BookDescriptionDaoFactory.getDaoFactory(getActivity()).getBookDescriptionDao();
-        bookDescriptions = bookDescriptionDao.getBookDescriptions();
-
-        ////Pomoika
-        BookDaoFactory bookDaoFactory = new BookDaoFactory(getActivity());
-        ////
+        bookController = new BookController(getActivity());
+        bookDescriptions = bookController.getBookDescriptions();
 
         boolean bookLibraryWasChanged = false;
 
         for (int i = 0; i < bookDescriptions.size(); i++) {
             if (! (new File(bookDescriptions.get(i).getFilePath())).exists()) {
-                bookDaoFactory.getBookDao(bookDescriptions.get(i).getType()).removeBook(bookDescriptions.get(i));
+                bookController.removeBook(bookDescriptions.get(i));
                 bookDescriptions.remove(i);
 
                 bookLibraryWasChanged = true;
@@ -102,16 +97,15 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
     @Override
     public void onBookRemoveClick(final BookDescription bookDescription) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(true);
         builder.setTitle(bookDescription.getTitle());
         builder.setMessage(getString(R.string.book_remove_message));
 
-        String positiveText = getString(R.string.remove);
-        builder.setPositiveButton(positiveText,
+        builder.setPositiveButton(R.string.remove,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        BookDao bookDao = new BookDaoFactory(getActivity()).getBookDao(bookDescription.getType());
-                        bookDao.removeBook(bookDescription);
+                        bookController.removeBook(bookDescription);
 
                         listAdapter.remove(bookDescription);
                         listAdapter.notifyDataSetChanged();
@@ -125,15 +119,14 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
                     }
                 });
 
-        String negativeText = getString(R.string.cancel);
-        builder.setNegativeButton(negativeText,
+        builder.setNegativeButton(R.string.cancel,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                        dialog.dismiss();
                     }
                 });
-        builder.setCancelable(true);
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }

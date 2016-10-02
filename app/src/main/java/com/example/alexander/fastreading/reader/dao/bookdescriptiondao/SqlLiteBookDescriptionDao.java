@@ -4,9 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
-import android.util.Log;
 
-import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.dao.bookdao.BookHasBeenAddedException;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.ArrayList;
@@ -42,29 +41,49 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
     }
 
     @Override
-    public BookDescription findBookDescription(long id) {
-        Cursor cursor = database.rawQuery("SELECT * FROM " + BookDescriptionDatabaseHelper.BOOK_TABLE + " WHERE " + BaseColumns._ID + "='" + id + "'" , null);
+    public long getNextItemId() {
+        Cursor cursor = database.rawQuery("SELECT * FROM SQLITE_SEQUENCE WHERE name='" + BookDescriptionDatabaseHelper.BOOK_TABLE + "'" , null);
+        long result = 0;
+
         if (cursor.moveToFirst()) {
-            return getBookDescription(cursor);
+            result = cursor.getLong(cursor.getColumnIndex("seq"));
+            cursor.close();
         }
 
-        return null;
+        return result + 1;
+    }
+
+    @Override
+    public BookDescription findBookDescription(long id) {
+        Cursor cursor = database.rawQuery("SELECT * FROM " + BookDescriptionDatabaseHelper.BOOK_TABLE + " WHERE " + BaseColumns._ID + "='" + id + "'" , null);
+        BookDescription result = null;
+
+        if (cursor.moveToFirst()) {
+            result =  getBookDescription(cursor);
+            cursor.close();
+        }
+
+        return result;
     }
 
     @Override
     public BookDescription findBookDescription(String filePath) {
         Cursor cursor = database.rawQuery("SELECT * FROM " + BookDescriptionDatabaseHelper.BOOK_TABLE + " WHERE " + BookDescriptionDatabaseHelper.BOOK_FILE_PATH + "='" + filePath + "'" , null);
+        BookDescription result = null;
+
         if (cursor.moveToFirst()) {
-            return getBookDescription(cursor);
+            result =  getBookDescription(cursor);
+            cursor.close();
         }
 
-        return null;
+        return result;
     }
 
     @Override
-    public void updateBookDescription(BookDescription newValue) {
-        database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(newValue), BaseColumns._ID + "='" + newValue.getId() + "'", null);
+    public void updateBookDescription(BookDescription bookDescription) {
+        database.update(BookDescriptionDatabaseHelper.BOOK_TABLE, getValues(bookDescription), BaseColumns._ID + "='" + bookDescription.getId() + "'", null);
     }
+
 
     @Override
     public void removeBookDescription(long id) {
@@ -81,6 +100,8 @@ public class SqlLiteBookDescriptionDao implements BookDescriptionDao {
                 bookDescriptions.add(getBookDescription(cursor));
             } while (cursor.moveToNext());
         }
+
+        cursor.close();
 
         return bookDescriptions;
     }

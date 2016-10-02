@@ -104,6 +104,12 @@ public class FileHelper {
         return getTextFromFile(streamReader);
     }
 
+    public static String getTextFromFile(InputStream inputStream) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(inputStream); // utf8
+
+        return getTextFromFile(streamReader);
+    }
+
     private static String getTextFromFile(InputStreamReader streamReader) throws IOException {
         StringBuilder text = new StringBuilder();
 
@@ -180,6 +186,26 @@ public class FileHelper {
         } finally {
             if (is != null){
                 is.close();
+            }
+            if (os != null){
+                os.close();
+            }
+        }
+    }
+
+
+    public static void copyFile(InputStream inputStreamSource, File dest) throws IOException {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStreamSource.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            if (inputStreamSource != null){
+                inputStreamSource.close();
             }
             if (os != null){
                 os.close();

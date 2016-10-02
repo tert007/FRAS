@@ -50,7 +50,7 @@
     <string name="remove">Remove</string>
     <string name="cancel">Cancel</string>
     <string name="bookOffset">Progress</string>
-    <string name="book_in_library">The book in the library already</string>
+    <string name="book_has_been_added">The book has been added</string>
     <string name="open_book">Open the book</string>
     <string name="library_was_changed">The library was changed</string>
     <string name="change_text_size">Change the text size</string>

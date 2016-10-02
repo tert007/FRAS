@@ -3,9 +3,9 @@ package com.example.alexander.fastreading.reader.reader;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDao;
-import com.example.alexander.fastreading.reader.dao.bookdao.BookDaoFactory;
+import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
+import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
 import java.util.List;
@@ -38,8 +38,11 @@ public class FileReadingAsyncTask extends AsyncTask<BookDescription, Void, List<
         BookDescription bookDescription = params[0];
 
         try {
-            BookDao bookDao = new BookDaoFactory(context).getBookDao(bookDescription.getType());
-            return bookDao.getChaptersText(bookDescription);
+            BookController bookController = new BookController(context);
+            BookContent bookContent = bookController.getBookContent(bookDescription.getFilePath());
+
+            //FIX
+            return bookContent.getChaptersText();
         } catch (BookParserException e) {
             return null;
         }

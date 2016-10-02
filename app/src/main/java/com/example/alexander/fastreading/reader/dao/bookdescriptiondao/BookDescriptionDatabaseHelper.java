@@ -56,9 +56,6 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
                         BOOK_TYPE + " TEXT NOT NULL, " +
                         BOOK_FAVORITE_FLAG + " INTEGER NOT NULL, " +
                         BOOK_OFFSET + " INTEGER NOT NULL);"
-
-                //                        BOOK_OFFSET + " REAL NOT NULL);"
-
         );
     }
 
