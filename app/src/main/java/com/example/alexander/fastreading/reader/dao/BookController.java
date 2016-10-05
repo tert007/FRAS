@@ -67,18 +67,18 @@ public class BookController {
         return bookDescriptionDao.findBookDescription(filePath);
     }
 
-    public BookContent getBookContent(String filePath) throws BookParserException {
-        switch (FileHelper.getFileExtension(filePath)) {
+    public BookContent getBookContent(BookDescription bookDescription) throws BookParserException {
+        switch (bookDescription.getType()) {
             case FileHelper.FB2:
                 if (fb2BookDao == null)
                     fb2BookDao = new Fb2BookDao(bookDescriptionDao, context);
 
-                return fb2BookDao.getBookContent(filePath);
+                return fb2BookDao.getBookContent(bookDescription);
             case FileHelper.EPUB:
                 if (epubBookDao == null)
                     epubBookDao = new EpubBookDao(bookDescriptionDao, context);
 
-                return epubBookDao.getBookContent(filePath);
+                return epubBookDao.getBookContent(bookDescription);
         }
 
         return null;

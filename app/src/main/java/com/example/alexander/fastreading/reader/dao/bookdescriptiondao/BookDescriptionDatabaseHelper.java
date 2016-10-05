@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME = "books_database.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String BOOK_TABLE = "books";
 
@@ -57,6 +57,12 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
                         BOOK_FAVORITE_FLAG + " INTEGER NOT NULL, " +
                         BOOK_OFFSET + " INTEGER NOT NULL);"
         );
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + BOOK_TABLE);
+        onCreate(db);
     }
 
     @Override

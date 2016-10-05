@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.style.AlignmentSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StrikethroughSpan;
@@ -15,6 +16,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.JsonHelper;
 import com.example.alexander.fastreading.reader.XmlHelper;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.entity.BookChapter;
@@ -22,6 +24,7 @@ import com.example.alexander.fastreading.reader.entity.Fb2BookChapter;
 import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -33,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Alexander on 29.09.2016.
@@ -99,14 +103,17 @@ public class Fb2BookDao extends AbstractBookDao {
         bookDescription.setLanguage(bookLanguage);
         bookDescription.setAuthor(authors.get(0)); ////////FIX
 
-        bookDescription.setCoverImagePath(getCoverImagePath(bookDocument, id)); // FIX
+        String saveDirectoryPath = booksLibraryPath + File.separator + id;
+
+        bookDescription.setCoverImagePath(getCoverImagePath(bookDocument, saveDirectoryPath));
+        JsonHelper.saveBook(bookDescription, parseBook(bookDocument), saveDirectoryPath);
 
         bookDescriptionDao.addBookDescription(bookDescription);
 
         return bookDescription;
     }
 
-    private String getCoverImagePath(Document bookDocument, long id) throws BookParserException {
+    private String getCoverImagePath(Document bookDocument, String directoryPath) throws BookParserException {
         NodeList coverPageTags = bookDocument.getElementsByTagName("coverpage");
         if (coverPageTags.getLength() == 0)
             return null;
@@ -163,19 +170,15 @@ public class Fb2BookDao extends AbstractBookDao {
                         //binary = binary.replace("\n", "");
 
                         byte[] imageByte = Base64.decode(binary, Base64.DEFAULT);
-
-                        String imagePath = booksLibraryPath + File.separator + String.valueOf(id) + coverId;
+                        String imagePath = directoryPath + File.separator + coverId;
 
                         File imageFile = new File(imagePath);
                         imageFile.getParentFile().mkdirs();
-
                         imageFile.createNewFile();
 
-                        FileOutputStream fos = new FileOutputStream(imageFile);
-
-                        fos.write(imageByte);
-
-                        fos.close();
+                        FileOutputStream fileOutputStream = new FileOutputStream(imageFile);
+                        fileOutputStream.write(imageByte);
+                        fileOutputStream.close();
 
                         return imagePath;
                     } catch (IOException e) {
@@ -409,18 +412,28 @@ public class Fb2BookDao extends AbstractBookDao {
                 }
                 break;
             }
-            case POEM_TAG:
-                builder.setSpan(new StyleSpan(Typeface.ITALIC),
-                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                break;
-            case STANZA_TAG: {
+            case POEM_TAG: {
                 int builderLength = builder.length();
                 if (builderLength < 1) {
                     break;
                 }
 
                 if (!(builder.charAt(builderLength - 1) == '\n')) {
-                    builder.append("\n");
+                    builder.append("\n\n");
+                }
+                break;
+            }
+            case STANZA_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
+                builder.setSpan(new StyleSpan(Typeface.ITALIC),
+                        0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                    builder.append("\n\n");
                 }
                 break;
             }
@@ -483,9 +496,9 @@ public class Fb2BookDao extends AbstractBookDao {
     }
 
     @Override
-    public BookContent getBookContent(String filePath) throws BookParserException {
-        Document bookDocument = XmlHelper.getXmlFromFile(new File(filePath));
-        return parseBook(bookDocument);
+    public BookContent getBookContent(BookDescription bookDescription) throws BookParserException {
+        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
+        return JsonHelper.readBook(bookDescription, directoryPath);
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
+import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.reader.fragment.reader.ReaderFragment;
 import com.example.alexander.fastreading.reader.reader.fragment.reader.ReaderFragmentOnPauseResponse;
@@ -35,8 +36,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     private FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
 
-    private List<CharSequence> bookChapters;
     private BookDescription bookDescription;
+    private BookContent bookContent;
 
     private ReaderFragment readerFragment;
 
@@ -83,8 +84,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     }
 
     @Override
-    public void onFileReadingPostExecute(List<CharSequence> response) {
-        if (response == null){
+    public void onFileReadingPostExecute(BookContent bookContent) {
+        if (bookContent == null){
             progressDialog.dismiss();
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -104,17 +105,12 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
             return;
         }
 
-        if (response.isEmpty()) {
-            progressDialog.dismiss();
-            Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        bookChapters = response;
+        this.bookContent = bookContent;
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("book_description", bookDescription);
-        bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) bookChapters);
+        bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) this.bookContent.getChaptersText());
+        bundle.putStringArrayList("title_list", (ArrayList<String>) this.bookContent.getTitles());
 
         readerFragment = new ReaderFragment();
         readerFragment.setArguments(bundle);
@@ -166,7 +162,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
             Bundle bundle = new Bundle();
             bundle.putParcelable("book_description", bookDescription);
-            bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) bookChapters);
+            bundle.putCharSequenceArrayList("book", (ArrayList<CharSequence>) this.bookContent.getChaptersText());
+            bundle.putStringArrayList("title_list", (ArrayList<String>) this.bookContent.getTitles());
+
 
             readerFragment = new ReaderFragment();
             readerFragment.setArguments(bundle);

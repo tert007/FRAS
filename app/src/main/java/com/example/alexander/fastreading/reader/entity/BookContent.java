@@ -1,7 +1,5 @@
 package com.example.alexander.fastreading.reader.entity;
 
-import android.text.SpannableStringBuilder;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +8,7 @@ import java.util.List;
  */
 public class BookContent {
 
-    List<BookChapter> bookChapterList;
+    private List<BookChapter> bookChapterList;
 
     public List<BookChapter> getBookChapterList() {
         return bookChapterList;
@@ -21,12 +19,22 @@ public class BookContent {
     }
 
     public List<CharSequence> getChaptersText() {
-        final List<CharSequence> result = new ArrayList<>(bookChapterList.size());
+        final List<CharSequence> chapterTextList = new ArrayList<>(bookChapterList.size());
 
         for (BookChapter chapter : bookChapterList) {
-            result.add(chapter.getBookChapter());
+            chapterTextList.add(chapter.getBookChapter());
         }
 
-        return result;
+        return chapterTextList;
+    }
+
+    public List<String> getTitles() {
+        final List<String> titleList = new ArrayList<>(bookChapterList.size());
+
+        for (BookChapter bookChapter : bookChapterList) {
+            titleList.add(bookChapter.getTitle().toString());
+        }
+        
+        return titleList;
     }
 }

@@ -14,6 +14,7 @@ import android.text.style.SuperscriptSpan;
 import android.text.style.UnderlineSpan;
 
 import com.example.alexander.fastreading.reader.FileHelper;
+import com.example.alexander.fastreading.reader.JsonHelper;
 import com.example.alexander.fastreading.reader.XmlHelper;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.entity.BookChapter;
@@ -34,6 +35,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -137,7 +139,7 @@ public class EpubBookDao extends AbstractBookDao {
 
             if (coverPath != null) {
                 String coverName = new File(coverPath).getName();
-                String imagePath = booksLibraryPath + File.separator + String.valueOf(id) + File.separator + coverName;
+                String imagePath = booksLibraryPath + File.separator + id + File.separator + coverName;
 
                 File imageFile = new File(imagePath);
                 imageFile.getParentFile().mkdirs();
@@ -152,20 +154,20 @@ public class EpubBookDao extends AbstractBookDao {
                     }
                 }
             }
+            zipFile.close();
+
         } catch (IOException e){
             throw new BookParserException(e);
-        } finally {
-            try {
-                if (zipFile != null)
-                    zipFile.close();
-            } catch (IOException e) {
-                throw new BookParserException(e);
-            }
         }
 
         bookDescription.setId(id);
         bookDescription.setFilePath(filePath);
         bookDescription.setType(FileHelper.getFileExtension(filePath));
+
+        String directoryPath = booksLibraryPath + File.separator + id;
+
+        BookContent bookContent = parseBook(filePath);
+        JsonHelper.saveBook(bookDescription, bookContent, directoryPath);
 
         bookDescriptionDao.addBookDescription(bookDescription);
 
@@ -220,7 +222,12 @@ public class EpubBookDao extends AbstractBookDao {
     }
 
     @Override
-    public BookContent getBookContent(String filePath) throws BookParserException {
+    public BookContent getBookContent(BookDescription bookDescription) throws BookParserException {
+        String directoryPath = booksLibraryPath + File.separator + bookDescription.getId();
+        return JsonHelper.readBook(bookDescription, directoryPath);
+    }
+
+    private BookContent parseBook(String filePath) throws BookParserException {
         try {
             ZipFile zipFile = new ZipFile(filePath);
             List<? extends ZipEntry> zipEntries = Collections.list(zipFile.entries());
@@ -238,7 +245,7 @@ public class EpubBookDao extends AbstractBookDao {
             }
 
             BookContent bookContent = new BookContent();
-            List<BookChapter> bookChapters = new ArrayList<>(navigationPoints.size());
+            List<BookChapter> bookChapters = new LinkedList<>();
 
             for (int i = 0; i < navigationPoints.size(); i++) {
                 String bookChapterId = navigationPoints.get(i).getBookChapterId();

@@ -6,11 +6,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -37,12 +37,16 @@ public class ReaderFragment extends Fragment {
     private TextView currentPageResultTextView;
     private AppCompatSeekBar seekBar;
     private TextView currentPageSeekTextView;
+    private TextView currentChapterTextView;
+    private View navigationLayout;
 
     private BookDescription bookDescription;
     private List<CharSequence> bookChapters;
+    private List<String> titles;
 
     private int currentPageIndex;
-    private List<CharSequence> pages;
+    private SeparatedBook separatedBook;
+    //private List<CharSequence> pages;
 
     private boolean itsSeekPause = true; // Seek Bar start status
 
@@ -66,6 +70,7 @@ public class ReaderFragment extends Fragment {
 
         bookDescription = getArguments().getParcelable("book_description");
         bookChapters = getArguments().getCharSequenceArrayList("book");
+        titles = getArguments().getStringArrayList("title_list");
 
         textView = (TextView) view.findViewById(R.id.reader_pages_text_view);
         String textSize = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("reader_text_size", getString(R.string.text_size_default_value));
@@ -77,6 +82,8 @@ public class ReaderFragment extends Fragment {
         currentPageTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_text_view);
         currentPageResultTextView = (TextView) view.findViewById(R.id.reader_pages_current_page_result_text_view);
 
+        navigationLayout = view.findViewById(R.id.reader_pages_navigation_layout);
+        currentChapterTextView = (TextView) view.findViewById(R.id.reader_pages_current_chapter_title_text_view);
         currentPageSeekTextView = (TextView) view.findViewById(R.id.reader_pages_seek_text_view);
         seekBar = (AppCompatSeekBar) view.findViewById(R.id.reader_pages_seek_bar);
 
@@ -87,11 +94,11 @@ public class ReaderFragment extends Fragment {
                 thirdPartOfPageWidth = pageWidth / 3;
 
                 PageSplitter pageSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
-                pages = pageSplitter.getPages(bookChapters);
+                separatedBook = pageSplitter.getSeparatedBook(titles, bookChapters);
 
                 setCurrentPage();
 
-                textView.setText(pages.get(currentPageIndex));
+                textView.setText(separatedBook.getPage((currentPageIndex)));
 
                 currentPageTextView.setVisibility(View.VISIBLE);
                 currentPageResultTextView.setVisibility(View.VISIBLE);
@@ -115,10 +122,10 @@ public class ReaderFragment extends Fragment {
     private int getBookOffset() {
         int index = 0;
         for (int i = 0; i < currentPageIndex; i++){
-            index += pages.get(i).length();
+            index += separatedBook.getPage(i).length();
         }
 
-        if (currentPageIndex < pages.size() - 1){
+        if (currentPageIndex < separatedBook.size() - 1){
             return index + 1; //??
         }
 
@@ -130,12 +137,14 @@ public class ReaderFragment extends Fragment {
 
         long bookLength = 0;
 
-        if (bookDescription.getBookOffset() <= pages.get(0).length()){
+        if (bookDescription.getBookOffset() <= separatedBook.getPage(0).length()){
             return;
         }
 
-        for (CharSequence page : pages) {
-            bookLength += page.length();
+
+
+        for (int i = 0; i < separatedBook.size(); i++) {
+            bookLength += separatedBook.getPage(i).length();
 
             if (bookLength <= bookDescription.getBookOffset()){
                 currentPageIndex++;
@@ -146,7 +155,7 @@ public class ReaderFragment extends Fragment {
     }
 
     private String getCurrentPageByString(){
-        return String.valueOf(currentPageIndex + 1) + '/' + pages.size();
+        return String.valueOf(currentPageIndex + 1) + '/' + separatedBook.size();
     }
 
     private void showDialog() {
@@ -176,13 +185,13 @@ public class ReaderFragment extends Fragment {
                     seekBar.setOnSeekBarChangeListener(fastReadingSeekBarChangeListener);
 
                     if (!itWasFastReading) {
-                        wordSelector = new WordSelector(pages.get(currentPageIndex));
+                        wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
                     }
                 } else {
                     speedTextView.setVisibility(View.GONE);
                     speedResultTextView.setVisibility(View.GONE);
 
-                    textView.setText(pages.get(currentPageIndex));
+                    textView.setText(separatedBook.getPage(currentPageIndex));
 
                     textView.setOnTouchListener(onTouchListener);
                     seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
@@ -215,9 +224,9 @@ public class ReaderFragment extends Fragment {
 
                     textView.postDelayed(this, (int) delay);
                 } else {
-                    if (currentPageIndex <  pages.size() - 1){
+                    if (currentPageIndex <  separatedBook.size() - 1){
                         currentPageIndex++;
-                        wordSelector = new WordSelector(pages.get(currentPageIndex));
+                        wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
 
                         textView.postDelayed(this, defaultPageChangeDelay);
 
@@ -238,12 +247,11 @@ public class ReaderFragment extends Fragment {
 
                 if (x < thirdPartOfPageWidth) {
                     itsSeekPause = true;
-                    seekBar.setVisibility(View.GONE);
-                    currentPageSeekTextView.setVisibility(View.GONE);
+                    navigationLayout.setVisibility(View.GONE);
 
                     if (currentPageIndex > 0){
                         currentPageIndex--;
-                        textView.setText(pages.get(currentPageIndex));
+                        textView.setText(separatedBook.getPage(currentPageIndex));
                         currentPageResultTextView.setText(getCurrentPageByString());
                     }
                 } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
@@ -251,23 +259,23 @@ public class ReaderFragment extends Fragment {
                     itsSeekPause = !itsSeekPause;
 
                     if (!itsSeekPause) {
-                        seekBar.setMax(pages.size() - 1);
+                        currentChapterTextView.setText(separatedBook.getTitle(currentPageIndex));
+                        seekBar.setMax(separatedBook.size() - 1);
                         seekBar.setProgress(currentPageIndex);
                         currentPageSeekTextView.setText(getCurrentPageByString());
-                        seekBar.setVisibility(View.VISIBLE);
-                        currentPageSeekTextView.setVisibility(View.VISIBLE);
+                        navigationLayout.setVisibility(View.VISIBLE);
+
                     } else {
-                        seekBar.setVisibility(View.GONE);
-                        currentPageSeekTextView.setVisibility(View.GONE);
+                        navigationLayout.setVisibility(View.GONE);
+
                     }
                 } else {
                     itsSeekPause = true;
-                    seekBar.setVisibility(View.GONE);
-                    currentPageSeekTextView.setVisibility(View.GONE);
+                    navigationLayout.setVisibility(View.GONE);
 
-                    if (currentPageIndex < pages.size() - 1){
+                    if (currentPageIndex < separatedBook.size() - 1){
                         currentPageIndex++;
-                        textView.setText(pages.get(currentPageIndex));
+                        textView.setText(separatedBook.getPage(currentPageIndex));
                         currentPageResultTextView.setText(getCurrentPageByString());
                     }
                 }
@@ -294,16 +302,15 @@ public class ReaderFragment extends Fragment {
                     fastReadingStarted = !fastReadingStarted;
 
                     if (fastReadingStarted) {
-                        seekBar.setVisibility(View.GONE);
-                        currentPageSeekTextView.setVisibility(View.GONE);
+                        navigationLayout.setVisibility(View.GONE);
 
                         textView.post(wordSelectorThread);
                     } else {
-                        seekBar.setMax(pages.size() - 1);
+                        currentChapterTextView.setText(separatedBook.getTitle(currentPageIndex));
+                        seekBar.setMax(separatedBook.size() - 1);
                         seekBar.setProgress(currentPageIndex);
                         currentPageSeekTextView.setText(getCurrentPageByString());
-                        seekBar.setVisibility(View.VISIBLE);
-                        currentPageSeekTextView.setVisibility(View.VISIBLE);
+                        navigationLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if (currentSpeedIndex < speed.length - 1){
@@ -323,6 +330,7 @@ public class ReaderFragment extends Fragment {
             if (fromUser){
                 currentPageIndex = progress;
                 currentPageSeekTextView.setText(getCurrentPageByString());
+                currentChapterTextView.setText(separatedBook.getTitle(currentPageIndex));
             }
         }
 
@@ -333,7 +341,7 @@ public class ReaderFragment extends Fragment {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            textView.setText(pages.get(currentPageIndex));
+            textView.setText(separatedBook.getPage(currentPageIndex));
             currentPageResultTextView.setText(getCurrentPageByString());
         }
     };
@@ -344,6 +352,7 @@ public class ReaderFragment extends Fragment {
             if (fromUser){
                 currentPageIndex = progress;
                 currentPageSeekTextView.setText(getCurrentPageByString());
+                currentChapterTextView.setText(separatedBook.getTitle(currentPageIndex));
             }
         }
 
@@ -354,8 +363,8 @@ public class ReaderFragment extends Fragment {
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            textView.setText(pages.get(currentPageIndex));
-            wordSelector = new WordSelector(pages.get(currentPageIndex));
+            textView.setText(separatedBook.getPage(currentPageIndex));
+            wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
             currentPageResultTextView.setText(getCurrentPageByString());
         }
     };

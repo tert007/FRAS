@@ -8,6 +8,6 @@ import com.example.alexander.fastreading.reader.entity.BookDescription;
  */
 public interface BookDao {
     BookDescription addBook(String filePath) throws BookParserException, BookHasBeenAddedException;
-    BookContent getBookContent(String filePath) throws BookParserException; //if i will save use id (?)
+    BookContent getBookContent(BookDescription bookDescription) throws BookParserException;
     void removeBook(long id);
 }

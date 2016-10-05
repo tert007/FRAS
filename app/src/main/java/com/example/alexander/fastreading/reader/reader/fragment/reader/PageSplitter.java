@@ -6,6 +6,7 @@ import android.text.TextPaint;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -35,14 +36,14 @@ public class PageSplitter {
         this.lineSpacingExtra = lineSpacingExtra;
     }
 
-    public List<CharSequence> getPages(List<CharSequence> chapters) {
-        //Лист глав книги в лист страниц
+    public SeparatedBook getSeparatedBook(List<String> titles, List<CharSequence> chapters) {
         if (chapters.isEmpty())
-            return Collections.emptyList();
+            return null;
 
-        List<CharSequence> result = new ArrayList<>(); //FIX malloc every time
+        List<List<CharSequence>> pages = new LinkedList<>();
 
         for (CharSequence chapter : chapters) {
+            List<CharSequence> chapterPages = new LinkedList<>();
 
             int usedHeight = 0;
 
@@ -51,6 +52,10 @@ public class PageSplitter {
 
             StaticLayout tempLayout = new StaticLayout(chapter, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
             int lastLineIndex = tempLayout.getLineCount() - 1;
+
+            if (lastLineIndex == 0) {
+                chapterPages.add(chapter);
+            }
 
             int selectedLine = 0;
             while (selectedLine != lastLineIndex) {
@@ -65,11 +70,13 @@ public class PageSplitter {
                 usedHeight = tempLayout.getLineBottom(selectedLine);
 
                 endIndex = tempLayout.getLineEnd(selectedLine);
-                result.add(chapter.subSequence(startIndex, endIndex));
+                chapterPages.add(chapter.subSequence(startIndex, endIndex));
                 startIndex = endIndex;
             }
+
+            pages.add(chapterPages);
         }
 
-        return result;
+        return new SeparatedBook(titles, pages);
     }
 }

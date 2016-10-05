@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Alexander on 22.08.2016.
  */
-public class FileReadingAsyncTask extends AsyncTask<BookDescription, Void, List<CharSequence>> {
+public class FileReadingAsyncTask extends AsyncTask<BookDescription, Void, BookContent> {
 
     public FileReaderAsyncTaskResponse delegate;
 
@@ -34,25 +34,22 @@ public class FileReadingAsyncTask extends AsyncTask<BookDescription, Void, List<
     }
 
     @Override
-    protected List<CharSequence> doInBackground(BookDescription... params) {
+    protected BookContent doInBackground(BookDescription... params) {
         BookDescription bookDescription = params[0];
 
         try {
             BookController bookController = new BookController(context);
-            BookContent bookContent = bookController.getBookContent(bookDescription.getFilePath());
-
-            //FIX
-            return bookContent.getChaptersText();
+            return bookController.getBookContent(bookDescription);
         } catch (BookParserException e) {
             return null;
         }
     }
 
     @Override
-    protected void onPostExecute(List<CharSequence> chapters) {
-        super.onPostExecute(chapters);
+    protected void onPostExecute(BookContent bookContent) {
+        super.onPostExecute(bookContent);
         //progressDialog.dismiss();
 
-        delegate.onFileReadingPostExecute(chapters);
+        delegate.onFileReadingPostExecute(bookContent);
     }
 }

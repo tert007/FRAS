@@ -1,5 +1,7 @@
 package com.example.alexander.fastreading.reader.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 
@@ -18,6 +20,7 @@ public class EpubBookChapter implements BookChapter {
         this.content = content;
     }
 
+    @Override
     public CharSequence getTitle() {
         return title;
     }
@@ -26,6 +29,7 @@ public class EpubBookChapter implements BookChapter {
         this.title = title;
     }
 
+    @Override
     public CharSequence getContent() {
         return content;
     }
