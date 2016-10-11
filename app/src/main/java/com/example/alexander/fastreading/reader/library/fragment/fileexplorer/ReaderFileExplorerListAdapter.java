@@ -38,13 +38,16 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
             convertView = layoutInflater.inflate(R.layout.reader_file_explorer_list_item, parent, false);
         }
 
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.reader_file_explorer_image_view);
+        File currentFile = getItem(position);
 
-        String fileExtension = FileHelper.getFileExtension(getItem(position));
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.reader_file_explorer_image_view);
+        View fileTypeLayout = convertView.findViewById(R.id.reader_file_explorer_type_layout);
+
+        String fileExtension = FileHelper.getFileExtension(currentFile);
         if (fileExtension != null){
             switch (fileExtension){
                 case FileHelper.TXT:
-                    imageView.setImageResource(R.drawable.text_document);
+                    imageView.setImageResource(R.drawable.notepad);
                     break;
                 case FileHelper.EPUB:
                     imageView.setImageResource(R.drawable.book);
@@ -53,12 +56,18 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
                     imageView.setImageResource(R.drawable.book);
                     break;
             }
+
+            fileTypeLayout.setVisibility(View.VISIBLE);
+
+            TextView textView = (TextView) fileTypeLayout.findViewById(R.id.reader_file_explorer_file_type_text_view);
+            textView.setText(fileExtension);
         } else {
             imageView.setImageResource(R.drawable.folder);
+            fileTypeLayout.setVisibility(View.GONE);
         }
 
         TextView textView = (TextView) convertView.findViewById(R.id.reader_file_explorer_text_view);
-        textView.setText(getItem(position).getName());
+        textView.setText(currentFile.getName());
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

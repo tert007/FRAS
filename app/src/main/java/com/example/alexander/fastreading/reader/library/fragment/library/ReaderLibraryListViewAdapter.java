@@ -1,9 +1,8 @@
 package com.example.alexander.fastreading.reader.library.fragment.library;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,10 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Alexander on 04.09.2016.
@@ -47,18 +49,23 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
         textView.setText(currentBookDescription.getTitle());
 
         TextView progressTextView = (TextView) convertView.findViewById(R.id.reader_library__list_view_item_progress_result_text_view);
-        //String progress = String.valueOf(Math.round(currentBookDescription.getBookOffset() * 100)) + '%';
-        //progressTextView.setText(progress);
+        String progress = String.valueOf(currentBookDescription.getProgress()) + '%';
+        progressTextView.setText(progress);
 
-        ImageView bookCoverImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_image_view);
+        TextView bookCoverImageView = (TextView) convertView.findViewById(R.id.reader_library_list_view_item_cover_text_view);
 
-        if (currentBookDescription.getCoverImagePath() != null){
-            Bitmap bookCoverBitmap = BitmapFactory.decodeFile(currentBookDescription.getCoverImagePath());
-
-            bookCoverImageView.setImageBitmap(bookCoverBitmap);
+        char firstLetter;
+        if (currentBookDescription.getTitle().length() > 0) {
+            firstLetter = currentBookDescription.getTitle().charAt(0);
         } else {
-            bookCoverImageView.setImageResource(R.drawable.book_without_title);
+            firstLetter = '-';
         }
+
+        GradientDrawable gradientDrawable = ((GradientDrawable)bookCoverImageView.getBackground());
+        int color = ColourGenerator.getRandomColor(firstLetter);
+        gradientDrawable.setColor(color);
+
+        bookCoverImageView.setText(String.valueOf(firstLetter));
 
         ImageView removeImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_remove_image_view);
         removeImageView.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +84,4 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
 
         return convertView;
     }
-
-
 }

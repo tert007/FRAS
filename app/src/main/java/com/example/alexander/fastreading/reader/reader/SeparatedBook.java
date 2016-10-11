@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.reader.fragment.reader;
+package com.example.alexander.fastreading.reader.reader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class SeparatedBook {
 
         for (String title : titles) {
             trimTitles.add(title.trim().replaceAll("[\\s]+", " "));
-        }
+        } //fix
 
         this.titles = trimTitles;
         this.chapters = chapters;
@@ -46,6 +46,20 @@ public class SeparatedBook {
         }
 
         return null;
+    }
+
+    public int getPageIndexByTitle(int titleIndex) {
+        int pageIndex = 0;
+
+        for (int i = 0; i < titleIndex; i++) {
+            pageIndex += chapters.get(i).size();
+        }
+
+        return pageIndex;
+    }
+
+    public List<String> getTitles() {
+        return titles;
     }
 
     public CharSequence getPage(int pageIndex) {

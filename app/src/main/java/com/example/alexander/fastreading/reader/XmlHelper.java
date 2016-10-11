@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader;
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ public class XmlHelper {
 
             Document document = documentBuilder.parse(file);
             document.getDocumentElement().normalize();
+
             return document;
         } catch (Exception e) {
             throw new BookParserException(e);

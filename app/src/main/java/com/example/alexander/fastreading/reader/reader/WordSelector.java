@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.reader.fragment.reader;
+package com.example.alexander.fastreading.reader.reader;
 
 import android.graphics.Color;
 import android.text.SpannableString;

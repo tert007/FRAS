@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.reader.fragment.reader;
+package com.example.alexander.fastreading.reader.reader;
 
 import com.example.alexander.fastreading.reader.entity.BookDescription;
 

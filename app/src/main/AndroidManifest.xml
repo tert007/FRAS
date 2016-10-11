@@ -39,6 +39,17 @@
 
         <activity android:name=".reader.reader.ReaderActivity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".reader.reader.settings.ReaderSettingsActivity"
+            android:parentActivityName=".reader.reader.ReaderActivity"
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".reader.reader.ReaderActivity" />
+            </activity>
+
     </application>
 
 </manifest>

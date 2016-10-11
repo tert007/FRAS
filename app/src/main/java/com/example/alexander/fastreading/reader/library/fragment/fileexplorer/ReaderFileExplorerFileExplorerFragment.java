@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,32 +23,25 @@ import java.util.List;
 /**
  * Created by Alexander on 03.08.2016.
  */
-public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
+public class ReaderFileExplorerFileExplorerFragment extends ListFragment implements
         ReaderFileExplorerBookAddAsyncTaskResponse,
         ReaderFileExplorerOnFileClickResponse,
         ReaderBookDescriptionResponse {
 
     public ReaderBookDescriptionResponse delegate;
 
-    private BookController bookController;
-
-    private ReaderFileExplorerListAdapter adapter;
-    private ListView listView;
-
     private File path = new File("/");
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reader_file_explorer_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.reader_file_explorer_fragment, null);
+    }
 
-        bookController = new BookController(getActivity());
-
-        listView = (ListView) view.findViewById(R.id.reader_file_explorer_list_view);
-
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         listViewUpdate();
-
-        return view;
     }
 
     public boolean onBackPressed() {
@@ -107,10 +101,12 @@ public class ReaderFileExplorerFileExplorerFragment extends Fragment implements
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(path.getPath());
 
+        ReaderFileExplorerListAdapter adapter;
+
         adapter = new ReaderFileExplorerListAdapter(getActivity(), R.id.reader_file_explorer_text_view, files);
         adapter.delegate = this;
 
-        listView.setAdapter(adapter);
+        setListAdapter(adapter);
     }
 
     //Добавление книги, а также нажатие на ту что уже добавлена

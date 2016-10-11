@@ -4,9 +4,36 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ListView
-        android:id="@+id/reader_file_explorer_list_view"
+        android:id="@id/android:list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
+
+    <LinearLayout
+        android:id="@id/android:empty"
+        android:text="@string/directory_is_empty"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@drawable/folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@id/android:empty"
+
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:text="@string/directory_is_empty"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </LinearLayout>

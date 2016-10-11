@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.reader.reader.fragment.reader;
+package com.example.alexander.fastreading.reader.reader;
 
 /**
  * Created by Alexander on 21.09.2016.

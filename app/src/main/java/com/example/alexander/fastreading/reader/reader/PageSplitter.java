@@ -1,11 +1,12 @@
-package com.example.alexander.fastreading.reader.reader.fragment.reader;
+package com.example.alexander.fastreading.reader.reader;
 
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 
+import com.example.alexander.fastreading.reader.entity.BookContent;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,13 +37,18 @@ public class PageSplitter {
         this.lineSpacingExtra = lineSpacingExtra;
     }
 
-    public SeparatedBook getSeparatedBook(List<String> titles, List<CharSequence> chapters) {
-        if (chapters.isEmpty())
+    public SeparatedBook getSeparatedBook(BookContent bookContent) {
+        if (bookContent == null)
             return null;
+
+        final List<String> titles = new ArrayList<>(bookContent.getTitles().size());
+        for (CharSequence title : bookContent.getTitles()) {
+            titles.add(title.toString());
+        }
 
         List<List<CharSequence>> pages = new LinkedList<>();
 
-        for (CharSequence chapter : chapters) {
+        for (CharSequence chapter : bookContent.getChaptersText()) {
             List<CharSequence> chapterPages = new LinkedList<>();
 
             int usedHeight = 0;

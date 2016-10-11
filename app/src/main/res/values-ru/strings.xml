@@ -24,11 +24,11 @@
     <string name="book_remove_message">Вы хотите удалить данную книгу из вашей библиотеки?</string>
     <string name="remove">Удалить</string>
     <string name="cancel">Отмена</string>
-    <string name="bookOffset">Прогресс</string>
+    <string name="progress">Прогресс</string>
     <string name="book_has_been_added">Книга уже в бибилотеке</string>
     <string name="open_book">Открыть книгу</string>
     <string name="library_was_changed">Библиотека была изменена</string>
-    <string name="change_text_size">Извменить размер текста</string>
+    <string name="change_text_size">Изменить размер текста</string>
     <string name="reading_type">Выберите тип чтения</string>
 
     <string-array name="reading_type">
@@ -39,5 +39,11 @@
     <string name="exit">Выход</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>
     <string name="file_reading_error">Ошибка при открытии файла</string>
+    <string name="select_page">Выбрать страницу</string>
+    <string name="select_chapter">Выбрать главу</string>
+    <string name="directory_is_empty">Папка пуста</string>
+    <string name="training">Тренировка</string>
+    <string name="file_type">Тип файла</string>
+    <string name="reading">Чтение</string>
 
 </resources>

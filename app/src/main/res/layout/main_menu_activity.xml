@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -15,60 +16,51 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:id="@+id/main_menu_library"
+            android:padding="8dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/main_menu_start_reader_text_view"
-                android:src="@drawable/fast_reading"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
+                android:src="@drawable/library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <ImageView
-                android:id="@+id/main_menu_start_training_menu_text_view"
-                android:src="@drawable/training"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
+            <TextView
+                android:textSize="30sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:textColor="@color/black"
+                android:text="@string/reading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center_horizontal"
+            android:padding="8dp"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:src="@drawable/training"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
+                android:src="@drawable/brain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <ImageView
-                android:src="@drawable/training"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
+            <TextView
+                android:textSize="30sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:textColor="@color/black"
+                android:text="@string/training"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:src="@drawable/training"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
-
-            <ImageView
-                android:src="@drawable/training"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:padding="1dp"/>
-        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

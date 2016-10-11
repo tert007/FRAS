@@ -9,10 +9,112 @@
 
     <include layout="@layout/toolbar"/>
 
-    <FrameLayout
-        android:id="@+id/reader_fragment_container"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/reader_pages_speed_text_view"
+
+            android:visibility="invisible"
+
+            android:text="@string/speed"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/reader_pages_speed_result_text_view"
+
+            android:visibility="invisible"
+
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/reader_pages_current_page_text_view"
+
+            android:text="@string/page"
+
+            android:visibility="invisible"
+
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/default_margin"
+            android:paddingLeft="@dimen/default_margin"
+            android:paddingRight="@dimen/default_margin"
+            android:paddingEnd="@dimen/default_margin"/>
+
+        <TextView
+            android:id="@+id/reader_pages_current_page_result_text_view"
+
+            android:visibility="invisible"
+
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    </FrameLayout>
+
+        <TextView
+            android:id="@+id/reader_pages_text_view"
+
+            android:textColor="@color/black"
+
+            android:layout_margin="@dimen/default_margin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:id="@+id/reader_pages_navigation_layout"
+            android:visibility="gone"
+            android:background="@color/color_primary_light"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/reader_pages_current_chapter_title_text_view"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:paddingTop="@dimen/default_margin"
+                android:paddingBottom="@dimen/default_margin"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/reader_pages_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/reader_pages_seek_text_view"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                android:paddingTop="@dimen/default_margin"
+                android:paddingBottom="@dimen/default_margin"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </LinearLayout>

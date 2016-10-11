@@ -1,10 +1,10 @@
 package com.example.alexander.fastreading.reader.library.fragment.description;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +90,6 @@ public class ReaderBookDescriptionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ReaderActivity.class);
-
                 intent.putExtra("book_description", bookDescription);
 
                 startActivity(intent);

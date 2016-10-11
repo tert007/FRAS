@@ -11,6 +11,7 @@ import android.util.Log;
     private long id;
 
     private long bookOffset;
+    private int progress;
 
     private String title;
     private String author;
@@ -99,9 +100,18 @@ import android.util.Log;
         this.bookOffset = bookOffset;
     }
 
+    public int getProgress() {
+        return progress;
+    }
+
+    public void setProgress(int progress) {
+        this.progress = progress;
+    }
+
     protected BookDescription(Parcel in) {
         id = in.readLong();
         bookOffset = in.readLong();
+        progress = in.readInt();
         title = in.readString();
         author = in.readString();
         language = in.readString();
@@ -119,6 +129,7 @@ import android.util.Log;
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
+        dest.writeInt(progress);
         dest.writeLong(bookOffset);
         dest.writeString(title);
         dest.writeString(author);

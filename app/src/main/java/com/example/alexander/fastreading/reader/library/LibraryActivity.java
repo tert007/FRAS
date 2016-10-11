@@ -1,12 +1,11 @@
 package com.example.alexander.fastreading.reader.library;
 
-import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
@@ -14,7 +13,6 @@ import com.example.alexander.fastreading.reader.library.fragment.library.ReaderL
 import com.example.alexander.fastreading.reader.library.fragment.library.ReaderLibraryFragment;
 import com.example.alexander.fastreading.reader.library.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.library.fragment.fileexplorer.ReaderFileExplorerFileExplorerFragment;
-import com.example.alexander.fastreading.reader.reader.ReaderActivity;
 
 
 public class LibraryActivity extends AppCompatActivity implements ReaderLibraryFloatButtonOnClickResponse, ReaderBookDescriptionResponse {
@@ -35,11 +33,12 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.library_color));
             toolbar.setTitleTextColor(Color.WHITE);
             setSupportActionBar(toolbar);
         }
 
-        fragmentManager = getFragmentManager();
+        fragmentManager = getSupportFragmentManager();
 
         readerLibraryFragment = new ReaderLibraryFragment();
         readerLibraryFragment.addBookDelegate = this;
@@ -49,7 +48,7 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
         fragmentManager.
                 beginTransaction().
-                replace(R.id.library_fragment_container, readerLibraryFragment).
+                replace(R.id.reader_library_fragment_container, readerLibraryFragment).
                 commit();
     }
 
@@ -69,7 +68,7 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
                 fragmentManager.
                         beginTransaction().
-                        replace(R.id.library_fragment_container, readerLibraryFragment).
+                        replace(R.id.reader_library_fragment_container, readerLibraryFragment).
                         commit();
             }
         }
@@ -83,7 +82,7 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
             fragmentManager.
                     beginTransaction().
-                    replace(R.id.library_fragment_container, readerLibraryFragment).
+                    replace(R.id.reader_library_fragment_container, readerLibraryFragment).
                     commit();
         }
     }
@@ -95,7 +94,7 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
         fragmentManager.
                 beginTransaction().
-                replace(R.id.library_fragment_container, fileExplorerFragment).
+                replace(R.id.reader_library_fragment_container, fileExplorerFragment).
                 commit();
 
         currentFragmentFragmentState = FragmentState.FILE_EXPLORER;
@@ -113,7 +112,7 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
         fragmentManager.
                 beginTransaction().
-                replace(R.id.library_fragment_container, bookDescriptionFragment).
+                replace(R.id.reader_library_fragment_container, bookDescriptionFragment).
                 commit();
 
         currentFragmentFragmentState = FragmentState.BOOK_DESCRIPTION;

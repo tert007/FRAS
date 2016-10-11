@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements BaseColumns {
 
     private static final String DATABASE_NAME = "books_database.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public static final String BOOK_TABLE = "books";
 
@@ -22,6 +22,8 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
 
     public static final String BOOK_FILE_PATH = "file_path";
     public static final String BOOK_TYPE = "type";
+    public static final String BOOK_PROGRESS = "progress";
+
     public static final String BOOK_FAVORITE_FLAG = "favorite";
     public static final String BOOK_OFFSET = "book_offset";
 
@@ -34,6 +36,7 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
             BOOK_FILE_PATH,
             BOOK_TYPE,
             BOOK_FAVORITE_FLAG,
+            BOOK_PROGRESS,
             BOOK_OFFSET
     };
 
@@ -55,6 +58,7 @@ public class BookDescriptionDatabaseHelper extends SQLiteOpenHelper implements B
                         BOOK_FILE_PATH + " TEXT NOT NULL, " +
                         BOOK_TYPE + " TEXT NOT NULL, " +
                         BOOK_FAVORITE_FLAG + " INTEGER NOT NULL, " +
+                        BOOK_PROGRESS + " INTEGER NOT NULL, " +
                         BOOK_OFFSET + " INTEGER NOT NULL);"
         );
     }

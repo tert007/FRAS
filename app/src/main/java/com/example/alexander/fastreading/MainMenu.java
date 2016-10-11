@@ -22,10 +22,10 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ImageView startTrainingMenuImageView = (ImageView) findViewById(R.id.main_menu_start_training_menu_text_view);
-        startTrainingMenuImageView.setOnClickListener(this);
+        //ImageView startTrainingMenuImageView = (ImageView) findViewById(R.id.main_menu_start_training_menu_text_view);
+        //startTrainingMenuImageView.setOnClickListener(this);
 
-        ImageView startReaderImageView = (ImageView) findViewById(R.id.main_menu_start_reader_text_view);
+        View startReaderImageView = findViewById(R.id.main_menu_library);
         startReaderImageView.setOnClickListener(this);
 
         SettingsManager.Initialize(this);
@@ -49,10 +49,11 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            /*
             case R.id.main_menu_start_training_menu_text_view :
                 startActivity(new Intent(this, TrainingMenuActivity.class));
-                break;
-            case R.id.main_menu_start_reader_text_view :
+                break;*/
+            case R.id.main_menu_library :
                 startActivity(new Intent(this, LibraryActivity.class));
                 break;
         }

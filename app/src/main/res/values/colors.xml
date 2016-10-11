@@ -2,9 +2,10 @@
 <resources>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="red">#f44336</color>
-    <color name="green">#00E676</color>
-    <color name="gray">#cdcdcd</color>
+    <color name="grey">#655f5f</color>
+
+    <color name="library_color">#54C0EB</color>
+    <color name="training_color">#FFCA4F</color>
 
     <color name="color_primary_main">#3F51B5</color>
     <color name="color_primary_dark">#303F9F</color>
