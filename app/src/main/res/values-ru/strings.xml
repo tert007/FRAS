@@ -31,10 +31,15 @@
     <string name="change_text_size">Изменить размер текста</string>
     <string name="reading_type">Выберите тип чтения</string>
 
+    <string-array name="library_book_settings" translatable="true">
+        <item>Удалить книгу</item>
+    </string-array>
+
     <string-array name="reading_type">
         <item>Чтение</item>
         <item>Быстрое чтение</item>
     </string-array>
+
     <string name="choose_reading_mode">Выберите режим чтения</string>
     <string name="exit">Выход</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>

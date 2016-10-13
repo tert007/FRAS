@@ -4,19 +4,9 @@
     <color name="black">#000000</color>
     <color name="grey">#655f5f</color>
 
-    <color name="library_color">#54C0EB</color>
-    <color name="training_color">#FFCA4F</color>
+    <color name="light_grey">#b9b4b4</color>
 
-    <color name="color_primary_main">#3F51B5</color>
-    <color name="color_primary_dark">#303F9F</color>
-    <color name="color_primary_light">#C5CAE9</color>
-
-    <color name="color_accent_main">#A5D6A7</color>
-    <color name="color_accent_dark">#66BB6A</color>
-    <color name="color_accent_light">#C8E6C9</color>
-
-
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#00BCD4</color>
+    <color name="colorPrimaryDark">#00838F</color>
+    <color name="colorAccent">#FFA726</color>
 </resources>

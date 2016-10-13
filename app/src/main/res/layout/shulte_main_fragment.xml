@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/default_background"
-            android:textColor="@color/color_primary_main"
+            android:textColor="@color/grey"
             android:textSize="20sp">
         </com.example.alexander.fastreading.shulte.SquareTextView>
 

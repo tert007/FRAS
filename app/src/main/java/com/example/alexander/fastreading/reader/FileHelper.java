@@ -23,15 +23,18 @@ public class FileHelper {
     public static final String EPUB = "epub";
     public static final String TXT = "txt";
     public static final String FB2 = "fb2";
+    public static final String FB2_ZIP = "fb2.zip";
+
 
     private static final List<String> supportedExtensions;
 
     static {
-        supportedExtensions = new ArrayList<String>();
+        supportedExtensions = new ArrayList<>();
 
         supportedExtensions.add(EPUB);
         supportedExtensions.add(TXT);
         supportedExtensions.add(FB2);
+        supportedExtensions.add(FB2_ZIP);
     }
 
     public static List<File> readerFileFilter(File[] files){
@@ -61,15 +64,7 @@ public class FileHelper {
     }
 
     public static String getFileExtension(File file) {
-        String extension = null;
-        String fileName = file.getName();
-
-        int i = fileName.lastIndexOf('.');
-
-        if (i > 0 && i < fileName.length() - 1) {
-            extension = fileName.substring(i + 1).toLowerCase();
-        }
-        return extension;
+        return getFileExtension(file.getName());
     }
 
     public static String getFileName(File file) {
@@ -78,17 +73,26 @@ public class FileHelper {
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
-    public static String getFileName(String fileName) {
-        return getFileName(new File(fileName));
-    }
-
     public static String getFileExtension(String filePath) {
+        String fileName = new File(filePath).getName();
         String extension = null;
-        int i = filePath.lastIndexOf('.');
 
-        if (i > 0 && i < filePath.length() - 1) {
-            extension = filePath.substring(i + 1).toLowerCase();
+        int i = fileName.lastIndexOf('.');
+
+        if (i > 0 && i < fileName.length() - 1) {
+            extension = fileName.substring(i + 1).toLowerCase();
+
+            if (extension.equals("zip")) {
+                int zipIndex = fileName.lastIndexOf(FB2_ZIP);
+
+                if (zipIndex > 1 && zipIndex == fileName.length() - FB2_ZIP.length()) {
+                    if (fileName.charAt(zipIndex - 1) == '.') {
+                        return FB2_ZIP;
+                    }
+                }
+            }
         }
+
         return extension;
     }
 

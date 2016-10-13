@@ -32,6 +32,7 @@ public class BookController {
     public BookDescription addBook(String filePath) throws BookParserException, BookHasBeenAddedException {
         switch (FileHelper.getFileExtension(filePath)) {
             case FileHelper.FB2:
+            case FileHelper.FB2_ZIP:
                 if (fb2BookDao == null)
                     fb2BookDao = new Fb2BookDao(bookDescriptionDao, context);
 

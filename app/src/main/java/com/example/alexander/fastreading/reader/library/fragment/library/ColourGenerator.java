@@ -8,11 +8,8 @@ import java.util.Random;
  * Created by Alexander on 11.10.2016.
  */
 public class ColourGenerator {
-    private static final Random random = new Random();
-    private static final List<Integer> colours;
 
-    static {
-        colours = Arrays.asList(
+        /*
                 0xffe57373,
                 0xfff06292,
                 0xffba68c8,
@@ -30,8 +27,7 @@ public class ColourGenerator {
                 0xffffb74d, // last usesed
                 0xffa1887f,
                 0xff90a4ae
-        );
-    }
+                */
 
     public static int getRandomColor(char letter) {
         char c = Character.toUpperCase(letter);

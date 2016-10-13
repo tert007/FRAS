@@ -35,8 +35,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Created by Alexander on 29.09.2016.
@@ -88,9 +91,33 @@ public class Fb2BookDao extends AbstractBookDao {
 
         bookDescription.setId(id);
         bookDescription.setFilePath(filePath);
-        bookDescription.setType(FileHelper.getFileExtension(filePath));
+        bookDescription.setType(FileHelper.FB2);
 
-        Document bookDocument = XmlHelper.getXmlFromFile(new File(filePath));
+        Document bookDocument = null;
+
+        String fileType = FileHelper.getFileExtension(filePath);
+        //Архивированная книга
+        if (fileType.equals(FileHelper.FB2_ZIP)) {
+            try {
+                ZipFile zipFile = new ZipFile(filePath);
+                List<? extends ZipEntry> zipEntries = Collections.list(zipFile.entries());
+
+                for (ZipEntry zipEntry : zipEntries) {
+                    if (FileHelper.getFileExtension(zipEntry.getName()).equals(FileHelper.FB2)) {
+                        bookDocument = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
+                        break;
+                    }
+                }
+            } catch (IOException e) {
+                throw new BookParserException(e);
+            }
+        } else {
+            bookDocument = XmlHelper.getXmlFromFile(new File(filePath));
+        }
+
+        if (bookDocument == null) {
+            throw new BookParserException("File reading error");
+        }
 
         Element description = (Element) bookDocument.getElementsByTagName("description").item(0);
         Element titleInfo = (Element) description.getElementsByTagName("title-info").item(0);
@@ -156,8 +183,6 @@ public class Fb2BookDao extends AbstractBookDao {
 
         NodeList binaryTags = bookDocument.getElementsByTagName("binary");
         int binaryTagsCount = binaryTags.getLength();
-
-        Log.d("b-count", String.valueOf(binaryTagsCount));
 
         for (int i = 0; i < binaryTagsCount; i++) {
             Element binaryTag = (Element) binaryTags.item(i);
@@ -264,7 +289,9 @@ public class Fb2BookDao extends AbstractBookDao {
             bookChapterList.add(parseBody(bodyTags.item(i)));
 
             for (int j = 0; j < sectionTagsCount; j++) {
-                bookChapterList.add(parseSection(sectionTags.item(j)));
+                Fb2BookChapter bookChapter = parseSection(sectionTags.item(j));
+                if (! bookChapter.getBookChapter().toString().trim().isEmpty())
+                    bookChapterList.add(bookChapter);
             }
         }
 
@@ -328,6 +355,7 @@ public class Fb2BookDao extends AbstractBookDao {
 
         if (builder.length() > 0) {
             bookChapter.setContent(builder);
+            ///
         }
 
         return bookChapter;
@@ -335,11 +363,11 @@ public class Fb2BookDao extends AbstractBookDao {
 
     private CharSequence parseTag(Node tag) {
         if (tag.getNodeType() == Node.TEXT_NODE){
-            String tagNodeValue = tag.getNodeValue().trim();
+            //String tagNodeValue = tag.getNodeValue();
 
-            //Если это самый внутренни тег и при этом не "левый" \n
-            if (!tagNodeValue.isEmpty()){
-                return tagNodeValue;
+            //Если это самый внутренни тег и при этом не \n
+            if (!tag.getNodeValue().trim().isEmpty()){
+                return tag.getNodeValue();
             } else {
                 return "";
             }

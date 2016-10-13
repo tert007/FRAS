@@ -105,7 +105,7 @@ public class EpubBookDao extends AbstractBookDao {
     @Override
     public BookDescription addBook(String filePath) throws BookParserException, BookHasBeenAddedException {
         if (bookDescriptionDao.findBookDescription(filePath) != null) {
-            throw new BookHasBeenAddedException("The book has been added");
+            throw new BookHasBeenAddedException("The epub_book has been added");
         }
 
         long id = bookDescriptionDao.getNextItemId();
@@ -260,7 +260,8 @@ public class EpubBookDao extends AbstractBookDao {
                             Document chapterDocument = XmlHelper.getXmlFromFile(zipFile.getInputStream(zipEntry));
                             CharSequence bookChapterContent = parseChapter(chapterDocument);
 
-                            bookChapters.add(new EpubBookChapter(bookChapterTitle, bookChapterContent));
+                            if (! bookChapterContent.toString().trim().isEmpty())
+                                bookChapters.add(new EpubBookChapter(bookChapterTitle, bookChapterContent));
                             break;
                         } else {
                             List<String> ids = new ArrayList<>();
@@ -296,94 +297,102 @@ public class EpubBookDao extends AbstractBookDao {
 
     private List<BookChapter> parseCombineChapter (Document combineChapterDocument, String html, List<String> ids, List<String> titles) throws BookParserException {
         //Парсим страницы в которых одновременно несколько глав
-            CharSequence combineChapter = parseChapter(combineChapterDocument);
+        CharSequence combineChapter = parseChapter(combineChapterDocument);
 
-            String bodyRegex = "<body[\\s\\S]+</body>";
+        String bodyRegex = "<body[\\s\\S]+</body>";
 
-            Pattern bodyPattern = Pattern.compile(bodyRegex);
-            Matcher matcher = bodyPattern.matcher(html);
+        Pattern bodyPattern = Pattern.compile(bodyRegex);
+        Matcher matcher = bodyPattern.matcher(html);
 
-            String body = html;
+        String body = html;
+
+        if (matcher.find()) {
+            body = html.substring(matcher.start(), matcher.end());
+            body = body.replaceAll("\n", ""); ///   \r
+        }
+
+        int chaptersCount = ids.size();
+        int[] startIndexes = new int[chaptersCount];
+        List<BookChapter> bookChapters = new ArrayList<>(chaptersCount);
+
+        for (int i = 0; i < chaptersCount; i++) {
+            StringBuilder request = new StringBuilder();
+            request.append("id=\"");
+            request.append(ids.get(i));
+            request.append("\"");
+            //request.append("[\\s\\S]");
+
+            Pattern pattern = Pattern.compile(request.toString());
+            matcher = pattern.matcher(body);
 
             if (matcher.find()) {
-                body = html.substring(matcher.start(), matcher.end());
-                body = body.replaceAll("\n", ""); ///   \r
-            }
+                int bodyLength = body.length();
 
-            int chaptersCount = ids.size();
-            int[] startIndexes = new int[chaptersCount];
-            List<BookChapter> bookChapters = new ArrayList<>(chaptersCount);
+                int startIndex = 0;
+                int endIndex = bodyLength;
 
-            for (int i = 0; i < chaptersCount; i++) {
-                StringBuilder request = new StringBuilder();
-                request.append("id=\"");
-                request.append(ids.get(i));
-                request.append("\"");
-                //request.append("[\\s\\S]");
+                boolean itsTag = false;
 
-                Pattern pattern = Pattern.compile(request.toString());
-                matcher = pattern.matcher(body);
-
-                if (matcher.find()) {
-                    int bodyLength = body.length();
-
-                    int startIndex = 0;
-                    int endIndex = bodyLength;
-
-                    boolean itsTag = false;
-
-                    for (int j = matcher.start(); j < bodyLength; j++) {
-                        if (body.charAt(j) == '>') {
-                            startIndex = j + 1;
-                            break;
-                        }
+                for (int j = matcher.start(); j < bodyLength; j++) {
+                    if (body.charAt(j) == '>') {
+                        startIndex = j + 1;
+                        break;
                     }
+                }
 
-                    for (int j = startIndex; j < bodyLength; j++) {
-                        if (body.charAt(j) == '<') {
-                            itsTag = true;
-                        } else if (body.charAt(j) == '>') {
-                            if (itsTag)
-                                itsTag = false;
-                        } else {
-                            if (!itsTag) {
-                                startIndex = j;
-                                break;
-                            }
-                        }
-                    }
-
-                    for (int j = startIndex; j < bodyLength; j++) {
-                        if (body.charAt(j) == '<') {
-                            endIndex = j - 1;
-                            break;
-                        }
-                    }
-
-                    String partOfContent = body.substring(startIndex, endIndex + 1).trim(); //ТО, ЧТО ЕСТЬ В ГЛАВЕ
-                    body = body.substring(endIndex + 1);
-
-                    Pattern combinePattern = Pattern.compile(partOfContent);
-                    Matcher combineMatcher = combinePattern.matcher(combineChapter);
-
-                    if (i > 0) {
-                        if (combineMatcher.find(startIndexes[i - 1])) {
-                            startIndexes[i] = combineMatcher.start();
-                        }
+                for (int j = startIndex; j < bodyLength; j++) {
+                    if (body.charAt(j) == '<') {
+                        itsTag = true;
+                    } else if (body.charAt(j) == '>') {
+                        if (itsTag)
+                            itsTag = false;
                     } else {
-                        if (combineMatcher.find()) {
-                            startIndexes[i] = combineMatcher.start();
+                        if (!itsTag) {
+                            startIndex = j;
+                            break;
                         }
                     }
                 }
-            }
 
-            for (int i = 0; i < chaptersCount - 1; i++) {
-                bookChapters.add(new EpubBookChapter(titles.get(i), combineChapter.subSequence(startIndexes[i], startIndexes[i + 1])));
-            }
-            bookChapters.add(new EpubBookChapter(titles.get(chaptersCount - 1), combineChapter.subSequence(startIndexes[chaptersCount - 1], combineChapter.length())));
+                for (int j = startIndex; j < bodyLength; j++) {
+                    if (body.charAt(j) == '<') {
+                        endIndex = j - 1;
+                        break;
+                    }
+                }
 
-            return bookChapters;
+                String partOfContent = body.substring(startIndex, endIndex + 1).trim(); //ТО, ЧТО ЕСТЬ В ГЛАВЕ
+                body = body.substring(endIndex + 1);
+
+                Pattern combinePattern = Pattern.compile(partOfContent);
+                Matcher combineMatcher = combinePattern.matcher(combineChapter);
+
+                if (i > 0) {
+                    if (combineMatcher.find(startIndexes[i - 1])) {
+                        startIndexes[i] = combineMatcher.start();
+                    }
+                } else {
+                    if (combineMatcher.find()) {
+                        startIndexes[i] = combineMatcher.start();
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < chaptersCount - 1; i++) {
+            CharSequence title = titles.get(i);
+            CharSequence chapter = combineChapter.subSequence(startIndexes[i], startIndexes[i + 1]);
+
+            if (! chapter.toString().trim().isEmpty())
+                bookChapters.add(new EpubBookChapter(title, chapter));
+        }
+        CharSequence title = titles.get(chaptersCount - 1);
+        CharSequence chapter = combineChapter.subSequence(startIndexes[chaptersCount - 1], combineChapter.length());
+
+        if (! chapter.toString().trim().isEmpty())
+            bookChapters.add(new EpubBookChapter(title, chapter));
+
+        return bookChapters;
     }
 
     private class NavigationPoint {

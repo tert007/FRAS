@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
 
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -25,25 +25,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
 
-        android:background="@drawable/reader_library_cover_background"
+        android:background="@drawable/reader_library_title_cover_background"
 
         android:layout_width="72dp"
         android:layout_height="72dp" />
-
-    <ImageView
-        android:id="@+id/reader_library_list_view_item_remove_image_view"
-
-        android:src="@drawable/remove"
-
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-
-        android:padding="@dimen/default_margin"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 
     <LinearLayout
         android:layout_toRightOf="@id/reader_library_list_view_item_cover_text_view"
@@ -57,6 +42,9 @@
 
         <TextView
             android:id="@+id/reader_library_list_view_item_title_text_view"
+
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginEnd="@dimen/default_margin"
 
             android:textSize="16sp"
             android:textStyle="bold"
@@ -99,5 +87,4 @@
 
     </LinearLayout>
 
-
-   </RelativeLayout>
+</RelativeLayout>

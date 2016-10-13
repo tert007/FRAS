@@ -50,10 +50,11 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
                     imageView.setImageResource(R.drawable.notepad);
                     break;
                 case FileHelper.EPUB:
-                    imageView.setImageResource(R.drawable.book);
+                    imageView.setImageResource(R.drawable.epub_book);
                     break;
+                case FileHelper.FB2_ZIP:
                 case FileHelper.FB2:
-                    imageView.setImageResource(R.drawable.book);
+                    imageView.setImageResource(R.drawable.fb2_book);
                     break;
             }
 

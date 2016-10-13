@@ -65,7 +65,6 @@ public class ReaderFileExplorerFileExplorerFragment extends ListFragment impleme
         } else {
             ReaderFileExplorerBookAddAsyncTask bookAddAsyncTask = new ReaderFileExplorerBookAddAsyncTask(getActivity());
             bookAddAsyncTask.delegate = this;
-
             bookAddAsyncTask.execute(file.getPath());
         }
     }

@@ -8,12 +8,27 @@
         android:id="@+id/reader_book_description_cover_image_view"
         android:layout_gravity="center"
 
-        android:layout_width="wrap_content"
-        android:layout_height="275dp"
-        android:scaleType="centerInside"
-        android:layout_marginTop="@dimen/default_margin" />
+        android:src="@drawable/book_without_title"
 
-    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:scaleType="centerInside"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
+
+
+    <View
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,7 +36,7 @@
             android:id="@+id/reader_book_description_title_text_view"
             android:text="@string/book_title"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/grey"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_width="wrap_content"
@@ -32,16 +47,22 @@
             android:textSize="16sp"
             android:textColor="@color/black"
 
-            android:layout_toRightOf="@id/reader_book_description_title_text_view"
-            android:layout_toEndOf="@id/reader_book_description_title_text_view"
-
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <View
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -49,7 +70,7 @@
             android:id="@+id/reader_book_description_author_text_view"
             android:text="@string/author"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/grey"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_width="wrap_content"
@@ -60,17 +81,23 @@
             android:textSize="16sp"
             android:textColor="@color/black"
 
-            android:layout_toRightOf="@id/reader_book_description_author_text_view"
-            android:layout_toEndOf="@id/reader_book_description_author_text_view"
-
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <View
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -78,7 +105,7 @@
             android:id="@+id/reader_book_description_language_text_view"
             android:text="@string/language"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/grey"
 
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
@@ -91,19 +118,23 @@
             android:textSize="16sp"
             android:textColor="@color/black"
 
-            android:layout_toRightOf="@id/reader_book_description_language_text_view"
-            android:layout_toEndOf="@id/reader_book_description_language_text_view"
-
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
+    <View
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
-    <RelativeLayout
+    <LinearLayout
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -111,7 +142,7 @@
             android:id="@+id/reader_book_description_book_path_text_view"
             android:text="@string/file_path"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="@color/grey"
 
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
@@ -122,8 +153,6 @@
             android:id="@+id/reader_book_description_book_path_result_text_view"
             android:textSize="16sp"
             android:textColor="@color/black"
-            android:layout_toRightOf="@id/reader_book_description_book_path_text_view"
-            android:layout_toEndOf="@id/reader_book_description_book_path_text_view"
 
             android:maxLines="2"
             android:ellipsize="marquee"
@@ -137,16 +166,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:background="@color/light_grey"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
 
     <Button
         android:id="@+id/reader_book_description_pages_reading_button"
 
-        android:text="Читать"
+        android:text="@string/reading"
 
+        android:background="@drawable/reader_book_description_button_background"
+        android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
 
         android:layout_width="125dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

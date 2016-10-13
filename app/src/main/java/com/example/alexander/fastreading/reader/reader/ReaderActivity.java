@@ -127,8 +127,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
                 final String[] items = separatedBook.getTitles().toArray(new String[separatedBook.getTitles().size()]);
 
-                Log.d("items_length", String.valueOf(items[items.length - 1]));
-
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -247,6 +245,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         separatedBook = pageSplitter.getSeparatedBook(bookContent);
 
         setCurrentPage();
+
+        currentSpeedIndex = preferences.getInt("current_speed_index", 0);
+        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
 
         textView.setText(separatedBook.getPage((currentPageIndex)));
 
@@ -396,6 +397,10 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         super.onStop();
 
         fastReadingStarted = false;
+
+        preferences.edit().
+                putInt("current_speed_index", currentSpeedIndex).
+                apply();
 
         bookDescription.setBookOffset(getBookOffset());
         bookDescription.setProgress(getProgress());

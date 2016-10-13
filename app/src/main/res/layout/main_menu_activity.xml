@@ -20,7 +20,7 @@
             android:padding="8dp"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
-            android:layout_width="300dp"
+            android:layout_width="315dp"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -29,20 +29,21 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/main_menu_start_reading"
                 android:textSize="30sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
                 android:textColor="@color/black"
                 android:text="@string/reading"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_gravity="center_horizontal"
             android:padding="8dp"
-            android:layout_width="300dp"
+            android:layout_width="315dp"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -51,13 +52,14 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/main_menu_start_training"
                 android:textSize="30sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
                 android:textColor="@color/black"
                 android:text="@string/training"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 

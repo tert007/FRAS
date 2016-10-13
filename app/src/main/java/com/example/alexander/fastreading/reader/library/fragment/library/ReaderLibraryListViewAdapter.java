@@ -67,11 +67,11 @@ public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> 
 
         bookCoverImageView.setText(String.valueOf(firstLetter));
 
-        ImageView removeImageView = (ImageView) convertView.findViewById(R.id.reader_library_list_view_item_remove_image_view);
-        removeImageView.setOnClickListener(new View.OnClickListener() {
+        convertView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View view) {
                 removeBookDelegate.onBookRemoveClick(currentBookDescription);
+                return false;
             }
         });
 

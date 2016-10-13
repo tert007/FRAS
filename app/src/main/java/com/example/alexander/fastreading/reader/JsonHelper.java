@@ -313,7 +313,7 @@ public class JsonHelper {
                 return new EpubBookChapter(title, spannedContent);
             }
             default:
-                throw new BookParserException("Unsupported book format");
+                throw new BookParserException("Unsupported epub_book format");
         }
     }
 

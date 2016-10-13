@@ -98,35 +98,46 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
     @Override
     public void onBookRemoveClick(final BookDescription bookDescription) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(true);
-        builder.setTitle(bookDescription.getTitle());
-        builder.setMessage(getString(R.string.book_remove_message));
+        builder.setItems(R.array.library_book_settings, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setCancelable(true);
+                    builder.setTitle(bookDescription.getTitle());
+                    builder.setMessage(getString(R.string.book_remove_message));
 
-        builder.setPositiveButton(R.string.remove,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        bookController.removeBook(bookDescription);
+                    builder.setPositiveButton(R.string.remove,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    bookController.removeBook(bookDescription);
 
-                        listAdapter.remove(bookDescription);
-                        listAdapter.notifyDataSetChanged();
+                                    listAdapter.remove(bookDescription);
+                                    listAdapter.notifyDataSetChanged();
 
-                        if (listAdapter.isEmpty()){
-                            emptyLibraryTextView.setVisibility(View.VISIBLE);
-                            listView.setEmptyView(emptyLibraryTextView);
-                        } else {
-                            emptyLibraryTextView.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                                    if (listAdapter.isEmpty()){
+                                        emptyLibraryTextView.setVisibility(View.VISIBLE);
+                                        listView.setEmptyView(emptyLibraryTextView);
+                                    } else {
+                                        emptyLibraryTextView.setVisibility(View.GONE);
+                                    }
+                                }
+                            });
 
-        builder.setNegativeButton(R.string.cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+                    builder.setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            }
+        });
 
         AlertDialog dialog = builder.create();
         dialog.show();

@@ -12,6 +12,10 @@
     <string name="language">Language</string>
     <string name="book_title">Book title</string>
 
+    <string-array name="library_book_settings" translatable="true">
+        <item>Remove the book</item>
+    </string-array>
+
     <string-array name="guess_number_settings" translatable="false">
         <item>4</item>
         <item>5</item>

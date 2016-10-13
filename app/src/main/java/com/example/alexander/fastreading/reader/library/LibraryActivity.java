@@ -33,7 +33,6 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.library_color));
             toolbar.setTitleTextColor(Color.WHITE);
             setSupportActionBar(toolbar);
         }

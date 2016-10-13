@@ -82,12 +82,17 @@
 
         <LinearLayout
             android:id="@+id/reader_pages_navigation_layout"
+            android:background="?android:colorBackground"
             android:visibility="gone"
-            android:background="@color/color_primary_light"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <View
+                android:background="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
 
             <TextView
                 android:id="@+id/reader_pages_current_chapter_title_text_view"
