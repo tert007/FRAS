@@ -51,13 +51,13 @@ public class Fb2BookChapter implements BookChapter {
             builder.append(content);
         }
 
-        /*
+
         int builderLength = builder.length();
         for (int i = builderLength - 1; i >= 0; i--) {
             if (builder.charAt(i) != '\n') {
                 return builder.subSequence(0 , i + 1);
             }
-        }*/
+        }
 
         return builder;
     }

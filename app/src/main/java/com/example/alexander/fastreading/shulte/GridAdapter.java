@@ -23,7 +23,6 @@ public class GridAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         if (convertView == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             convertView = layoutInflater.inflate(R.layout.shulte_main_grid_item, parent, false);

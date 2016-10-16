@@ -22,8 +22,7 @@
     <View
         android:background="@color/light_grey"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
+        android:layout_height="1px"/>
 
     <LinearLayout
         android:paddingTop="8dp"
@@ -33,7 +32,6 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/reader_book_description_title_text_view"
             android:text="@string/book_title"
             android:textSize="16sp"
             android:textColor="@color/grey"
@@ -53,83 +51,99 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-    <View
-        android:background="@color/light_grey"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
 
 
     <LinearLayout
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:id="@+id/reader_description_author_view"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/reader_book_description_author_text_view"
-            android:text="@string/author"
-            android:textSize="16sp"
-            android:textColor="@color/grey"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <View
+            android:background="@color/light_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
 
-        <TextView
-            android:id="@+id/reader_book_description_author_result_text_view"
-            android:textSize="16sp"
-            android:textColor="@color/black"
 
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
+        <LinearLayout
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:text="@string/author"
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/reader_book_description_author_result_text_view"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/reader_description_language_view"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:background="@color/light_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+
+        <LinearLayout
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/reader_book_description_language_text_view"
+                android:text="@string/language"
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/reader_book_description_language_result_text_view"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <View
         android:background="@color/light_grey"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
-
-    <LinearLayout
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/reader_book_description_language_text_view"
-            android:text="@string/language"
-            android:textSize="16sp"
-            android:textColor="@color/grey"
-
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/reader_book_description_language_result_text_view"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <View
-        android:background="@color/light_grey"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1px"/>
 
     <LinearLayout
         android:paddingTop="8dp"
@@ -171,8 +185,7 @@
     <View
         android:background="@color/light_grey"
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
+        android:layout_height="1px"/>
 
     <Button
         android:id="@+id/reader_book_description_pages_reading_button"

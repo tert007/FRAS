@@ -26,23 +26,19 @@ public class SquareTextView extends TextView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        int widthDesc = MeasureSpec.getMode(widthMeasureSpec);
-        int heightDesc = MeasureSpec.getMode(heightMeasureSpec);
         int size = 0;
+        int width = getMeasuredWidth();
+        int height = getMeasuredHeight();
+        int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
+        int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
-        if (widthDesc == MeasureSpec.UNSPECIFIED
-                && heightDesc == MeasureSpec.UNSPECIFIED) {
-            size = getContext().getResources().getDimensionPixelSize(R.dimen.default_margin); // Use your own default size, for example 125dp
-        } else if ((widthDesc == MeasureSpec.UNSPECIFIED || heightDesc == MeasureSpec.UNSPECIFIED)
-                && !(widthDesc == MeasureSpec.UNSPECIFIED && heightDesc == MeasureSpec.UNSPECIFIED)) {
-            //Only one of the dimensions has been specified so we choose the dimension that has a value (in the case of unspecified, the value assigned is 0)
-            size = width > height ? width : height;
+        // set the dimensions
+        if (widthWithoutPadding < heightWithoutPadding) {
+            size = heightWithoutPadding;
         } else {
-            //In all other cases both dimensions have been specified so we choose the smaller of the two
-            size = width > height ? height : width;
+            size = widthWithoutPadding;
         }
-        setMeasuredDimension(size, size);
+
+        setMeasuredDimension(size + getPaddingLeft() + getPaddingRight(), size + getPaddingTop() + getPaddingBottom());
     }
 }

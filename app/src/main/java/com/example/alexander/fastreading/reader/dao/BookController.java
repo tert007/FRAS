@@ -7,6 +7,7 @@ import com.example.alexander.fastreading.reader.dao.bookdao.BookHasBeenAddedExce
 import com.example.alexander.fastreading.reader.dao.bookdao.BookParserException;
 import com.example.alexander.fastreading.reader.dao.bookdao.EpubBookDao;
 import com.example.alexander.fastreading.reader.dao.bookdao.Fb2BookDao;
+import com.example.alexander.fastreading.reader.dao.bookdao.TxtBookDao;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDao;
 import com.example.alexander.fastreading.reader.dao.bookdescriptiondao.BookDescriptionDaoFactory;
 import com.example.alexander.fastreading.reader.entity.BookContent;
@@ -23,6 +24,7 @@ public class BookController {
 
     private Fb2BookDao fb2BookDao;
     private EpubBookDao epubBookDao;
+    private TxtBookDao txtBookDao;
 
     public BookController(Context context) {
         this.context = context;
@@ -42,6 +44,11 @@ public class BookController {
                     epubBookDao = new EpubBookDao(bookDescriptionDao, context);
 
                 return epubBookDao.addBook(filePath);
+            case FileHelper.TXT:
+                if (txtBookDao == null)
+                    txtBookDao = new TxtBookDao(bookDescriptionDao);
+
+                return txtBookDao.addBook(filePath);
         }
 
         return null;
@@ -55,11 +62,19 @@ public class BookController {
                     fb2BookDao = new Fb2BookDao(bookDescriptionDao, context);
 
                 fb2BookDao.removeBook(bookDescription.getId());
+                break;
             case FileHelper.EPUB:
                 if (epubBookDao == null)
                     epubBookDao = new EpubBookDao(bookDescriptionDao, context);
 
                 epubBookDao.removeBook(bookDescription.getId());
+                break;
+            case FileHelper.TXT:
+                if (txtBookDao == null)
+                    txtBookDao = new TxtBookDao(bookDescriptionDao);
+
+                txtBookDao.removeBook(bookDescription.getId());
+                break;
         }
     }
 
@@ -80,6 +95,11 @@ public class BookController {
                     epubBookDao = new EpubBookDao(bookDescriptionDao, context);
 
                 return epubBookDao.getBookContent(bookDescription);
+            case FileHelper.TXT:
+                if (txtBookDao == null)
+                    txtBookDao = new TxtBookDao(bookDescriptionDao);
+
+                return txtBookDao.getBookContent(bookDescription);
         }
 
         return null;

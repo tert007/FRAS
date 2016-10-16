@@ -78,6 +78,7 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
             listView.setAdapter(listAdapter);
         }
 
+
         FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.reader_library_floating_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +86,8 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
                 addBookDelegate.onFloatButtonClick();
             }
         });
+
+        //floatingActionButton.at
 
         return view;
     }

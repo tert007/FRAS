@@ -43,28 +43,30 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.reader_file_explorer_image_view);
         View fileTypeLayout = convertView.findViewById(R.id.reader_file_explorer_type_layout);
 
-        String fileExtension = FileHelper.getFileExtension(currentFile);
-        if (fileExtension != null){
-            switch (fileExtension){
-                case FileHelper.TXT:
-                    imageView.setImageResource(R.drawable.notepad);
-                    break;
-                case FileHelper.EPUB:
-                    imageView.setImageResource(R.drawable.epub_book);
-                    break;
-                case FileHelper.FB2_ZIP:
-                case FileHelper.FB2:
-                    imageView.setImageResource(R.drawable.fb2_book);
-                    break;
-            }
-
-            fileTypeLayout.setVisibility(View.VISIBLE);
-
-            TextView textView = (TextView) fileTypeLayout.findViewById(R.id.reader_file_explorer_file_type_text_view);
-            textView.setText(fileExtension);
-        } else {
+        if (currentFile.isDirectory()) {
             imageView.setImageResource(R.drawable.folder);
             fileTypeLayout.setVisibility(View.GONE);
+        } else {
+            String fileExtension = FileHelper.getFileExtension(currentFile);
+            if (fileExtension != null){
+                switch (fileExtension){
+                    case FileHelper.TXT:
+                        imageView.setImageResource(R.drawable.notepad);
+                        break;
+                    case FileHelper.EPUB:
+                        imageView.setImageResource(R.drawable.epub_book);
+                        break;
+                    case FileHelper.FB2_ZIP:
+                    case FileHelper.FB2:
+                        imageView.setImageResource(R.drawable.fb2_book);
+                        break;
+                }
+
+                fileTypeLayout.setVisibility(View.VISIBLE);
+
+                TextView textView = (TextView) fileTypeLayout.findViewById(R.id.reader_file_explorer_file_type_text_view);
+                textView.setText(fileExtension);
+            }
         }
 
         TextView textView = (TextView) convertView.findViewById(R.id.reader_file_explorer_text_view);

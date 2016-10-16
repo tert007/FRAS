@@ -105,7 +105,7 @@ public class EpubBookDao extends AbstractBookDao {
     @Override
     public BookDescription addBook(String filePath) throws BookParserException, BookHasBeenAddedException {
         if (bookDescriptionDao.findBookDescription(filePath) != null) {
-            throw new BookHasBeenAddedException("The epub_book has been added");
+            throw new BookHasBeenAddedException("The book has been added");
         }
 
         long id = bookDescriptionDao.getNextItemId();

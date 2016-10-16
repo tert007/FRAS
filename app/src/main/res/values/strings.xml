@@ -69,4 +69,5 @@
     <string name="training">Training</string>
     <string name="file_type">File type</string>
     <string name="reading">Reading</string>
+    <string name="table_of_contents">Table of contents</string>
 </resources>

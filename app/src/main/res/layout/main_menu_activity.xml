@@ -16,7 +16,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:id="@+id/main_menu_library"
+            android:id="@+id/main_menu_start_reading"
             android:padding="8dp"
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/main_menu_start_reading"
+                android:id="@+id/main_menu_start_reading_text_view"
                 android:textSize="30sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_margin"
@@ -41,6 +41,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/main_menu_start_training"
             android:layout_gravity="center_horizontal"
             android:padding="8dp"
             android:layout_width="315dp"
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/main_menu_start_training"
+                android:id="@+id/main_menu_start_training_text_view"
                 android:textSize="30sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/default_margin"

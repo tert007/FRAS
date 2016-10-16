@@ -96,10 +96,11 @@
 
             <TextView
                 android:id="@+id/reader_pages_current_chapter_title_text_view"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:paddingTop="@dimen/default_margin"
-                android:paddingBottom="@dimen/default_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="@string/table_of_contents"
+                android:textSize="18sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -111,10 +112,10 @@
 
             <TextView
                 android:id="@+id/reader_pages_seek_text_view"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                android:paddingTop="@dimen/default_margin"
-                android:paddingBottom="@dimen/default_margin"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="18sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

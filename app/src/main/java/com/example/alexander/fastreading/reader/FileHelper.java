@@ -1,5 +1,7 @@
 package com.example.alexander.fastreading.reader;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -73,6 +75,12 @@ public class FileHelper {
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
+    public static String getFileName(String filePath) {
+        //using when we need to get name from BookTitle.txt -> BookTitle
+        String fileName = new File(filePath).getName();
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
     public static String getFileExtension(String filePath) {
         String fileName = new File(filePath).getName();
         String extension = null;
@@ -96,23 +104,58 @@ public class FileHelper {
         return extension;
     }
 
+    public static String getEncoding(File file) throws IOException {
+        FileInputStream fis = null;
+        UniversalDetector detector = new UniversalDetector(null);
+        String encoding = null;
+        byte[] buf = new byte[4096];
+        fis = new FileInputStream(file);
+        int nread;
+        while ((nread = fis.read(buf)) > 0 && !detector.isDone()) {
+            detector.handleData(buf, 0, nread);
+        }
+        detector.dataEnd();
+        encoding = detector.getDetectedCharset();
+
+        return encoding;
+    }
+
+    public static String getTextFromFile(File file, String charset) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), charset);
+
+        return getTextFromFile(streamReader);
+    }
+
+    public static String getTextFromFile(String filePath, String charset) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(filePath), charset);
+
+        return getTextFromFile(streamReader);
+    }
+
+    public static String getTextFromFile(InputStream inputStream, String charset) throws IOException {
+        InputStreamReader streamReader = new InputStreamReader(inputStream, charset);
+
+        return getTextFromFile(streamReader);
+    }
+
     public static String getTextFromFile(File file) throws IOException {
-        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "utf8");
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file));
 
         return getTextFromFile(streamReader);
     }
 
     public static String getTextFromFile(String filePath) throws IOException {
-        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(filePath), "utf8");
+        InputStreamReader streamReader = new InputStreamReader(new FileInputStream(filePath));
 
         return getTextFromFile(streamReader);
     }
 
     public static String getTextFromFile(InputStream inputStream) throws IOException {
-        InputStreamReader streamReader = new InputStreamReader(inputStream); // utf8
+        InputStreamReader streamReader = new InputStreamReader(inputStream);
 
         return getTextFromFile(streamReader);
     }
+
 
     private static String getTextFromFile(InputStreamReader streamReader) throws IOException {
         StringBuilder text = new StringBuilder();

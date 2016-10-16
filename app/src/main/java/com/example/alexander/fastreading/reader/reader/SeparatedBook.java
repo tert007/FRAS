@@ -17,8 +17,13 @@ public class SeparatedBook {
         final List<String> trimTitles = new ArrayList<>(titles.size());
 
         for (String title : titles) {
-            trimTitles.add(title.trim().replaceAll("[\\s]+", " "));
-        } //fix
+            String bufTitle = title.trim().replaceAll("[\\s]+", " ");
+            if (bufTitle.isEmpty()) {
+                bufTitle = "...";
+            }
+
+            trimTitles.add(bufTitle);
+        }
 
         this.titles = trimTitles;
         this.chapters = chapters;

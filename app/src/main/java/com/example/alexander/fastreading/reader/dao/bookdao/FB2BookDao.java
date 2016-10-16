@@ -36,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
@@ -275,12 +276,10 @@ public class Fb2BookDao extends AbstractBookDao {
     private BookContent parseBook(Document bookDocument) {
         BookContent bookContent = new BookContent();
 
-        int chaptersCount = bookDocument.getElementsByTagName("section").getLength();
-
         NodeList bodyTags = bookDocument.getElementsByTagName("body");
         int bodyTagsCount = bodyTags.getLength();
 
-        List<BookChapter> bookChapterList = new ArrayList<>(chaptersCount + bodyTagsCount);
+        List<BookChapter> bookChapterList = new LinkedList<>();
 
         for (int i = 0; i < bodyTagsCount; i++) {
             NodeList sectionTags = ((Element) bodyTags.item(i)).getElementsByTagName("section");
@@ -363,10 +362,9 @@ public class Fb2BookDao extends AbstractBookDao {
 
     private CharSequence parseTag(Node tag) {
         if (tag.getNodeType() == Node.TEXT_NODE){
-            //String tagNodeValue = tag.getNodeValue();
 
             //Если это самый внутренни тег и при этом не \n
-            if (!tag.getNodeValue().trim().isEmpty()){
+            if (! tag.getNodeValue().trim().isEmpty()){
                 return tag.getNodeValue();
             } else {
                 return "";
@@ -384,16 +382,18 @@ public class Fb2BookDao extends AbstractBookDao {
 
         switch (tag.getNodeName()) {
             case TITLE_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new RelativeSizeSpan(TITLE_FONT_HEIGHT),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new StyleSpan(Typeface.BOLD),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                int builderLength = builder.length();
-                if (builderLength < 1) {
-                    break;
-                }
+
 
                 if (!(builder.charAt(builderLength - 1) == '\n')) {
                     builder.append("\n\n");
@@ -401,6 +401,11 @@ public class Fb2BookDao extends AbstractBookDao {
                 break;
             }
             case SUBTITLE_TAG:  {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new RelativeSizeSpan(SUBTITLE_FONT_HEIGHT),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
@@ -408,12 +413,8 @@ public class Fb2BookDao extends AbstractBookDao {
                 builder.setSpan(new StyleSpan(Typeface.BOLD),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                int builderLength = builder.length();
-                if (builderLength < 1) {
-                    break;
-                }
 
-                if (!(builder.charAt(builderLength - 1) == '\n')) {
+                if (builder.charAt(builderLength - 1) != '\n') {
                     builder.append("\n\n");
                 }
                 break;
@@ -476,10 +477,16 @@ public class Fb2BookDao extends AbstractBookDao {
                 }
                 break;
             }
-            case CITE_TAG:
+            case CITE_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new StyleSpan(Typeface.ITALIC),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
+            }
             case TEXT_AUTHOR_TAG:{
                 int builderLength = builder.length();
                 if (builderLength < 1) {
@@ -491,30 +498,61 @@ public class Fb2BookDao extends AbstractBookDao {
                 }
                 break;
             }
-            case EMPHASIS_TAG:
+            case EMPHASIS_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new StyleSpan(Typeface.ITALIC),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
-            case STRONG_TAG:
+            }
+            case STRONG_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new StyleSpan(Typeface.BOLD),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
-            case SUB_TAG:
+            }
+            case SUB_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new RelativeSizeSpan(SUB_FONT_HEIGHT),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new SubscriptSpan(),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
-            case SUP_TAG:
+            }
+            case SUP_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new RelativeSizeSpan(SUB_FONT_HEIGHT),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new SuperscriptSpan(),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
-            case STRIKE_THROUGH_TAG:
+            }
+            case STRIKE_THROUGH_TAG: {
+                int builderLength = builder.length();
+                if (builderLength < 1) {
+                    break;
+                }
+
                 builder.setSpan(new StrikethroughSpan(),
                         0, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 break;
+
+            }
             case EMPTY_LINE_TAG:
                 builder.append("\n");
                 break;

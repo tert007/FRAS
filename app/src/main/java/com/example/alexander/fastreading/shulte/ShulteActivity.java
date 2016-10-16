@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.shulte;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,7 +24,6 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
     ShulteMainFragment gridFragment;
 
     FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
         setContentView(R.layout.shulte_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         settingsFragment = new ShulteSettingsFragment();
@@ -39,18 +39,18 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
 
         fragmentManager = getFragmentManager();
 
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.shulte_fragment_container, settingsFragment);
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().
+                replace(R.id.shulte_fragment_container, settingsFragment).
+                commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings :
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.shulte_fragment_container, settingsFragment);
-                fragmentTransaction.commit();
+                fragmentManager.beginTransaction().
+                        replace(R.id.shulte_fragment_container, settingsFragment).
+                        commit();
 
                 getSupportActionBar().setTitle(R.string.settings);
                 return true;
@@ -62,9 +62,9 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
 
                 gridFragment.setArguments(bundle);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.shulte_fragment_container, gridFragment);
-                fragmentTransaction.commit();
+                fragmentManager.beginTransaction().
+                        replace(R.id.shulte_fragment_container, gridFragment).
+                        commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -88,9 +88,9 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
 
                 gridFragment.setArguments(bundle);
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.shulte_fragment_container, gridFragment);
-                fragmentTransaction.commit();
+                fragmentManager.beginTransaction().
+                        replace(R.id.shulte_fragment_container, gridFragment).
+                        commit();
 
                 break;
         }

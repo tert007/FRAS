@@ -50,5 +50,6 @@
     <string name="training">Тренировка</string>
     <string name="file_type">Тип файла</string>
     <string name="reading">Чтение</string>
+    <string name="table_of_contents">Оглавление</string>
 
 </resources>

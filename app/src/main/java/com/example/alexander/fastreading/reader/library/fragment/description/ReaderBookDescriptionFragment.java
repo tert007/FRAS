@@ -23,43 +23,30 @@ import com.example.alexander.fastreading.reader.reader.ReaderActivity;
  */
 public class ReaderBookDescriptionFragment extends Fragment {
 
-    private TextView bookTitleResultTextView;
-    private TextView bookAuthorResultTextView;
-    private TextView bookLanguageResultTextView;
-    private TextView bookFilePathResultTextView;
-
-    private TextView bookTitleTextView;
-    private TextView bookAuthorTextView;
-    private TextView bookLanguageTextView;
-
-    private ImageView bookCoverImageView;
-
-    private Button startPages;
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.reader_book_description_fragment, container, false);
+        final View view = inflater.inflate(R.layout.reader_book_description_fragment, container, false);
 
-        bookTitleResultTextView = (TextView) view.findViewById(R.id.reader_book_description_title_result_text_view);
-        bookTitleTextView = (TextView) view.findViewById(R.id.reader_book_description_title_text_view);
+        final View authorView = view.findViewById(R.id.reader_description_author_view);
+        final View languageView = view.findViewById(R.id.reader_description_language_view);
 
-        bookAuthorResultTextView = (TextView) view.findViewById(R.id.reader_book_description_author_result_text_view);
-        bookAuthorTextView = (TextView) view.findViewById(R.id.reader_book_description_author_text_view);
+        final TextView bookTitleResultTextView = (TextView) view.findViewById(R.id.reader_book_description_title_result_text_view);
+        final TextView bookAuthorResultTextView = (TextView) authorView.findViewById(R.id.reader_book_description_author_result_text_view);
+        final TextView bookLanguageResultTextView = (TextView) languageView.findViewById(R.id.reader_book_description_language_result_text_view);
+        final TextView bookFilePathResultTextView = (TextView) view.findViewById(R.id.reader_book_description_book_path_result_text_view);
+        final ImageView bookCoverImageView = (ImageView) view.findViewById(R.id.reader_book_description_cover_image_view);
 
-        bookLanguageResultTextView = (TextView) view.findViewById(R.id.reader_book_description_language_result_text_view);
-        bookLanguageTextView = (TextView) view.findViewById(R.id.reader_book_description_language_text_view);
-
-        bookFilePathResultTextView = (TextView) view.findViewById(R.id.reader_book_description_book_path_result_text_view);
-
-        bookCoverImageView = (ImageView) view.findViewById(R.id.reader_book_description_cover_image_view);
-
-        startPages  = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
+        final Button startReadingButton = (Button) view.findViewById(R.id.reader_book_description_pages_reading_button);
 
         final BookDescription bookDescription = (BookDescription) getArguments().getParcelable("book_description");
 
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(bookDescription.getTitle());
 
-        if (bookDescription.getType().equals(FileHelper.EPUB) || bookDescription.getType().equals(FileHelper.FB2) ) {
+        if (bookDescription.getType().equals(FileHelper.TXT)) {
+            authorView.setVisibility(View.GONE);
+            languageView.setVisibility(View.GONE);
 
+            bookCoverImageView.setImageResource(R.drawable.book_without_title);
+        } else {
             Bitmap bookCoverBitmap = BitmapFactory.decodeFile(bookDescription.getCoverImagePath());
 
             if (bookCoverBitmap == null){
@@ -68,25 +55,14 @@ public class ReaderBookDescriptionFragment extends Fragment {
                 bookCoverImageView.setImageBitmap(bookCoverBitmap);
             }
 
-            bookTitleResultTextView.setText(bookDescription.getTitle());
             bookAuthorResultTextView.setText(bookDescription.getAuthor());
             bookLanguageResultTextView.setText(bookDescription.getLanguage());
-
-        } else {
-            //TXT File
-            bookCoverImageView.setImageResource(R.drawable.book_without_title);
-
-            bookTitleResultTextView.setVisibility(View.GONE);
-            bookAuthorResultTextView.setVisibility(View.GONE);
-            bookLanguageResultTextView.setVisibility(View.GONE);
-            bookTitleTextView.setVisibility(View.GONE);
-            bookAuthorTextView.setVisibility(View.GONE);
-            bookLanguageTextView.setVisibility(View.GONE);
         }
 
+        bookTitleResultTextView.setText(bookDescription.getTitle());
         bookFilePathResultTextView.setText(bookDescription.getFilePath());
 
-        startPages.setOnClickListener(new View.OnClickListener() {
+        startReadingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ReaderActivity.class);

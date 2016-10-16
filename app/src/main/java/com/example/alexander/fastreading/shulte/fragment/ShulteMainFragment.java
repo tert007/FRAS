@@ -1,6 +1,7 @@
 package com.example.alexander.fastreading.shulte.fragment;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -70,7 +71,6 @@ public class ShulteMainFragment extends Fragment implements AdapterView.OnItemCl
         return view;
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final TextView pickedItem = (TextView)view.findViewById(R.id.shulte_grid_item_text_view);
@@ -79,7 +79,7 @@ public class ShulteMainFragment extends Fragment implements AdapterView.OnItemCl
         String nextItemText = nextItemTextView.getText().toString();
 
         if (pickedItemText.equals(nextItemText)){
-            pickedItem.setBackgroundResource(R.drawable.access_background);
+            pickedItem.setBackgroundColor(Color.GREEN);
 
             String nextItem;
             if (SettingsManager.getShulteTableType().equals(ShulteTableType.NUMBERS)){
@@ -108,14 +108,14 @@ public class ShulteMainFragment extends Fragment implements AdapterView.OnItemCl
                 nextItemTextView.setText(nextItem);
             }
         } else {
-            pickedItem.setBackgroundResource(R.drawable.reject_background);
+            pickedItem.setBackgroundColor(Color.RED);
         }
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                pickedItem.setBackgroundResource(R.drawable.default_background);
+                pickedItem.setBackgroundColor(Color.WHITE);
             }
         }, 50);
     }

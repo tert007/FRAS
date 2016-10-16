@@ -8,13 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.reader.library.LibraryActivity;
 import com.example.alexander.fastreading.trainingmenu.TrainingMenuActivity;
 
-public class MainMenu extends AppCompatActivity implements View.OnClickListener {
+public class MainMenu extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +23,29 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //ImageView startTrainingMenuImageView = (ImageView) findViewById(R.id.main_menu_start_training_menu_text_view);
-        //startTrainingMenuImageView.setOnClickListener(this);
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "ElMessiri-Regular.ttf");
 
-        View startReaderView = findViewById(R.id.main_menu_library);
-        startReaderView.setOnClickListener(this);
+        View startReaderView = findViewById(R.id.main_menu_start_reading);
+        startReaderView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainMenu.this, LibraryActivity.class));
+            }
+        });
 
-        TextView startReaderTextView = (TextView) startReaderView.findViewById(R.id.main_menu_start_reading);
-        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "lobster.ttf");
+        TextView startReaderTextView = (TextView) startReaderView.findViewById(R.id.main_menu_start_reading_text_view);
         startReaderTextView.setTypeface(typeface);
+
+        View startTraining = findViewById(R.id.main_menu_start_training);
+        startTraining.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainMenu.this, TrainingMenuActivity.class));
+            }
+        });
+
+        TextView startTrainingTextView = (TextView) startTraining.findViewById(R.id.main_menu_start_training_text_view);
+        startTrainingTextView.setTypeface(typeface);
 
         SettingsManager.Initialize(this);
         RecordsManager.Initialize(this);
@@ -49,19 +62,6 @@ public class MainMenu extends AppCompatActivity implements View.OnClickListener 
         switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            /*
-            case R.id.main_menu_start_training_menu_text_view :
-                startActivity(new Intent(this, TrainingMenuActivity.class));
-                break;*/
-            case R.id.main_menu_library :
-                startActivity(new Intent(this, LibraryActivity.class));
-                break;
         }
     }
 }
