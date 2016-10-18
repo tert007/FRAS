@@ -2,6 +2,7 @@ package com.example.alexander.fastreading.guessnumber;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +31,8 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
         setContentView(R.layout.guess_number_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white));
+        toolbar.setTitleTextColor(Color.WHITE);
+        //toolbar.setTitle(getString(R.string.remember_number));
         setSupportActionBar(toolbar);
 
         settingsFragment = new GuessNumberSettingsFragment();
@@ -43,11 +45,13 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
         fragmentTransaction.commit();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.guess_number_toolbar, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -60,20 +64,29 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
                 //getSupportActionBar().setTitle(R.string.settings);
                 return true;
             case R.id.guess_number_toolbar_restart:
-                mainFragment = new GuessNumberMainFragment();
-
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
-                fragmentTransaction.commit();
+                restartGame();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }    }
 
+    public void startSettingsFragment(){
+        mainFragment = new GuessNumberMainFragment();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.guess_number_fragment_container, settingsFragment);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public void viewOnClick(View v) {
         mainFragment = new GuessNumberMainFragment();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
+        fragmentTransaction.commit();
+    }
 
+    public void restartGame(){
+        mainFragment = new GuessNumberMainFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
         fragmentTransaction.commit();

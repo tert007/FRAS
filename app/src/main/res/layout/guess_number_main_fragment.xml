@@ -12,63 +12,206 @@
         android:layout_height="wrap_content" />
 
     <TextView
-        android:id="@+id/guess_number_show_text_view"
-        android:paddingTop="100dp"
-        android:paddingBottom="@dimen/default_margin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif"
-        />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/guess_number_record"
+        android:layout_gravity="right" />
 
     <TextView
-        android:id="@+id/guess_number_answer_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/guess_number_current_result"
+        android:layout_gravity="right" />
+
+    <TextView
+        android:id="@+id/guess_number_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:id="@+id/guess_number_answer_layout"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="@dimen/default_margin"
-        android:paddingBottom="@dimen/default_margin"
-        android:textSize="20sp"
-        android:fontFamily="sans-serif"
-        />
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp">
 
-    <RelativeLayout
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button1"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button2"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="3"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button3"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp">
 
-        <TableLayout
-            android:layout_centerInParent="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="4"
 
-            <TableRow>
-                <Button android:id="@+id/guess_number_button1"/>
-                <Button android:id="@+id/guess_number_button2"/>
-                <Button android:id="@+id/guess_number_button3"/>
-            </TableRow>
+            android:textColor="@drawable/guess_number_button_text_color_selector"
 
-            <TableRow>
-                <Button android:id="@+id/guess_number_button4"/>
-                <Button android:id="@+id/guess_number_button5"/>
-                <Button android:id="@+id/guess_number_button6"/>
-            </TableRow>
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button4"
+            android:gravity="center" />
 
-            <TableRow>
-                <Button android:id="@+id/guess_number_button7"/>
-                <Button android:id="@+id/guess_number_button8"/>
-                <Button android:id="@+id/guess_number_button9"/>
-            </TableRow>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="5"
 
-            <TableRow>
-                <Button android:id="@+id/guess_number_button0" android:layout_span="2"/>
-                <Button android:id="@+id/guess_number_edit_button"/>
+            android:textColor="@drawable/guess_number_button_text_color_selector"
 
-            </TableRow>
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button5"
+            android:gravity="center" />
 
-        </TableLayout>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="6"
 
-    </RelativeLayout>
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button6"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="7"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button7"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="8"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button8"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="9"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button9"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0"
+
+            android:textColor="@drawable/guess_number_button_text_color_selector"
+
+            android:textSize="30sp"
+            android:clickable="true"
+            android:textStyle="bold"
+            android:id="@+id/guess_number_button0"
+            android:gravity="center"/>
+    </LinearLayout>
+
 
 </LinearLayout>

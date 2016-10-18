@@ -7,17 +7,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/shulte_table_type_switch"
-
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="wrap_content">
 
-        android:text="@string/shulte_table_type_settings"
-        android:gravity="center_vertical"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif"/>
+        <TextView
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+
+            android:text="@string/chose_complexity"
+            android:textSize="16sp"
+            android:textColor="@color/grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/shulte_settings_spinner"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:entries="@array/shulte_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
 
     <TextView
         android:layout_weight="1"
@@ -25,19 +37,23 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         android:text="@string/shulte_table_description"
-        android:fontFamily="sans-serif"
 
         android:layout_width="match_parent"
         android:layout_height="0dp" />
 
     <Button
         android:id="@+id/shulte_start_training_button"
-        android:fontFamily="sans-serif"
 
         android:text="@string/start"
-        android:layout_marginBottom="25dp"
-        android:layout_width="200dp"
+        android:textColor="@color/white"
+
+        android:background="@drawable/button_background"
+
+        android:layout_gravity="center_horizontal"
+
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"/>
 
 </LinearLayout>

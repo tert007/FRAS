@@ -191,9 +191,9 @@
         android:id="@+id/reader_book_description_pages_reading_button"
 
         android:text="@string/reading"
-
-        android:background="@drawable/reader_book_description_button_background"
         android:textColor="@color/white"
+
+        android:background="@drawable/button_background"
         android:layout_gravity="center_horizontal"
 
         android:layout_width="125dp"

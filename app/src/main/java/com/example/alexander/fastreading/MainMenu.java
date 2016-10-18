@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.reader.library.LibraryActivity;
+import com.example.alexander.fastreading.reader.reader.ReaderActivity;
 import com.example.alexander.fastreading.trainingmenu.TrainingMenuActivity;
 
 public class MainMenu extends AppCompatActivity {
@@ -25,27 +26,24 @@ public class MainMenu extends AppCompatActivity {
 
         Typeface typeface = Typeface.createFromAsset(this.getAssets(), "ElMessiri-Regular.ttf");
 
-        View startReaderView = findViewById(R.id.main_menu_start_reading);
-        startReaderView.setOnClickListener(new View.OnClickListener() {
+        final TextView startReaderTextView = (TextView) findViewById(R.id.main_menu_start_reading_text_view);
+        startReaderTextView.setTypeface(typeface);
+        startReaderTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainMenu.this, LibraryActivity.class));
             }
         });
 
-        TextView startReaderTextView = (TextView) startReaderView.findViewById(R.id.main_menu_start_reading_text_view);
-        startReaderTextView.setTypeface(typeface);
 
-        View startTraining = findViewById(R.id.main_menu_start_training);
-        startTraining.setOnClickListener(new View.OnClickListener() {
+        final TextView startTrainingTextView = (TextView) findViewById(R.id.main_menu_start_training_text_view);
+        startTrainingTextView.setTypeface(typeface);
+        startTrainingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainMenu.this, TrainingMenuActivity.class));
             }
         });
-
-        TextView startTrainingTextView = (TextView) startTraining.findViewById(R.id.main_menu_start_training_text_view);
-        startTrainingTextView.setTypeface(typeface);
 
         SettingsManager.Initialize(this);
         RecordsManager.Initialize(this);

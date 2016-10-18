@@ -7,13 +7,20 @@
     <string name="start">Start</string>
     <string name="shulte_table_type_settings">Numbers / Lettets</string>
     <string name="current_time">Current time</string>
-    <string name="guess_number_settings_choose_complexity">Choose complexity</string>
+    <string name="chose_complexity">Choose complexity</string>
     <string name="author">Author</string>
     <string name="language">Language</string>
     <string name="book_title">Book title</string>
 
     <string-array name="library_book_settings" translatable="true">
         <item>Remove the book</item>
+    </string-array>
+
+    <string-array name="shulte_settings" translatable="false">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
     </string-array>
 
     <string-array name="guess_number_settings" translatable="false">
@@ -70,4 +77,9 @@
     <string name="file_type">File type</string>
     <string name="reading">Reading</string>
     <string name="table_of_contents">Table of contents</string>
+    <string name="new_record">New record</string>
+    <string name="training_completed">Training completed</string>
+    <string name="your_result">Your result</string>
+    <string name="retry">Retry</string>
+    <string name="complete">complete</string>
 </resources>

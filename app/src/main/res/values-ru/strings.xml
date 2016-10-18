@@ -8,7 +8,7 @@
     <string name="start">Начать</string>
     <string name="shulte_table_type_settings">Цифры / Буквы</string>
     <string name="current_time">Текущее время</string>
-    <string name="guess_number_settings_choose_complexity">Выберите сложность</string>
+    <string name="chose_complexity">Выберите сложность</string>
     <string name="author">Автор</string>
     <string name="language">Язык</string>
     <string name="book_title">Название книги</string>
@@ -51,5 +51,10 @@
     <string name="file_type">Тип файла</string>
     <string name="reading">Чтение</string>
     <string name="table_of_contents">Оглавление</string>
+    <string name="new_record">Новый рекорд</string>
+    <string name="training_completed">Упражение окочено</string>
+    <string name="your_result">Ваш результат</string>
+    <string name="retry">Повторить</string>
+    <string name="complete">Закончить</string>
 
 </resources>

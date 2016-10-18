@@ -19,40 +19,30 @@ import com.example.alexander.fastreading.RecordsManager;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.shulte.GridAdapter;
 import com.example.alexander.fastreading.shulte.ShulteGenerator;
-import com.example.alexander.fastreading.shulte.ShulteTableType;
 
 /**
  * Created by Alexander on 27.07.2016.
  */
 public class ShulteMainFragment extends Fragment implements AdapterView.OnItemClickListener {
 
+    private static final String START_NEXT_ITEM_VALUE = "1";
     private static final String NOT_INITIALIZE_VALUE = "-";
 
     private TextView recordTextView;
     private TextView nextItemTextView;
-    private GridView gridView;
-    private GridAdapter gridAdapter;
+    private ShulteGenerator shulteGenerator;
 
     private Chronometer chronometer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        int countRow = getArguments().getInt("count_row");
+        int countRow = SettingsManager.getShulteComplexity();
+        shulteGenerator = new ShulteGenerator(countRow);
 
         View view = inflater.inflate(R.layout.shulte_main_fragment, container, false);
 
         nextItemTextView = (TextView) view.findViewById(R.id.shulte_next_item);
-
-        if (SettingsManager.getShulteTableType().equals(ShulteTableType.NUMBERS)){
-            nextItemTextView.setText(ShulteGenerator.FIRST_NUMBER);
-            gridAdapter = new GridAdapter(getActivity().getApplicationContext(), R.id.shulte_grid_item_text_view, ShulteGenerator.getRandomNumbers());
-        } else {
-            nextItemTextView.setText(ShulteGenerator.FIRST_LETTER);
-            gridAdapter = new GridAdapter(getActivity().getApplicationContext(), R.id.shulte_grid_item_text_view, ShulteGenerator.getRandomLetters());
-        }
-
         recordTextView = (TextView) view.findViewById(R.id.shulte_record);
         if(RecordsManager.getShulteRecord() == 0){
             recordTextView.setText(NOT_INITIALIZE_VALUE);
@@ -60,11 +50,15 @@ public class ShulteMainFragment extends Fragment implements AdapterView.OnItemCl
             recordTextView.setText(String.valueOf(RecordsManager.getShulteRecord()));
         }
 
-        gridView = (GridView) view.findViewById(R.id.shulte_table);
+        GridAdapter gridAdapter = new GridAdapter(getActivity(), R.id.shulte_grid_item_text_view, shulteGenerator.getRandomNumbers());
+        GridView gridView = (GridView) view.findViewById(R.id.shulte_table);
+
         gridView.setNumColumns(countRow);
         gridView.setOnItemClickListener(this);
         gridView.setAdapter(gridAdapter);
-        
+
+        nextItemTextView.setText(START_NEXT_ITEM_VALUE);
+
         chronometer = (Chronometer) view.findViewById(R.id.shulte_chronometer);
         chronometer.start();
 
@@ -81,12 +75,7 @@ public class ShulteMainFragment extends Fragment implements AdapterView.OnItemCl
         if (pickedItemText.equals(nextItemText)){
             pickedItem.setBackgroundColor(Color.GREEN);
 
-            String nextItem;
-            if (SettingsManager.getShulteTableType().equals(ShulteTableType.NUMBERS)){
-                nextItem = ShulteGenerator.getNextNumberItem(pickedItemText);
-            } else {
-                nextItem = ShulteGenerator.getNextLetterItem(pickedItemText);
-            }
+            String nextItem = shulteGenerator.getNextNumberItem(pickedItemText);
 
             if (nextItem == null){
                 long startTime = SystemClock.elapsedRealtime();

@@ -5,5 +5,5 @@ package com.example.alexander.fastreading.guessnumber;
  */
 public interface Response {
     //После того как AsyncTask сгенерирует случайное число, оно передает его с помощью этого метода
-    void onResponse(String result);
+    void onResponse(int[] result);
 }

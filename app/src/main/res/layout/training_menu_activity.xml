@@ -6,20 +6,40 @@
     android:orientation="vertical"
     tools:context=".trainingmenu.TrainingMenuActivity">
 
-    <Button
-        android:layout_marginTop="100dp"
-        android:id="@+id/activity_start_shulte_table"
+
+    <TextView
+        android:id="@+id/training_menu_start_shulte"
         android:text="Таблица Шульта"
-        android:layout_gravity="center"
-        android:layout_width="200dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+
+        android:drawableLeft="@drawable/training_icon_shulte"
+        android:drawableStart="@drawable/training_icon_shulte"
+
+        android:padding="8dp"
+
+        android:layout_gravity="center_horizontal"
+        android:layout_width="300dp"
         android:layout_height="wrap_content" />
 
-    <Button
 
-        android:id="@+id/activity_start_guess_number"
+
+    <TextView
+        android:id="@+id/training_menu_start_guess_number"
+
         android:text="Угадай число"
-        android:layout_gravity="center"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+
+        android:drawableLeft="@drawable/training_icon_guess_number"
+        android:drawableStart="@drawable/training_icon_guess_number"
+
+        android:padding="8dp"
+
+        android:layout_gravity="center_horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

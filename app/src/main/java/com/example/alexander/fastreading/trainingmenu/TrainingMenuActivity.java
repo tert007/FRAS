@@ -1,13 +1,11 @@
 package com.example.alexander.fastreading.trainingmenu;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.RecordsManager;
@@ -15,52 +13,31 @@ import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
 
-public class TrainingMenuActivity extends AppCompatActivity implements View.OnClickListener {
-
-    Button button;
-    Button button2;
+public class TrainingMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.training_menu_activity);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "ElMessiri-Regular.ttf");
 
-        button = (Button) findViewById(R.id.activity_start_shulte_table);
-        button.setOnClickListener(this);
+        final TextView shulteTextView = (TextView) findViewById(R.id.training_menu_start_shulte);
+        shulteTextView.setTypeface(typeface);
+        shulteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TrainingMenuActivity.this, ShulteActivity.class));
+            }
+        });
 
-        button2 = (Button) findViewById(R.id.activity_start_guess_number);
-        button2.setOnClickListener(this);
-
-        SettingsManager.Initialize(this);
-        RecordsManager.Initialize(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.shulte_toolbar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.activity_start_shulte_table :
-                startActivity(new Intent(this, ShulteActivity.class));
-                break;
-            case R.id.activity_start_guess_number :
-                startActivity(new Intent(this, GuessNumberActivity.class));
-                break;
-        }
+        final TextView guessNumberTextView = (TextView) findViewById(R.id.training_menu_start_guess_number);
+        guessNumberTextView.setTypeface(typeface);
+        guessNumberTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TrainingMenuActivity.this, GuessNumberActivity.class));
+            }
+        });
     }
 }
