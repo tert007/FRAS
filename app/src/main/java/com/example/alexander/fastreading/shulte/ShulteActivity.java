@@ -1,10 +1,8 @@
 package com.example.alexander.fastreading.shulte;
 
 import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -15,13 +13,11 @@ import android.view.View;
 
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.shulte.fragment.ShulteMainFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShulteSettingsFragment;
 
 public class ShulteActivity extends AppCompatActivity implements ViewOnClickListener {
-
-    ShulteSettingsFragment settingsFragment;
-    ShulteMainFragment gridFragment;
 
     FragmentManager fragmentManager;
 
@@ -31,40 +27,23 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
         setContentView(R.layout.shulte_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.schulte_table);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        settingsFragment = new ShulteSettingsFragment();
-        settingsFragment.delegate = this;
-
         fragmentManager = getFragmentManager();
 
-        fragmentManager.beginTransaction().
-                replace(R.id.shulte_fragment_container, settingsFragment).
-                commit();
+        startSettingsFragment();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings :
-                fragmentManager.beginTransaction().
-                        replace(R.id.shulte_fragment_container, settingsFragment).
-                        commit();
-
-                getSupportActionBar().setTitle(R.string.settings);
+                startSettingsFragment();
                 return true;
             case R.id.restart:
-                gridFragment = new ShulteMainFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("count_row", 5);
-
-                gridFragment.setArguments(bundle);
-
-                fragmentManager.beginTransaction().
-                        replace(R.id.shulte_fragment_container, gridFragment).
-                        commit();
+                startTrainingFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -81,18 +60,26 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
     public void viewOnClick(View v) {
         switch (v.getId()){
             case R.id.shulte_start_training_button:
-                gridFragment = new ShulteMainFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("count_row", 5);
-
-                gridFragment.setArguments(bundle);
-
-                fragmentManager.beginTransaction().
-                        replace(R.id.shulte_fragment_container, gridFragment).
-                        commit();
-
+                startTrainingFragment();
                 break;
         }
     }
+
+    public void startTrainingFragment() {
+        ShulteMainFragment mainFragment = new ShulteMainFragment();
+
+        fragmentManager.beginTransaction().
+                replace(R.id.shulte_fragment_container, mainFragment).
+                commit();
+    }
+
+    public void startSettingsFragment() {
+        ShulteSettingsFragment settingsFragment = new ShulteSettingsFragment();
+        settingsFragment.delegate = this;
+
+        fragmentManager.beginTransaction().
+                replace(R.id.shulte_fragment_container, settingsFragment).
+                commit();
+    }
+
 }

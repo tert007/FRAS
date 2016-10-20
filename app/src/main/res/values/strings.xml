@@ -3,11 +3,11 @@
     <string name="record">Record</string>
     <string name="settings">Settings</string>
     <string name="shulte_table_description">description</string>
-    <string name="shulte_next_item">Next Item</string>
+    <string name="next">Next</string>
     <string name="start">Start</string>
     <string name="shulte_table_type_settings">Numbers / Lettets</string>
-    <string name="current_time">Current time</string>
-    <string name="chose_complexity">Choose complexity</string>
+    <string name="time">Time</string>
+    <string name="choose_complexity">Choose complexity</string>
     <string name="author">Author</string>
     <string name="language">Language</string>
     <string name="book_title">Book title</string>
@@ -17,7 +17,6 @@
     </string-array>
 
     <string-array name="shulte_settings" translatable="false">
-        <item>4</item>
         <item>5</item>
         <item>6</item>
         <item>7</item>
@@ -53,7 +52,7 @@
     <string name="file_opening_message">File\'s opening</string>
     <string name="text_size">Text size</string>
     <string name="fast_reading">Fast reading</string>
-    <string name="library_is_empty">Your library is empty now :(</string>
+    <string name="library_is_empty">Your library is empty</string>
     <string name="add_book_message">Book\'s adding to library</string>
     <string name="library">Library</string>
     <string name="page">Page</string>
@@ -82,4 +81,16 @@
     <string name="your_result">Your result</string>
     <string name="retry">Retry</string>
     <string name="complete">complete</string>
+    <string name="colored_items">Colored items</string>
+    <string name="permutation">Permutation</string>
+    <string name="eyes_mode">Eyes mode</string>
+    <string name="stop">Stop</string>
+    <string name="schulte_table">Schulte Table</string>
+    <string name="shulte_settings_permutation_description">When your answer is correct table will change</string>
+    <string name="shulte_settings_colored_description">Items have a different colours</string>
+    <string name="shulte_settings_eyes_mode_description">Training without a touches</string>
+    <string name="shulte_settings_complexity_description">Choose a size of the table</string>
+    <string name="shulte_settings_record_lock_description">In this mode new record will not be save</string>
+    <string name="restart">Restart</string>
+    <string name="help">Help</string>
 </resources>

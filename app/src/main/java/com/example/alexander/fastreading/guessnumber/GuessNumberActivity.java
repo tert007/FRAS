@@ -3,7 +3,6 @@ package com.example.alexander.fastreading.guessnumber;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.alexander.fastreading.shulte.ViewOnClickListener;
+import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberMainFragment;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberSettingsFragment;
@@ -64,7 +63,7 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
                 //getSupportActionBar().setTitle(R.string.settings);
                 return true;
             case R.id.guess_number_toolbar_restart:
-                restartGame();
+                startTrainingFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -77,15 +76,15 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
         fragmentTransaction.commit();
     }
 
-    @Override
-    public void viewOnClick(View v) {
+    public void startTrainingFragment(){
         mainFragment = new GuessNumberMainFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
         fragmentTransaction.commit();
     }
 
-    public void restartGame(){
+    @Override
+    public void viewOnClick(View v) {
         mainFragment = new GuessNumberMainFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);

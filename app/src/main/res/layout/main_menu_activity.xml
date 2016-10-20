@@ -24,8 +24,8 @@
 
             android:padding="8dp"
 
-            android:drawableLeft="@drawable/library"
-            android:drawableStart="@drawable/library"
+            android:drawableLeft="@drawable/maim_menu_reading_button"
+            android:drawableStart="@drawable/maim_menu_reading_button"
 
             android:gravity="center"
             android:layout_gravity="center_horizontal"
@@ -43,8 +43,8 @@
 
             android:padding="8dp"
 
-            android:drawableLeft="@drawable/brain"
-            android:drawableStart="@drawable/brain"
+            android:drawableLeft="@drawable/main_menu_training_item"
+            android:drawableStart="@drawable/main_menu_training_item"
 
             android:gravity="center"
             android:layout_gravity="center_horizontal"

@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.shulte;
+package com.example.alexander.fastreading;
 
 import android.view.View;
 

@@ -220,7 +220,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     GuessNumberActivity mainActivity = (GuessNumberActivity) getActivity();
-                    mainActivity.restartGame();
+                    mainActivity.startTrainingFragment();
                 }
             });
             builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {

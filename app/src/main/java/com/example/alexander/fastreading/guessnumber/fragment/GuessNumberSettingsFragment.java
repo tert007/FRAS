@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.shulte.ViewOnClickListener;
+import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.SettingsManager;
 
 /**

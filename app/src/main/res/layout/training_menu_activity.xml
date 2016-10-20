@@ -6,14 +6,15 @@
     android:orientation="vertical"
     tools:context=".trainingmenu.TrainingMenuActivity">
 
-
     <TextView
         android:id="@+id/training_menu_start_shulte"
+
         android:text="Таблица Шульта"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textColor="@color/black"
         android:gravity="center"
 
+        android:drawablePadding="8dp"
         android:drawableLeft="@drawable/training_icon_shulte"
         android:drawableStart="@drawable/training_icon_shulte"
 
@@ -24,15 +25,15 @@
         android:layout_height="wrap_content" />
 
 
-
     <TextView
         android:id="@+id/training_menu_start_guess_number"
 
         android:text="Угадай число"
-        android:textSize="20sp"
+        android:textSize="22sp"
         android:textColor="@color/black"
         android:gravity="center"
 
+        android:drawablePadding="8dp"
         android:drawableLeft="@drawable/training_icon_guess_number"
         android:drawableStart="@drawable/training_icon_guess_number"
 

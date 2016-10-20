@@ -9,5 +9,5 @@
     android:gravity="center"
 
     android:textColor="@color/black"
-    android:textSize="30sp">
+    android:textSize="35sp">
 </com.example.alexander.fastreading.shulte.SquareTextView>
