@@ -40,6 +40,48 @@
         <item>Быстрое чтение</item>
     </string-array>
 
+    <string-array name="alphabet">
+        <item>А</item>
+        <item>Б</item>
+        <item>В</item>
+        <item>Г</item>
+        <item>Д</item>
+
+        <item>Е</item>
+        <item>Ё</item>
+        <item>Ж</item>
+        <item>З</item>
+        <item>И</item>
+
+        <item>Й</item>
+        <item>К</item>
+        <item>Л</item>
+        <item>М</item>
+        <item>Н</item>
+
+        <item>О</item>
+        <item>П</item>
+        <item>Р</item>
+        <item>С</item>
+        <item>Т</item>
+
+        <item>У</item>
+        <item>Ф</item>
+        <item>Х</item>
+        <item>Ц</item>
+        <item>Ч</item>
+
+        <item>Ш</item>
+        <item>Щ</item>
+        <item>Ъ</item>
+        <item>Ы</item>
+        <item>Ь</item>
+
+        <item>Э</item>
+        <item>Ю</item>
+        <item>Я</item>
+    </string-array>
+
     <string name="choose_reading_mode">Выберите режим чтения</string>
     <string name="exit">Выход</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>
@@ -57,16 +99,20 @@
     <string name="retry">Повторить</string>
     <string name="complete">Завершить</string>
     <string name="colored_items">Цветные элементы</string>
-    <string name="permutation">Перестановка</string>
-    <string name="eyes_mode">Режим глаз</string>
+    <string name="permutation">С перестановкой</string>
+    <string name="shulte_settings_input_type">Палец / Глаза</string>
     <string name="stop">Стоп</string>
-    <string name="schulte_table">Таблица Шульте</string>
-    <string name="shulte_settings_permutation_description">При правильном ответе таблица будет изменяться</string>
+    <string name="shulte_table">Таблица Шульте</string>
+    <string name="shulte_settings_permutation_description">При правильном ответе цифры меняют своё местоположение</string>
     <string name="shulte_settings_colored_description">Элементы имеют различные цвета</string>
-    <string name="shulte_settings_eyes_mode_description">Тренировка без нажатий</string>
+    <string name="shulte_settings_eyes_mode_description">Выбора метода тренировки</string>
     <string name="shulte_settings_complexity_description">Выбор размера таблицы</string>
     <string name="shulte_settings_record_lock_description">В данном режиме новый рекорд не будет сохранён</string>
     <string name="restart">Рестарт</string>
     <string name="help">Помощь</string>
+    <string name="dont_show_it_again">Не показывать снова</string>
+    <string name="close">Закрыть</string>
+    <string name="mistake">Ошибка</string>
+    <string name="vision_field">Поле зрения</string>
 
 </resources>

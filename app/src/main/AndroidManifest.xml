@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.alexander.fastreading">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -12,44 +12,39 @@
         android:label="@string/application_title"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.example.alexander.fastreading.MainMenu"
+            android:name=".MainMenu"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.example.alexander.fastreading.guessnumber.GuessNumberActivity"
-            android:screenOrientation="portrait"/>
-
+            android:name=".guessnumber.GuessNumberActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.alexander.fastreading.shulte.ShulteActivity"
-            android:screenOrientation="portrait"/>
-
+            android:name=".shulte.ShulteActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.alexander.fastreading.trainingmenu.TrainingMenuActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".reader.library.LibraryActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".reader.reader.ReaderActivity"
-            android:screenOrientation="portrait"/>
-
+            android:name=".trainingmenu.TrainingMenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reader.library.LibraryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".reader.reader.ReaderActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".reader.reader.settings.ReaderSettingsActivity"
             android:parentActivityName=".reader.reader.ReaderActivity"
             android:screenOrientation="portrait">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".reader.reader.ReaderActivity" />
-            </activity>
-
+        </activity>
+        <activity android:name=".visionfield.VisionFieldActivity"></activity>
     </application>
 
 </manifest>

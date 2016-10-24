@@ -11,20 +11,19 @@ public class ShulteColourGenerator {
     private static Random random = new Random();
     private static final int COUNT_COLOURS = 5;
 
-
     public static int getColour() {
         int colorIndex = random.nextInt(COUNT_COLOURS);
         switch (colorIndex) {
             case 0:
                 return Color.BLACK;
             case 1:
-                return Color.parseColor("#311B92"); //Floyd
+                return Color.parseColor("#311B92"); //Purple или синий
             case 2:
                 return Color.parseColor("#1B5E20"); //Green 900
             case 3:
-                return Color.parseColor("#FF9800"); //orange 500
+                return Color.parseColor("#FFAB110E"); //RED
             default:
-                return Color.parseColor("#E91E63"); //Pink
+                return Color.parseColor("#FFA17222"); //Pink
         }
     }
 }

@@ -12,6 +12,7 @@ import com.example.alexander.fastreading.RecordsManager;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
+import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
 
 public class TrainingMenuActivity extends AppCompatActivity {
 
@@ -39,5 +40,25 @@ public class TrainingMenuActivity extends AppCompatActivity {
                 startActivity(new Intent(TrainingMenuActivity.this, GuessNumberActivity.class));
             }
         });
+
+        final TextView visionFieldTextView = (TextView) findViewById(R.id.training_menu_start_vision_field);
+        visionFieldTextView.setTypeface(typeface);
+        visionFieldTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TrainingMenuActivity.this, VisionFieldActivity.class));
+            }
+        });
+
+        final TextView speedReadingTextView = (TextView) findViewById(R.id.training_menu_start_speed_reading);
+        speedReadingTextView.setTypeface(typeface);
+        speedReadingTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //startActivity(new Intent(TrainingMenuActivity.this, VisionFieldActivity.class));
+            }
+        });
+
+
     }
 }

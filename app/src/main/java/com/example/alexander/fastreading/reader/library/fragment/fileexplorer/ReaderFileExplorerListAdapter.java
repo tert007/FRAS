@@ -44,21 +44,21 @@ public class ReaderFileExplorerListAdapter extends ArrayAdapter<File> {
         View fileTypeLayout = convertView.findViewById(R.id.reader_file_explorer_type_layout);
 
         if (currentFile.isDirectory()) {
-            imageView.setImageResource(R.drawable.folder);
+            imageView.setImageResource(R.drawable.reader_folder);
             fileTypeLayout.setVisibility(View.GONE);
         } else {
             String fileExtension = FileHelper.getFileExtension(currentFile);
             if (fileExtension != null){
                 switch (fileExtension){
                     case FileHelper.TXT:
-                        imageView.setImageResource(R.drawable.notepad);
+                        imageView.setImageResource(R.drawable.reader_notepad);
                         break;
                     case FileHelper.EPUB:
-                        imageView.setImageResource(R.drawable.epub_book);
+                        imageView.setImageResource(R.drawable.reader_epub_book);
                         break;
                     case FileHelper.FB2_ZIP:
                     case FileHelper.FB2:
-                        imageView.setImageResource(R.drawable.fb2_book);
+                        imageView.setImageResource(R.drawable.reader_fb2_book);
                         break;
                 }
 

@@ -9,9 +9,9 @@
     <TextView
         android:id="@+id/training_menu_start_shulte"
 
-        android:text="Таблица Шульта"
+        android:text="@string/shulte_table"
         android:textSize="22sp"
-        android:textColor="@color/black"
+        android:textColor="@drawable/menu_selector"
         android:gravity="center"
 
         android:drawablePadding="8dp"
@@ -30,7 +30,43 @@
 
         android:text="Угадай число"
         android:textSize="22sp"
-        android:textColor="@color/black"
+        android:textColor="@drawable/menu_selector"
+        android:gravity="center"
+
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/training_icon_guess_number"
+        android:drawableStart="@drawable/training_icon_guess_number"
+
+        android:padding="8dp"
+
+        android:layout_gravity="center_horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/training_menu_start_vision_field"
+
+        android:text="Поле зрения"
+        android:textSize="22sp"
+        android:textColor="@drawable/menu_selector"
+        android:gravity="center"
+
+        android:drawablePadding="8dp"
+        android:drawableLeft="@drawable/training_icon_guess_number"
+        android:drawableStart="@drawable/training_icon_guess_number"
+
+        android:padding="8dp"
+
+        android:layout_gravity="center_horizontal"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/training_menu_start_speed_reading"
+        
+        android:text="Скорость чтения"
+        android:textSize="22sp"
+        android:textColor="@drawable/menu_selector"
         android:gravity="center"
 
         android:drawablePadding="8dp"

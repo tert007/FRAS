@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * Created by Alexander on 26.07.2016.
  */
-public class GridAdapter extends ArrayAdapter<String> {
+public class ShulteGridAdapter extends ArrayAdapter<String> {
 
     public TextViewOnTouchListener delegate;
 
-    public GridAdapter(Context context, int textViewResourceId, List<String> items) {
+    public ShulteGridAdapter(Context context, int textViewResourceId, List<String> items) {
         super(context, textViewResourceId, items);
     }
 

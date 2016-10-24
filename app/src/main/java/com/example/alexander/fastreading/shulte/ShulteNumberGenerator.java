@@ -7,14 +7,14 @@ import java.util.Random;
 /**
  * Created by Alexander on 27.07.2016.
  */
-public class ShulteGenerator {
+public class ShulteNumberGenerator {
 
     private final Random random = new Random();
 
     private final int itemsCount;
     private final List<String> randomNumberList;
 
-    public ShulteGenerator(int countLines) {
+    public ShulteNumberGenerator(int countLines) {
         itemsCount = countLines * countLines;
         randomNumberList = new ArrayList<>(itemsCount);
 

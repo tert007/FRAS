@@ -13,15 +13,17 @@ public class SettingsManager {
 
     private static final String SHULTE_COMPLEXITY_KEY = "shulte_complexity";
     private static final int SHULTE_COMPLEXITY_DEFAULT_VALUE = 5;
-
     private static final String SHULTE_PERMUTATION_KEY = "shulte_permutation";
     private static final boolean SHULTE_PERMUTATION_DEFAULT_VALUE = false;
-
     private static final String SHULTE_COLORED_KEY = "shulte_colored";
     private static final boolean SHULTE_COLORED_DEFAULT_VALUE = false;
-
-    private static final String SHULTE_EYE_MODE_KEY = "shulte_eye_mode_switch";
+    private static final String SHULTE_EYE_MODE_KEY = "shulte_eye_mode";
     private static final boolean SHULTE_EYE_MODE_DEFAULT_VALUE = false;
+    private static final String SHULTE_SHOW_HELP_KEY = "shulte_show_help";
+    private static final boolean SHULTE_SHOW_HELP_DEFAULT_VALUE = true;
+
+    private static final String VISION_FIELD_SHOW_HELP_KEY = "vision_field_show_help";
+    private static final boolean VISION_FIELD_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static int guessNumberComplexity;
 
@@ -29,6 +31,9 @@ public class SettingsManager {
     private static boolean shultePermutation;
     private static boolean shulteColored;
     private static boolean shulteEyeMode;
+    private static boolean shulteShowHelp;
+
+    private static boolean visionFieldShowHelp;
 
     private static SharedPreferences sharedPreferences;
 
@@ -99,5 +104,30 @@ public class SettingsManager {
     public static void setShulteEyeMode(boolean eyeMode) {
         sharedPreferences.edit().putBoolean(SHULTE_EYE_MODE_KEY, eyeMode).apply();
         shulteEyeMode = eyeMode;
+    }
+
+    public static boolean isShulteShowHelp() {
+        if (shulteShowHelp == false) {
+            shulteShowHelp = sharedPreferences.getBoolean(SHULTE_SHOW_HELP_KEY, SHULTE_SHOW_HELP_DEFAULT_VALUE);
+
+        }
+        return shulteShowHelp;
+    }
+
+    public static void setShulteShowHelp(boolean showHelp) {
+        sharedPreferences.edit().putBoolean(SHULTE_SHOW_HELP_KEY, showHelp).apply();
+        shulteShowHelp = showHelp;
+    }
+
+    public static boolean isVisionFieldShowHelp() {
+        if (visionFieldShowHelp == false) {
+            visionFieldShowHelp = sharedPreferences.getBoolean(VISION_FIELD_SHOW_HELP_KEY, VISION_FIELD_SHOW_HELP_DEFAULT_VALUE);
+        }
+        return visionFieldShowHelp;
+    }
+
+    public static void setVisionFieldShowHelp(boolean showHelp) {
+        sharedPreferences.edit().putBoolean(VISION_FIELD_SHOW_HELP_KEY, showHelp).apply();
+        shulteShowHelp = showHelp;
     }
 }

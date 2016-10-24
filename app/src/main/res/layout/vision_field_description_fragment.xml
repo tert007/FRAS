@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="8"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:text="@string/shulte_table_description"
+            android:padding="@dimen/default_margin"
+
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <CheckBox
+            android:id="@+id/vision_field_description_dont_show_again_check_box"
+
+
+            android:text="@string/dont_show_it_again"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_weight="2"
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <Button
+            android:id="@+id/vision_field_description_exit_button"
+
+            android:background="@drawable/button_background"
+            android:textColor="@color/white"
+            android:text="@string/start"
+
+            android:layout_gravity="center"
+
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+</LinearLayout>

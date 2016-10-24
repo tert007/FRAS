@@ -47,6 +47,40 @@
         <item>Fast reading</item>
     </string-array>
 
+    <string-array name="alphabet">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+
+        <item>Z</item>
+    </string-array>
+
     <string name="file_path">File path</string>
     <string name="speed">Speed</string>
     <string name="file_opening_message">File\'s opening</string>
@@ -83,9 +117,9 @@
     <string name="complete">complete</string>
     <string name="colored_items">Colored items</string>
     <string name="permutation">Permutation</string>
-    <string name="eyes_mode">Eyes mode</string>
+    <string name="shulte_settings_input_type">Finger / Eyes</string>
     <string name="stop">Stop</string>
-    <string name="schulte_table">Schulte Table</string>
+    <string name="shulte_table">Schulte Table</string>
     <string name="shulte_settings_permutation_description">When your answer is correct table will change</string>
     <string name="shulte_settings_colored_description">Items have a different colours</string>
     <string name="shulte_settings_eyes_mode_description">Training without a touches</string>
@@ -93,4 +127,8 @@
     <string name="shulte_settings_record_lock_description">In this mode new record will not be save</string>
     <string name="restart">Restart</string>
     <string name="help">Help</string>
+    <string name="dont_show_it_again">Don\'t show it again</string>
+    <string name="close">Close</string>
+    <string name="mistake">Mistake</string>
+    <string name="vision_field">Vision field</string>
 </resources>

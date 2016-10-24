@@ -24,8 +24,6 @@ public class ShulteSettingsFragment extends Fragment {
 
     private static final int DEFAULT_COMPLEXITY = 5;
 
-    public ViewOnClickListener delegate;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -103,6 +101,7 @@ public class ShulteSettingsFragment extends Fragment {
 
         if (eyeMode) {
             eyesModeLockTextView.setVisibility(View.VISIBLE);
+            permutationSwitch.setEnabled(false);
         } else {
             permutationSwitch.setEnabled(true);
         }
@@ -124,14 +123,6 @@ public class ShulteSettingsFragment extends Fragment {
 
                     permutationSwitch.setEnabled(true);
                 }
-            }
-        });
-
-        final Button startTrainingButton = (Button) view.findViewById(R.id.shulte_start_training_button);
-        startTrainingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                delegate.viewOnClick(v);
             }
         });
 

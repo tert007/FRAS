@@ -20,7 +20,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:src="@drawable/folder"
+            android:src="@drawable/reader_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/default_margin"/>

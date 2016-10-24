@@ -9,15 +9,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.ViewOnClickListener;
+import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.shulte.fragment.ShulteDescriptionFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShulteMainFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShulteSettingsFragment;
 
-public class ShulteActivity extends AppCompatActivity implements ViewOnClickListener {
+public class ShulteActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager;
 
@@ -27,13 +27,19 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
         setContentView(R.layout.shulte_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.schulte_table);
+        toolbar.setTitle(R.string.shulte_table);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
         fragmentManager = getFragmentManager();
 
-        startSettingsFragment();
+        if (SettingsManager.isShulteShowHelp()) {
+            startDescriptionFragment(true);
+        } else {
+            startTrainingFragment();
+        }
+
+        startTrainingFragment();
     }
 
     @Override
@@ -44,6 +50,9 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
                 return true;
             case R.id.restart:
                 startTrainingFragment();
+                return true;
+            case R.id.help:
+                startDescriptionFragment(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -56,13 +65,17 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
         return true;
     }
 
-    @Override
-    public void viewOnClick(View v) {
-        switch (v.getId()){
-            case R.id.shulte_start_training_button:
-                startTrainingFragment();
-                break;
-        }
+    public void startDescriptionFragment(boolean showCheckBox) {
+        ShulteDescriptionFragment descriptionFragment = new ShulteDescriptionFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("show_check_box", showCheckBox);
+
+        descriptionFragment.setArguments(bundle);
+
+        fragmentManager.beginTransaction().
+                replace(R.id.shulte_fragment_container, descriptionFragment).
+                commit();
     }
 
     public void startTrainingFragment() {
@@ -75,7 +88,6 @@ public class ShulteActivity extends AppCompatActivity implements ViewOnClickList
 
     public void startSettingsFragment() {
         ShulteSettingsFragment settingsFragment = new ShulteSettingsFragment();
-        settingsFragment.delegate = this;
 
         fragmentManager.beginTransaction().
                 replace(R.id.shulte_fragment_container, settingsFragment).

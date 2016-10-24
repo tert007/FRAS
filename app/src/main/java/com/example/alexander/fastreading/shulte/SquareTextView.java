@@ -32,7 +32,6 @@ public class SquareTextView extends TextView {
         int widthWithoutPadding = width - getPaddingLeft() - getPaddingRight();
         int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
-        // set the dimensions
         if (widthWithoutPadding < heightWithoutPadding) {
             size = heightWithoutPadding;
         } else {

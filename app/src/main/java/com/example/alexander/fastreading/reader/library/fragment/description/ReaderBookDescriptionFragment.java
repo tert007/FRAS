@@ -45,12 +45,12 @@ public class ReaderBookDescriptionFragment extends Fragment {
             authorView.setVisibility(View.GONE);
             languageView.setVisibility(View.GONE);
 
-            bookCoverImageView.setImageResource(R.drawable.book_without_title);
+            bookCoverImageView.setImageResource(R.drawable.reader_book_without_title);
         } else {
             Bitmap bookCoverBitmap = BitmapFactory.decodeFile(bookDescription.getCoverImagePath());
 
             if (bookCoverBitmap == null){
-                bookCoverImageView.setImageResource(R.drawable.book_without_title);
+                bookCoverImageView.setImageResource(R.drawable.reader_book_without_title);
             } else {
                 bookCoverImageView.setImageBitmap(bookCoverBitmap);
             }

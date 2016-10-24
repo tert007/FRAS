@@ -8,7 +8,7 @@
         android:id="@+id/reader_book_description_cover_image_view"
         android:layout_gravity="center"
 
-        android:src="@drawable/book_without_title"
+        android:src="@drawable/reader_book_without_title"
 
         android:layout_weight="1"
         android:layout_width="match_parent"

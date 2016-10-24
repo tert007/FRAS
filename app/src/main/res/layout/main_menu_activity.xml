@@ -20,7 +20,7 @@
 
             android:text="@string/reading"
             android:textSize="30sp"
-            android:textColor="@color/black"
+            android:textColor="@drawable/menu_selector"
 
             android:padding="8dp"
 
@@ -39,7 +39,7 @@
             android:text="@string/training"
 
             android:textSize="30sp"
-            android:textColor="@color/black"
+            android:textColor="@drawable/menu_selector"
 
             android:padding="8dp"
 
