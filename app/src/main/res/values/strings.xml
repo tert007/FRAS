@@ -29,6 +29,15 @@
         <item>7</item>
     </string-array>
 
+    <string-array name="vision_field_settings">
+        <item>30 sec</item>
+        <item>1 min</item>
+        <item>2 min</item>
+        <item>3 min</item>
+        <item>4 min</item>
+        <item>5 min</item>
+    </string-array>
+
     <string-array name="text_size_settings" translatable="false">
         <item>12</item>
         <item>14</item>
@@ -121,8 +130,8 @@
     <string name="stop">Stop</string>
     <string name="shulte_table">Schulte Table</string>
     <string name="shulte_settings_permutation_description">When your answer is correct table will change</string>
-    <string name="shulte_settings_colored_description">Items have a different colours</string>
-    <string name="shulte_settings_eyes_mode_description">Training without a touches</string>
+    <string name="shulte_settings_colored_description">Numerals have a different colours</string>
+    <string name="shulte_settings_eyes_mode_description">Choose training mode</string>
     <string name="shulte_settings_complexity_description">Choose a size of the table</string>
     <string name="shulte_settings_record_lock_description">In this mode new record will not be save</string>
     <string name="restart">Restart</string>
@@ -131,4 +140,10 @@
     <string name="close">Close</string>
     <string name="mistake">Mistake</string>
     <string name="vision_field">Vision field</string>
+    <string name="vision_field_settings_duration">Duration</string>
+    <string name="vision_field_settings_duration_description">The duration of the training</string>
+    <string name="vision_field_main_true_answer">Total mistakes</string>
+    <string name="vision_field_main_perfect_result">You guessed all!</string>
+    <string name="vision_field_main_good_result">You guessed almost all!</string>
+    <string name="guess_number">Remember number</string>
 </resources>

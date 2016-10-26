@@ -29,7 +29,6 @@ public class ShulteSettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.shulte_settings_fragment, null);
 
-
         final View complexityView = view.findViewById(R.id.shulte_settings_complexity_view);
         final Spinner spinner = (Spinner) complexityView.findViewById(R.id.shulte_settings_spinner);
         final TextView complexityLockTextView = (TextView) view.findViewById(R.id.shulte_settings_complexity_lock_text_view);

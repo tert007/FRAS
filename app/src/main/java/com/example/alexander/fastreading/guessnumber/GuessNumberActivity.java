@@ -10,19 +10,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberDescriptionFragment;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberMainFragment;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberSettingsFragment;
+import com.example.alexander.fastreading.visionfield.fragment.VisionFieldDescriptionFragment;
 
 
 public class GuessNumberActivity extends AppCompatActivity  implements ViewOnClickListener {
 
-    GuessNumberSettingsFragment settingsFragment;
-    GuessNumberMainFragment mainFragment;
+    //GuessNumberSettingsFragment settingsFragment;
+    //GuessNumberMainFragment mainFragment;
 
     FragmentManager fragmentManager;
-    FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +33,45 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
-        //toolbar.setTitle(getString(R.string.remember_number));
+        toolbar.setTitle(getString(R.string.guess_number));
         setSupportActionBar(toolbar);
 
-        settingsFragment = new GuessNumberSettingsFragment();
-        settingsFragment.delegate = this;
+        //settingsFragment = new GuessNumberSettingsFragment();
+        //settingsFragment.delegate = this;
 
         fragmentManager = getFragmentManager();
 
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.guess_number_fragment_container, settingsFragment);
-        fragmentTransaction.commit();
+        if (SettingsManager.isGuessNumberShowHelp()) {
+            startDescriptionFragment(true);
+        } else {
+            startTrainingFragment();
+        }
+    }
+
+    public void startTrainingFragment() {
+        fragmentManager.beginTransaction().
+                replace(R.id.guess_number_fragment_container, new GuessNumberMainFragment()).
+                commit();
+    }
+
+    public void startDescriptionFragment(boolean showCheckBox) {
+        GuessNumberDescriptionFragment descriptionFragment = new GuessNumberDescriptionFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("show_check_box", showCheckBox);
+
+        descriptionFragment.setArguments(bundle);
+
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.guess_number_fragment_container, descriptionFragment).
+                commit();
+    }
+
+    public void startSettingsFragment(){
+        //mainFragment = new GuessNumberMainFragment();
+        //fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.replace(R.id.guess_number_fragment_container, settingsFragment);
+        //fragmentTransaction.commit();
     }
 
 
@@ -55,39 +85,25 @@ public class GuessNumberActivity extends AppCompatActivity  implements ViewOnCli
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.guess_number_toolbar_settings :
-                fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.guess_number_fragment_container, settingsFragment);
-                fragmentTransaction.commit();
-
-                //getSupportActionBar().setTitle(R.string.settings);
-                return true;
-            case R.id.guess_number_toolbar_restart:
+            case R.id.restart:
                 startTrainingFragment();
+                return true;
+            case R.id.help:
+                startDescriptionFragment(false);
+                return true;
+            case R.id.settings :
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }    }
-
-    public void startSettingsFragment(){
-        mainFragment = new GuessNumberMainFragment();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.guess_number_fragment_container, settingsFragment);
-        fragmentTransaction.commit();
-    }
-
-    public void startTrainingFragment(){
-        mainFragment = new GuessNumberMainFragment();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
-        fragmentTransaction.commit();
+        }
     }
 
     @Override
     public void viewOnClick(View v) {
-        mainFragment = new GuessNumberMainFragment();
-        fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
-        fragmentTransaction.commit();
+        //mainFragment = new GuessNumberMainFragment();
+        //fragmentTransaction = fragmentManager.beginTransaction();
+        //fragmentTransaction.replace(R.id.guess_number_fragment_container, mainFragment);
+        //fragmentTransaction.commit();
     }
 }

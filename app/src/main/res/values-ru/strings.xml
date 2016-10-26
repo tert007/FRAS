@@ -40,6 +40,16 @@
         <item>Быстрое чтение</item>
     </string-array>
 
+    <string-array name="vision_field_settings">
+        <item>30 сек</item>
+        <item>1 мин</item>
+        <item>2 мин</item>
+        <item>3 мин</item>
+        <item>4 мин</item>
+        <item>5 мин</item>
+    </string-array>
+
+
     <string-array name="alphabet">
         <item>А</item>
         <item>Б</item>
@@ -104,8 +114,8 @@
     <string name="stop">Стоп</string>
     <string name="shulte_table">Таблица Шульте</string>
     <string name="shulte_settings_permutation_description">При правильном ответе цифры меняют своё местоположение</string>
-    <string name="shulte_settings_colored_description">Элементы имеют различные цвета</string>
-    <string name="shulte_settings_eyes_mode_description">Выбора метода тренировки</string>
+    <string name="shulte_settings_colored_description">Цифры имеют различные цвета</string>
+    <string name="shulte_settings_eyes_mode_description">Выбор метода тренировки</string>
     <string name="shulte_settings_complexity_description">Выбор размера таблицы</string>
     <string name="shulte_settings_record_lock_description">В данном режиме новый рекорд не будет сохранён</string>
     <string name="restart">Рестарт</string>
@@ -114,5 +124,11 @@
     <string name="close">Закрыть</string>
     <string name="mistake">Ошибка</string>
     <string name="vision_field">Поле зрения</string>
+    <string name="vision_field_settings_duration">Продолжительность</string>
+    <string name="vision_field_settings_duration_description">Продожительность выполнения упражнения</string>
+    <string name="vision_field_main_true_answer">Всего ошибок</string>
+    <string name="vision_field_main_perfect_result">Ты угадал все!</string>
+    <string name="vision_field_main_good_result">Ты угадал почти все!</string>
+    <string name="guess_number">Запомни число</string>
 
 </resources>

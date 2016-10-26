@@ -22,7 +22,6 @@
         <CheckBox
             android:id="@+id/vision_field_description_dont_show_again_check_box"
 
-
             android:text="@string/dont_show_it_again"
             android:textColor="@color/grey"
             android:textSize="14sp"
@@ -41,7 +40,7 @@
         <Button
             android:id="@+id/vision_field_description_exit_button"
 
-            android:background="@drawable/button_background"
+            android:background="@drawable/button_background_selector"
             android:textColor="@color/white"
             android:text="@string/start"
 

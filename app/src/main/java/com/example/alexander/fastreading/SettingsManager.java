@@ -10,6 +10,8 @@ import android.preference.PreferenceManager;
 public class SettingsManager {
     private static final String GUESS_NUMBER_COMPLEXITY_KEY = "guess_number_complexity";
     private static final int GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE = 4;
+    private static final String GUESS_NUMBER_SHOW_HELP_KEY = "guess_number_show_help";
+    private static final boolean GUESS_NUMBER_HELP_DEFAULT_VALUE = true;
 
     private static final String SHULTE_COMPLEXITY_KEY = "shulte_complexity";
     private static final int SHULTE_COMPLEXITY_DEFAULT_VALUE = 5;
@@ -22,10 +24,13 @@ public class SettingsManager {
     private static final String SHULTE_SHOW_HELP_KEY = "shulte_show_help";
     private static final boolean SHULTE_SHOW_HELP_DEFAULT_VALUE = true;
 
+    private static final String VISION_FIELD_COMPLEXITY_KEY = "vision_field_complexity";
+    private static final int VISION_FIELD_COMPLEXITY_DEFAULT_VALUE = 60;
     private static final String VISION_FIELD_SHOW_HELP_KEY = "vision_field_show_help";
     private static final boolean VISION_FIELD_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static int guessNumberComplexity;
+    private static boolean guessNumberShowHelp;
 
     private static int shulteComplexity;
     private static boolean shultePermutation;
@@ -33,12 +38,39 @@ public class SettingsManager {
     private static boolean shulteEyeMode;
     private static boolean shulteShowHelp;
 
+    private static int visionFieldComplexity;
     private static boolean visionFieldShowHelp;
 
     private static SharedPreferences sharedPreferences;
 
     public static void Initialize(Context context){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static boolean isGuessNumberShowHelp() {
+        if (guessNumberShowHelp == false) {
+            guessNumberShowHelp = sharedPreferences.getBoolean(GUESS_NUMBER_SHOW_HELP_KEY, GUESS_NUMBER_HELP_DEFAULT_VALUE);
+        }
+
+        return guessNumberShowHelp;
+    }
+
+    public static void setGuessNumberShowHelp(boolean showHelp) {
+        sharedPreferences.edit().putBoolean(GUESS_NUMBER_SHOW_HELP_KEY, showHelp).apply();
+        guessNumberShowHelp = showHelp;
+    }
+
+    public static int getGuessNumberComplexity() {
+        if (guessNumberComplexity == 0){
+            guessNumberComplexity = sharedPreferences.getInt(GUESS_NUMBER_SHOW_HELP_KEY, GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE);
+        }
+
+        return guessNumberComplexity;
+    }
+
+    public static void setGuessNumberComplexity(int complexity) {
+        sharedPreferences.edit().putInt(GUESS_NUMBER_SHOW_HELP_KEY, complexity).apply();
+        guessNumberComplexity = complexity;
     }
 
     public static int getShulteComplexity() {
@@ -52,19 +84,6 @@ public class SettingsManager {
     public static void setShulteComplexity(int complexity) {
         sharedPreferences.edit().putInt(SHULTE_COMPLEXITY_KEY, complexity).apply();
         shulteComplexity = complexity;
-    }
-
-    public static int getGuessNumberComplexity() {
-        if (guessNumberComplexity == 0){
-            guessNumberComplexity = sharedPreferences.getInt(GUESS_NUMBER_COMPLEXITY_KEY, GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE);
-        }
-
-        return guessNumberComplexity;
-    }
-
-    public static void setGuessNumberComplexity(int complexity) {
-        sharedPreferences.edit().putInt(GUESS_NUMBER_COMPLEXITY_KEY, complexity).apply();
-        guessNumberComplexity = complexity;
     }
 
     public static boolean isShultePermutation() {
@@ -129,5 +148,18 @@ public class SettingsManager {
     public static void setVisionFieldShowHelp(boolean showHelp) {
         sharedPreferences.edit().putBoolean(VISION_FIELD_SHOW_HELP_KEY, showHelp).apply();
         shulteShowHelp = showHelp;
+    }
+
+    public static int getVisionFieldComplexity() {
+        if (visionFieldComplexity == 0) {
+            visionFieldComplexity = sharedPreferences.getInt(VISION_FIELD_COMPLEXITY_KEY, VISION_FIELD_COMPLEXITY_DEFAULT_VALUE);
+        }
+
+        return visionFieldComplexity;
+    }
+
+    public static void setVisionFieldComplexity(int complexity) {
+        sharedPreferences.edit().putInt(VISION_FIELD_COMPLEXITY_KEY, complexity).apply();
+        visionFieldComplexity = complexity;
     }
 }

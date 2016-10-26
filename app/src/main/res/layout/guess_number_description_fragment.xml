@@ -20,7 +20,8 @@
             android:layout_height="0dp" />
 
         <CheckBox
-            android:id="@+id/shulte_description_dont_show_again_check_box"
+            android:id="@+id/guess_number_description_dont_show_again_check_box"
+
 
             android:text="@string/dont_show_it_again"
             android:textColor="@color/grey"
@@ -38,7 +39,7 @@
         android:layout_height="0dp">
 
         <Button
-            android:id="@+id/shulte_description_exit_button"
+            android:id="@+id/guess_number_description_exit_button"
 
             android:background="@drawable/button_background_selector"
             android:textColor="@color/white"

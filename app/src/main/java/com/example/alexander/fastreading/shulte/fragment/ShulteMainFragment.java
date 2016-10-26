@@ -194,7 +194,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                         });
                         builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                ((ShulteActivity) getActivity()).startSettingsFragment();
+                                getActivity().onBackPressed();
                             }
                         });
                         AlertDialog dialog = builder.create();

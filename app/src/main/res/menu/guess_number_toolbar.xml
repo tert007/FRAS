@@ -5,15 +5,15 @@
 
     <item
         android:icon="@drawable/restart"
-        android:id="@+id/guess_number_toolbar_restart"
-        android:title="@string/settings"
+        android:id="@+id/restart"
+        android:title="@string/restart"
         android:orderInCategory="100"
         app:showAsAction="ifRoom" />
 
     <item
-        android:icon="@drawable/settings"
-        android:id="@+id/guess_number_toolbar_settings"
-        android:title="@string/settings"
+        android:icon="@drawable/help"
+        android:id="@+id/help"
+        android:title="@string/help"
         android:orderInCategory="200"
         app:showAsAction="ifRoom" />
 </menu>

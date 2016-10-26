@@ -52,14 +52,6 @@ public class GuessNumberSettingsFragment extends Fragment {
             }
         });
 
-        final Button startTrainingButton = (Button) view.findViewById(R.id.guess_number_start_training_button);
-        startTrainingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                delegate.viewOnClick(v);;
-            }
-        });
-
         return view;
     }
 }

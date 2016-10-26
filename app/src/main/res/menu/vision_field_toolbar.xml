@@ -2,6 +2,7 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item
         android:icon="@drawable/restart"
         android:id="@+id/restart"
@@ -14,5 +15,12 @@
         android:id="@+id/help"
         android:title="@string/help"
         android:orderInCategory="200"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:icon="@drawable/settings"
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:orderInCategory="300"
         app:showAsAction="ifRoom" />
 </menu>

@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
 import com.example.alexander.fastreading.visionfield.VisionFieldGridAdapter;
 
@@ -30,7 +31,7 @@ public class VisionFieldMainFragment extends Fragment {
     private static final int DEFAULT_ROW_COUNT = 9;
     private static final int ITEMS_COUNT = 63;
 
-    private static final int DEFAULT_SHOWS_COUNT = 10;
+    private int showsCount;
     private int currentShowCount;
 
     private int mistakesCount;
@@ -49,6 +50,8 @@ public class VisionFieldMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vision_field_main_fragment, container, false);
 
+        showsCount = SettingsManager.getVisionFieldComplexity();
+
         alphabet = getResources().getStringArray(R.array.alphabet);
 
         gridView = (GridView) view.findViewById(R.id.vision_field_main_grid_view);
@@ -58,7 +61,7 @@ public class VisionFieldMainFragment extends Fragment {
         gridView.setAdapter(adapter);
 
         progressBar = (ProgressBar) view.findViewById(R.id.vision_field_main_progress_bar);
-        progressBar.setMax(DEFAULT_SHOWS_COUNT);
+        progressBar.setMax(showsCount);
 
         Button mistakeButton = (Button) view.findViewById(R.id.vision_field_main_mistake_button);
         mistakeButton.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +113,7 @@ public class VisionFieldMainFragment extends Fragment {
             currentShowCount++;
             progressBar.setProgress(currentShowCount);
 
-            if (currentShowCount < DEFAULT_SHOWS_COUNT) {
+            if (currentShowCount < showsCount) {
                 handler.postDelayed(this, 1000);
             } else {
                 handler.postDelayed(showResultRunnable, 2000);
@@ -123,9 +126,25 @@ public class VisionFieldMainFragment extends Fragment {
         public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setCancelable(false);
-            builder.setTitle(R.string.training_completed);
 
-            String result = "Твой результат: " + userFoundMistakes + "\n Ответ: " + mistakesCount;
+            String result = null;
+
+            if (userFoundMistakes == mistakesCount) {
+                builder.setTitle(R.string.vision_field_main_perfect_result);
+
+                result = getString(R.string.vision_field_main_true_answer) + ": " + mistakesCount;
+            } else if (mistakesCount == userFoundMistakes + 1 || mistakesCount == userFoundMistakes - 1) {
+                builder.setTitle(R.string.vision_field_main_good_result);
+
+                result = getString(R.string.your_result) + ": " + userFoundMistakes + '\n'
+                        + getString(R.string.vision_field_main_true_answer) + ": " + mistakesCount;
+            } else {
+                builder.setTitle(R.string.training_completed);
+
+                result = getString(R.string.your_result) + ": " + userFoundMistakes + '\n'
+                        + getString(R.string.vision_field_main_true_answer) + ": " + mistakesCount;
+            }
+
             builder.setMessage(result);
 
             builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {

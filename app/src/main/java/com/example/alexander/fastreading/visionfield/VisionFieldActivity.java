@@ -16,6 +16,7 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldDescriptionFragment;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldMainFragment;
+import com.example.alexander.fastreading.visionfield.fragment.VisionFieldSettingsFragment;
 
 public class VisionFieldActivity extends AppCompatActivity {
 
@@ -60,11 +61,16 @@ public class VisionFieldActivity extends AppCompatActivity {
                 commit();
     }
 
+    public void startSettingsFragment() {
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.vision_field_fragment_container, new VisionFieldSettingsFragment()).
+                commit();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-
-        //startTrainingFragment();
     }
 
     @Override
@@ -75,6 +81,9 @@ public class VisionFieldActivity extends AppCompatActivity {
                 return true;
             case R.id.help:
                 startDescriptionFragment(false);
+                return true;
+            case R.id.settings:
+                startSettingsFragment();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

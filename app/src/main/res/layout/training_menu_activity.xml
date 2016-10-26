@@ -28,7 +28,7 @@
     <TextView
         android:id="@+id/training_menu_start_guess_number"
 
-        android:text="Угадай число"
+        android:text="@string/guess_number"
         android:textSize="22sp"
         android:textColor="@drawable/menu_selector"
         android:gravity="center"
@@ -46,7 +46,7 @@
     <TextView
         android:id="@+id/training_menu_start_vision_field"
 
-        android:text="Поле зрения"
+        android:text="@string/vision_field"
         android:textSize="22sp"
         android:textColor="@drawable/menu_selector"
         android:gravity="center"
@@ -63,7 +63,7 @@
 
     <TextView
         android:id="@+id/training_menu_start_speed_reading"
-        
+
         android:text="Скорость чтения"
         android:textSize="22sp"
         android:textColor="@drawable/menu_selector"
