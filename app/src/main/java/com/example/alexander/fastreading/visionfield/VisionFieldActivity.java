@@ -1,22 +1,18 @@
 package com.example.alexander.fastreading.visionfield;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldDescriptionFragment;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldMainFragment;
-import com.example.alexander.fastreading.visionfield.fragment.VisionFieldSettingsFragment;
 
 public class VisionFieldActivity extends AppCompatActivity {
 
@@ -32,25 +28,15 @@ public class VisionFieldActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        fragmentManager = getFragmentManager();
 
-        if (SettingsManager.isVisionFieldShowHelp()) {
-            startDescriptionFragment(true);
-        } else {
-            startTrainingFragment();
-        }
+        SettingsManager.setVisionFieldShowHelp(true);
+        fragmentManager = getFragmentManager();
     }
 
-    public void startDescriptionFragment(boolean showCheckBox) {
-        VisionFieldDescriptionFragment descriptionFragment = new VisionFieldDescriptionFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("show_check_box", showCheckBox);
-
-        descriptionFragment.setArguments(bundle);
-
+    public void startDescriptionFragment() {
         fragmentManager.
                 beginTransaction().
-                replace(R.id.vision_field_fragment_container, descriptionFragment).
+                replace(R.id.vision_field_fragment_container, new VisionFieldDescriptionFragment()).
                 commit();
     }
 
@@ -61,16 +47,15 @@ public class VisionFieldActivity extends AppCompatActivity {
                 commit();
     }
 
-    public void startSettingsFragment() {
-        fragmentManager.
-                beginTransaction().
-                replace(R.id.vision_field_fragment_container, new VisionFieldSettingsFragment()).
-                commit();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (SettingsManager.isVisionFieldShowHelp()) {
+            startDescriptionFragment();
+        } else {
+            startTrainingFragment();
+        }
     }
 
     @Override
@@ -79,12 +64,16 @@ public class VisionFieldActivity extends AppCompatActivity {
             case R.id.restart:
                 startTrainingFragment();
                 return true;
-            case R.id.help:
-                startDescriptionFragment(false);
+            case R.id.help: {
+                Intent intent = new Intent(this, VisionFieldDescriptionActivity.class);
+                startActivity(intent);
                 return true;
-            case R.id.settings:
-                startSettingsFragment();
+            }
+            case R.id.settings: {
+                Intent intent = new Intent(this, VisionFieldSettingsActivity.class);
+                startActivity(intent);
                 return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

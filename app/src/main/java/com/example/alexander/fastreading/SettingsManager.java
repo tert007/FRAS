@@ -25,7 +25,10 @@ public class SettingsManager {
     private static final boolean SHULTE_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static final String VISION_FIELD_COMPLEXITY_KEY = "vision_field_complexity";
-    private static final int VISION_FIELD_COMPLEXITY_DEFAULT_VALUE = 60;
+    private static final int VISION_FIELD_COMPLEXITY_DEFAULT_VALUE = 30_000;
+
+    private static final String VISION_FIELD_SHOW_DELAY_KEY = "vision_field_show_delay";
+    private static final int VISION_FIELD_SHOW_DELAY_DEFAULT_VALUE = 1000;
     private static final String VISION_FIELD_SHOW_HELP_KEY = "vision_field_show_help";
     private static final boolean VISION_FIELD_SHOW_HELP_DEFAULT_VALUE = true;
 
@@ -39,6 +42,7 @@ public class SettingsManager {
     private static boolean shulteShowHelp;
 
     private static int visionFieldComplexity;
+    private static int visionFieldShowDelay;
     private static boolean visionFieldShowHelp;
 
     private static SharedPreferences sharedPreferences;
@@ -62,14 +66,14 @@ public class SettingsManager {
 
     public static int getGuessNumberComplexity() {
         if (guessNumberComplexity == 0){
-            guessNumberComplexity = sharedPreferences.getInt(GUESS_NUMBER_SHOW_HELP_KEY, GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE);
+            guessNumberComplexity = sharedPreferences.getInt(GUESS_NUMBER_COMPLEXITY_KEY, GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE);
         }
 
         return guessNumberComplexity;
     }
 
     public static void setGuessNumberComplexity(int complexity) {
-        sharedPreferences.edit().putInt(GUESS_NUMBER_SHOW_HELP_KEY, complexity).apply();
+        sharedPreferences.edit().putInt(GUESS_NUMBER_COMPLEXITY_KEY, complexity).apply();
         guessNumberComplexity = complexity;
     }
 
@@ -147,7 +151,7 @@ public class SettingsManager {
 
     public static void setVisionFieldShowHelp(boolean showHelp) {
         sharedPreferences.edit().putBoolean(VISION_FIELD_SHOW_HELP_KEY, showHelp).apply();
-        shulteShowHelp = showHelp;
+        visionFieldShowHelp = showHelp;
     }
 
     public static int getVisionFieldComplexity() {
@@ -161,5 +165,18 @@ public class SettingsManager {
     public static void setVisionFieldComplexity(int complexity) {
         sharedPreferences.edit().putInt(VISION_FIELD_COMPLEXITY_KEY, complexity).apply();
         visionFieldComplexity = complexity;
+    }
+
+    public static int getVisionFieldShowDelay() {
+        if (visionFieldShowDelay == 0) {
+            visionFieldShowDelay = sharedPreferences.getInt(VISION_FIELD_SHOW_DELAY_KEY, VISION_FIELD_SHOW_DELAY_DEFAULT_VALUE);
+        }
+
+        return visionFieldShowDelay;
+    }
+
+    public static void setVisionFieldShowDelay(int showDelay) {
+        sharedPreferences.edit().putInt(VISION_FIELD_SHOW_DELAY_KEY, showDelay).apply();
+        visionFieldShowDelay = showDelay;
     }
 }

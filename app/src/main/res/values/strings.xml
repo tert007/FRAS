@@ -29,13 +29,19 @@
         <item>7</item>
     </string-array>
 
-    <string-array name="vision_field_settings">
+    <string-array name="vision_field_settings_complexity">
         <item>30 sec</item>
         <item>1 min</item>
         <item>2 min</item>
         <item>3 min</item>
         <item>4 min</item>
         <item>5 min</item>
+    </string-array>
+
+    <string-array name="vision_field_settings_show_time">
+        <item>1 sec</item>
+        <item>0.8 sec</item>
+        <item>0.6 sec</item>
     </string-array>
 
     <string-array name="text_size_settings" translatable="false">
@@ -123,7 +129,7 @@
     <string name="training_completed">Training completed</string>
     <string name="your_result">Your result</string>
     <string name="retry">Retry</string>
-    <string name="complete">complete</string>
+    <string name="complete">Complete</string>
     <string name="colored_items">Colored items</string>
     <string name="permutation">Permutation</string>
     <string name="shulte_settings_input_type">Finger / Eyes</string>
@@ -145,5 +151,8 @@
     <string name="vision_field_main_true_answer">Total mistakes</string>
     <string name="vision_field_main_perfect_result">You guessed all!</string>
     <string name="vision_field_main_good_result">You guessed almost all!</string>
-    <string name="guess_number">Remember number</string>
+    <string name="guess_number">Remember the number</string>
+    <string name="vision_field_settings_show_time">Show time</string>
+    <string name="vision_field_settings_show_time_description">The duration of element showing</string>
+    <string name="title_activity_shulte_settings">Settings</string>
 </resources>

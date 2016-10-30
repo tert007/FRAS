@@ -40,9 +40,10 @@
         <Button
             android:id="@+id/shulte_description_exit_button"
 
-            android:background="@drawable/button_background_selector"
             android:textColor="@color/white"
             android:text="@string/start"
+
+            android:theme="@style/ButtonStyle"
 
             android:layout_gravity="center"
 

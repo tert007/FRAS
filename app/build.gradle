@@ -22,9 +22,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
+    androidTestCompile 'org.testng:testng:6.9.6'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:design:24.1.1'
     compile 'com.android.support:preference-v7:24.1.1'
-    androidTestCompile 'org.testng:testng:6.9.6'
     compile 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+    compile 'com.android.support:support-v4:24.1.1'
 }

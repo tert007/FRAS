@@ -21,12 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".guessnumber.GuessNumberActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".shulte.ShulteActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".trainingmenu.TrainingMenuActivity"
             android:screenOrientation="portrait" />
@@ -44,7 +39,64 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".reader.reader.ReaderActivity" />
         </activity>
-        <activity android:name=".visionfield.VisionFieldActivity"></activity>
+
+        <activity
+            android:name=".visionfield.VisionFieldActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".shulte.ShulteActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".shulte.ShulteSettingsActivity"
+            android:parentActivityName=".shulte.ShulteActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
+        </activity>
+
+        <activity
+            android:name=".shulte.ShulteDescriptionActivity"
+            android:parentActivityName=".shulte.ShulteActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
+        </activity>
+
+        <activity
+            android:name=".guessnumber.GuessNumberActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".guessnumber.GuessNumberDescriptionActivity"
+            android:parentActivityName=".guessnumber.GuessNumberActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
+        </activity>
+
+        <activity
+            android:name=".visionfield.VisionFieldDescriptionActivity"
+            android:parentActivityName=".shulte.ShulteActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
+        </activity>
+
+        <activity
+            android:name=".visionfield.VisionFieldSettingsActivity"
+            android:parentActivityName=".shulte.ShulteActivity"
+            android:screenOrientation="portrait">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
+        </activity>
     </application>
 
 </manifest>

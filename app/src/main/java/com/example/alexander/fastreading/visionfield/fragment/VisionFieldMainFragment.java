@@ -31,6 +31,10 @@ public class VisionFieldMainFragment extends Fragment {
     private static final int DEFAULT_ROW_COUNT = 9;
     private static final int ITEMS_COUNT = 63;
 
+    private static final int START_DELAY = 2000;
+    private static final int SHOW_RESULT_DELAY = 2000;
+    private int showTimeDelay;
+
     private int showsCount;
     private int currentShowCount;
 
@@ -50,7 +54,8 @@ public class VisionFieldMainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vision_field_main_fragment, container, false);
 
-        showsCount = SettingsManager.getVisionFieldComplexity();
+        showTimeDelay = SettingsManager.getVisionFieldShowDelay();
+        showsCount = SettingsManager.getVisionFieldComplexity() / showTimeDelay;
 
         alphabet = getResources().getStringArray(R.array.alphabet);
 
@@ -71,7 +76,7 @@ public class VisionFieldMainFragment extends Fragment {
             }
         });
 
-        handler.postDelayed(changeLetterRunnable, 1000);
+        handler.postDelayed(changeLetterRunnable, START_DELAY);
 
         return view;
     }
@@ -114,9 +119,9 @@ public class VisionFieldMainFragment extends Fragment {
             progressBar.setProgress(currentShowCount);
 
             if (currentShowCount < showsCount) {
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, showTimeDelay);
             } else {
-                handler.postDelayed(showResultRunnable, 2000);
+                handler.postDelayed(showResultRunnable, SHOW_RESULT_DELAY);
             }
         }
     };
@@ -199,12 +204,13 @@ public class VisionFieldMainFragment extends Fragment {
         }
     }
 
+
+
     @Override
     public void onStop() {
         super.onStop();
 
         handler.removeCallbacks(changeLetterRunnable);
         handler.removeCallbacks(showResultRunnable);
-
     }
 }

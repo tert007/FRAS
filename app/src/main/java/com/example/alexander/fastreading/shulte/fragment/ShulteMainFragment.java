@@ -90,9 +90,9 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
         if (SettingsManager.isShulteEyeMode()) {
             nextItemTextView.setText(NOT_INITIALIZE_VALUE);
 
-            Button button = (Button) view.findViewById(R.id.shulte_eye_mode_button);
-            button.setVisibility(View.VISIBLE);
-            button.setOnClickListener(new View.OnClickListener() {
+            final Button eyesModeFinisButton = (Button) view.findViewById(R.id.shulte_eye_mode_button);
+            eyesModeFinisButton.setVisibility(View.VISIBLE);
+            eyesModeFinisButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -120,7 +120,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                     });
                     builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            getActivity().onBackPressed();
+                            getActivity().finish();
                         }
                     });
 

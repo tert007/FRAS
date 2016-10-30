@@ -40,13 +40,19 @@
         <item>Быстрое чтение</item>
     </string-array>
 
-    <string-array name="vision_field_settings">
+    <string-array name="vision_field_settings_complexity">
         <item>30 сек</item>
         <item>1 мин</item>
         <item>2 мин</item>
         <item>3 мин</item>
         <item>4 мин</item>
         <item>5 мин</item>
+    </string-array>
+
+    <string-array name="vision_field_settings_show_time">
+        <item>1 сек</item>
+        <item>0.8 сек</item>
+        <item>0.6 сек</item>
     </string-array>
 
 
@@ -127,8 +133,10 @@
     <string name="vision_field_settings_duration">Продолжительность</string>
     <string name="vision_field_settings_duration_description">Продожительность выполнения упражнения</string>
     <string name="vision_field_main_true_answer">Всего ошибок</string>
-    <string name="vision_field_main_perfect_result">Ты угадал все!</string>
-    <string name="vision_field_main_good_result">Ты угадал почти все!</string>
+    <string name="vision_field_main_perfect_result">Ты угадал всё!</string>
+    <string name="vision_field_main_good_result">Ты угадал почти всё!</string>
     <string name="guess_number">Запомни число</string>
+    <string name="vision_field_settings_show_time">Время показа</string>
+    <string name="vision_field_settings_show_time_description">Продолжительность показа элемента на экране</string>
 
 </resources>

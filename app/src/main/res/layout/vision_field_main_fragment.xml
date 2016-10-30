@@ -44,8 +44,9 @@
 
             android:text="@string/mistake"
             android:textColor="@color/white"
-            android:background="@drawable/button_background_selector"
             android:layout_gravity="center"
+
+            android:theme="@style/ButtonStyle"
 
             android:layout_width="125dp"
             android:layout_height="wrap_content"

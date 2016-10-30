@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:orientation="vertical"
-    android:background="#E0F7FA"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -135,8 +134,7 @@
 
                 android:text="@string/stop"
                 android:textColor="@color/white"
-
-                android:background="@drawable/button_background_selector"
+                android:theme="@style/ButtonStyle"
 
                 android:layout_width="125dp"
                 android:layout_height="wrap_content"

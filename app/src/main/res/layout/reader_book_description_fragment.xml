@@ -193,7 +193,7 @@
         android:text="@string/reading"
         android:textColor="@color/white"
 
-        android:background="@drawable/button_default_background"
+        android:theme="@style/ButtonStyle"
         android:layout_gravity="center_horizontal"
 
         android:layout_width="125dp"

@@ -2,7 +2,9 @@ package com.example.alexander.fastreading.shulte;
 
 import android.app.FragmentManager;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -15,7 +17,6 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.shulte.fragment.ShulteDescriptionFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShulteMainFragment;
-import com.example.alexander.fastreading.shulte.fragment.ShulteSettingsFragment;
 
 public class ShulteActivity extends AppCompatActivity {
 
@@ -27,35 +28,42 @@ public class ShulteActivity extends AppCompatActivity {
         setContentView(R.layout.shulte_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.shulte_table);
         toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(R.string.shulte_table);
         setSupportActionBar(toolbar);
 
         fragmentManager = getFragmentManager();
-
-        if (SettingsManager.isShulteShowHelp()) {
-            startDescriptionFragment(true);
-        } else {
-            startTrainingFragment();
-        }
-
-        startTrainingFragment();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings :
-                startSettingsFragment();
+            case R.id.settings : {
+                Intent intent = new Intent(this, ShulteSettingsActivity.class);
+                startActivity(intent);
                 return true;
+            }
             case R.id.restart:
                 startTrainingFragment();
                 return true;
-            case R.id.help:
-                startDescriptionFragment(false);
+            case R.id.help: {
+                Intent intent = new Intent(this, ShulteDescriptionActivity.class);
+                startActivity(intent);
                 return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (SettingsManager.isShulteShowHelp()) {
+            startDescriptionFragment();
+        } else {
+            startTrainingFragment();
         }
     }
 
@@ -65,33 +73,15 @@ public class ShulteActivity extends AppCompatActivity {
         return true;
     }
 
-    public void startDescriptionFragment(boolean showCheckBox) {
-        ShulteDescriptionFragment descriptionFragment = new ShulteDescriptionFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("show_check_box", showCheckBox);
-
-        descriptionFragment.setArguments(bundle);
-
+    public void startDescriptionFragment() {
         fragmentManager.beginTransaction().
-                replace(R.id.shulte_fragment_container, descriptionFragment).
+                replace(R.id.shulte_fragment_container, new ShulteDescriptionFragment()).
                 commit();
     }
 
     public void startTrainingFragment() {
-        ShulteMainFragment mainFragment = new ShulteMainFragment();
-
         fragmentManager.beginTransaction().
-                replace(R.id.shulte_fragment_container, mainFragment).
+                replace(R.id.shulte_fragment_container, new ShulteMainFragment()).
                 commit();
     }
-
-    public void startSettingsFragment() {
-        ShulteSettingsFragment settingsFragment = new ShulteSettingsFragment();
-
-        fragmentManager.beginTransaction().
-                replace(R.id.shulte_fragment_container, settingsFragment).
-                commit();
-    }
-
 }

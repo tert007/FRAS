@@ -10,6 +10,17 @@
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="ButtonStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/reject_red</item>
+        <item name="colorButtonNormal">@color/colorAccent</item>
+    </style>
+
+    <style name="GuessNumberButtonStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/light_grey</item>
+        <item name="colorButtonNormal">@color/grey</item>
+    </style>
+
+    <!--Кнопка назад белого цвета-->
     <style name="ToolbarColoredBackArrow" parent="AppTheme">
         <item name="android:textColorSecondary">@color/white</item>
     </style>

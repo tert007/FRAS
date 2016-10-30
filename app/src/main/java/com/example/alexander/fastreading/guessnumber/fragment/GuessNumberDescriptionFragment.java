@@ -24,19 +24,13 @@ public class GuessNumberDescriptionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.guess_number_description_fragment, null);
 
-        boolean showCheckBox = getArguments().getBoolean("show_check_box");
-
         final CheckBox checkBox = (CheckBox) view.findViewById(R.id.guess_number_description_dont_show_again_check_box);
-        if (! showCheckBox) {
-            checkBox.setVisibility(View.INVISIBLE);
-        } else {
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SettingsManager.setVisionFieldShowHelp(! checkBox.isChecked());
-                }
-            });
-        }
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingsManager.setGuessNumberShowHelp(! checkBox.isChecked());
+            }
+        });
 
         final Button button = (Button) view.findViewById(R.id.guess_number_description_exit_button);
         button.setOnClickListener(new View.OnClickListener() {

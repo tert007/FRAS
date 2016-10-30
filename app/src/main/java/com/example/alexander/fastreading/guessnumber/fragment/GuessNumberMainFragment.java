@@ -6,13 +6,18 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,13 +29,6 @@ import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 
 import java.util.Random;
 
-/**
- * Created by Alexander on 31.07.2016.
- * <p/>
- * <p/>
- * Главный фрагмент GuessActivity
- * Содежржит само упражнение
- */
 public class GuessNumberMainFragment extends Fragment implements View.OnClickListener {
 
     private static final String NOT_INITIALIZE_VALUE = "-";
@@ -38,8 +36,8 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
     private static final int COUNT_TRY = 15;
     private static final int COUNT_NUMBER = 10;
 
-    private static final int ANSWER_TO_DOWN = -2;
-    private static final int ANSWER_TO_UP = 3;
+    private static final int ANSWER_TO_COMPLEXITY_DOWN = -2;
+    private static final int ANSWER_TO_COMPLEXITY_UP = 3;
 
     private int countTrueAnswer = 0;
 
@@ -55,8 +53,10 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
     private int currentCardIndex;
     private int[] trueAnswer;
+    private int[] userAnswer;
 
-    private TextView[] buttons = new TextView[COUNT_NUMBER];
+    private Button[] buttons = new Button[COUNT_NUMBER];
+    private Button editButton;
     private TextView[] cards;
 
     private ProgressBar progressBar;
@@ -64,9 +64,15 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
     private TextView currentResultTextView;
     private TextView recordTextView;
-    private TextView pointsTextView;
 
-    Animation showPointsAnimation;
+    private TextView pointsTextView;
+    private Animation showPointsAnimation;
+
+    private int acceptGreen;
+    private int rejectRed;
+    private int accentColor;
+
+    private int points;
 
     private int currentCountTry = 0;
 
@@ -75,24 +81,36 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.guess_number_main_fragment, null);
 
+        accentColor = ContextCompat.getColor(getActivity(), R.color.colorAccent);
+        acceptGreen = ContextCompat.getColor(getActivity(), R.color.accept_green);
+        rejectRed =  ContextCompat.getColor(getActivity(), R.color.reject_red);
+
         currentComplexity = SettingsManager.getGuessNumberComplexity();
 
         random = new Random();
 
         progressBar = (ProgressBar) view.findViewById(R.id.guess_number_main_progress_bar);
+        progressBar.getIndeterminateDrawable().setColorFilter(accentColor, android.graphics.PorterDuff.Mode.MULTIPLY);
         progressBar.setMax(COUNT_TRY);
 
         answerLayout = (LinearLayout) view.findViewById(R.id.guess_number_answer_layout);
-        buttons[0] = (TextView) view.findViewById(R.id.guess_number_button0);
-        buttons[1] = (TextView) view.findViewById(R.id.guess_number_button1);
-        buttons[2] = (TextView) view.findViewById(R.id.guess_number_button2);
-        buttons[3] = (TextView) view.findViewById(R.id.guess_number_button3);
-        buttons[4] = (TextView) view.findViewById(R.id.guess_number_button4);
-        buttons[5] = (TextView) view.findViewById(R.id.guess_number_button5);
-        buttons[6] = (TextView) view.findViewById(R.id.guess_number_button6);
-        buttons[7] = (TextView) view.findViewById(R.id.guess_number_button7);
-        buttons[8] = (TextView) view.findViewById(R.id.guess_number_button8);
-        buttons[9] = (TextView) view.findViewById(R.id.guess_number_button9);
+        buttons[0] = (Button) view.findViewById(R.id.guess_number_button0);
+        buttons[1] = (Button) view.findViewById(R.id.guess_number_button1);
+        buttons[2] = (Button) view.findViewById(R.id.guess_number_button2);
+        buttons[3] = (Button) view.findViewById(R.id.guess_number_button3);
+        buttons[4] = (Button) view.findViewById(R.id.guess_number_button4);
+        buttons[5] = (Button) view.findViewById(R.id.guess_number_button5);
+        buttons[6] = (Button) view.findViewById(R.id.guess_number_button6);
+        buttons[7] = (Button) view.findViewById(R.id.guess_number_button7);
+        buttons[8] = (Button) view.findViewById(R.id.guess_number_button8);
+        buttons[9] = (Button) view.findViewById(R.id.guess_number_button9);
+
+        editButton = (Button) view.findViewById(R.id.guess_number_button_edit);
+
+        SpannableString spannableString = new SpannableString(" ");
+        spannableString.setSpan(new ImageSpan(getActivity(), R.drawable.guess_number_edit_button_background), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editButton.setText(spannableString);
+        editButton.setOnClickListener(this);
 
         currentResultTextView = (TextView) view.findViewById(R.id.guess_number_current_result);
         currentResultTextView.setText(String.valueOf(currentResult));
@@ -129,25 +147,8 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             button.setOnClickListener(this);
         }
 
-        Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.guess_number_main_start_animation);
-        animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                handler.postDelayed(preShowNumber, 1000);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
+        handler.postDelayed(preShowNumber, SHOW_DELAY);
         cards = createCard(currentComplexity);
-        answerLayout.setAnimation(animation);
 
         return view;
     }
@@ -158,118 +159,121 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
         switch (v.getId()) {
             case R.id.guess_number_button0:
-                cards[currentCardIndex].setText("0");
                 currentNumberOfAnswer = 0;
                 break;
             case R.id.guess_number_button1:
-                cards[currentCardIndex].setText("1");
                 currentNumberOfAnswer = 1;
                 break;
             case R.id.guess_number_button2:
-                cards[currentCardIndex].setText("2");
                 currentNumberOfAnswer = 2;
                 break;
             case R.id.guess_number_button3:
-                cards[currentCardIndex].setText("3");
                 currentNumberOfAnswer = 3;
                 break;
             case R.id.guess_number_button4:
-                cards[currentCardIndex].setText("4");
                 currentNumberOfAnswer = 4;
                 break;
             case R.id.guess_number_button5:
-                cards[currentCardIndex].setText("5");
                 currentNumberOfAnswer = 5;
                 break;
             case R.id.guess_number_button6:
-                cards[currentCardIndex].setText("6");
                 currentNumberOfAnswer = 6;
                 break;
             case R.id.guess_number_button7:
-                cards[currentCardIndex].setText("7");
                 currentNumberOfAnswer = 7;
                 break;
             case R.id.guess_number_button8:
-                cards[currentCardIndex].setText("8");
                 currentNumberOfAnswer = 8;
                 break;
             case R.id.guess_number_button9:
-                cards[currentCardIndex].setText("9");
                 currentNumberOfAnswer = 9;
                 break;
+            case R.id.guess_number_button_edit:
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    cards[currentCardIndex].setText("_");
+                }
+                return;
         }
 
-        if (currentNumberOfAnswer != trueAnswer[currentCardIndex]) {
-            for (int i = 0; i < COUNT_NUMBER; i++) {
-                buttons[i].setEnabled(false);
-            }
+        cards[currentCardIndex].setText(String.valueOf(currentNumberOfAnswer));
+        userAnswer[currentCardIndex] = currentNumberOfAnswer;
 
+        if (currentCardIndex == currentComplexity - 1) {
+            currentCardIndex = 0;
             currentCountTry++;
-            countTrueAnswer--;
 
             progressBar.setProgress(currentCountTry);
 
-            cards[currentCardIndex].setBackgroundResource(R.drawable.guess_number_card_error_background);
-            cards[currentCardIndex].setTextColor(Color.WHITE);
+            setButtonEnabled(false);
 
-            if (countTrueAnswer == ANSWER_TO_DOWN) {
-                if (currentComplexity > MINIMUM_COMPLEXITY) {
-                    currentComplexity--;
+            boolean itsTrueAnswer = true;
+            for (int i = 0; i < currentComplexity; i++) {
 
-                    answerLayout.removeAllViews();
-                    cards = createCard(currentComplexity);
+                if (userAnswer[i] == trueAnswer[i]) {
+                    points++;
+
+                    cards[i].setBackgroundResource(R.drawable.guess_number_card_success_background);
+                } else {
+                    points--;
+
+                    itsTrueAnswer = false;
+                    cards[i].setBackgroundResource(R.drawable.guess_number_card_error_background);
                 }
 
-                countTrueAnswer = 0;
+                cards[i].setTextColor(Color.WHITE);
             }
 
-            handler.postDelayed(preShowNumber, SHOW_NUMBER_PERIOD);
-        } else {
-            cards[currentCardIndex].setBackgroundResource(R.drawable.guess_number_card_success_background);
-            cards[currentCardIndex].setTextColor(Color.WHITE);
-
-            if (currentCardIndex == cards.length - 1) {
-                for (int i = 0; i < COUNT_NUMBER; i++) {
-                    buttons[i].setEnabled(false);
-                }
-
-                currentCountTry++;
+            if (itsTrueAnswer) {
                 countTrueAnswer++;
+            } else {
+                countTrueAnswer--;
+            }
 
-                currentResult += currentComplexity;
-                currentResultTextView.setText(String.valueOf(currentResult));
+            String pointsText;
+            if (points >= 0) {
+                pointsText = "+" + points;
+                pointsTextView.setTextColor(acceptGreen);
 
-                progressBar.setProgress(currentCountTry);
+            } else {
+                pointsText = String.valueOf(points);
+                pointsTextView.setTextColor(rejectRed);
+            }
 
-                if (countTrueAnswer == ANSWER_TO_UP) {
-                    if (currentComplexity < MAXIMUM_COMPLEXITY) {
-                        currentComplexity++;
+            pointsTextView.setText(pointsText);
+            pointsTextView.startAnimation(showPointsAnimation);
 
-                        answerLayout.removeAllViews();
-                        cards = createCard(currentComplexity);
-                    }
+            currentResult += points;
+            if (currentResult < 0) {
+                currentResult = 0;
+            }
+            currentResultTextView.setText(String.valueOf(currentResult));
 
-                    countTrueAnswer = 0;
-                }
-
-                String pointsText = "+" + currentComplexity;
-                pointsTextView.setText(pointsText);
-                pointsTextView.startAnimation(showPointsAnimation);
-
-
+            if (currentCountTry == COUNT_TRY) {
+                handler.postDelayed(showResult, SHOW_DELAY);
+            } else {
                 handler.postDelayed(preShowNumber, SHOW_NUMBER_PERIOD);
             }
-        }
 
-        if (currentCountTry == COUNT_TRY) {
+        } else {
+            currentCardIndex++;
+        }
+    }
+
+    private static final int SHOW_DELAY = 1000;
+    private Runnable showResult = new Runnable() {
+        @Override
+        public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setCancelable(false);
+
+            SettingsManager.setGuessNumberComplexity(currentComplexity);
 
             if(RecordsManager.getGuessNumberRecord() < currentResult){
                 recordTextView.setText(String.valueOf(currentResult));
 
                 RecordsManager.setGuessNumberRecord(currentResult);
-                //new recordTextView
+
                 builder.setTitle(R.string.new_record);
                 builder.setMessage(getString(R.string.new_record) + ": " + currentResult);
             } else {
@@ -295,38 +299,55 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             AlertDialog dialog = builder.create();
             dialog.show();
         }
-
-        if (currentCardIndex < cards.length - 1) {
-            currentCardIndex++;
-        }
-    }
+    };
 
     private static final int SHOW_HINT_DELAY = 200;
     private static final int SHOW_TIME = 500;
 
     private Handler handler = new Handler();
+
     private Runnable preShowNumber = new Runnable() {
         @Override
         public void run() {
-            for (int i = 0; i < COUNT_NUMBER; i++) {
-                buttons[i].setEnabled(false);
+            points = 0;
+
+            setButtonEnabled(false);
+
+            if (countTrueAnswer == ANSWER_TO_COMPLEXITY_DOWN) {
+                if (currentComplexity > MINIMUM_COMPLEXITY) {
+                    currentComplexity--;
+
+                    answerLayout.removeAllViews();
+                    cards = createCard(currentComplexity);
+                }
+
+                countTrueAnswer = 0;
             }
 
-            currentCardIndex = 0;
+            if (countTrueAnswer == ANSWER_TO_COMPLEXITY_UP) {
+                if (currentComplexity < MAXIMUM_COMPLEXITY) {
+                    currentComplexity++;
+
+                    answerLayout.removeAllViews();
+                    cards = createCard(currentComplexity);
+                }
+
+                countTrueAnswer = 0;
+            }
 
             for (TextView card : cards) {
                 card.setBackgroundResource(R.drawable.guess_number_card_background);
-                card.setTextColor(Color.parseColor("#FFA726"));
+                card.setTextColor(accentColor);
                 card.setText("_");
             }
 
             handler.postDelayed(hideHintShowNumber, SHOW_HINT_DELAY);
         }
     };
+
     private Runnable hideHintShowNumber = new Runnable() {
         @Override
         public void run() {
-
             for (TextView card : cards) {
                 card.setTextColor(Color.BLACK);
             }
@@ -334,11 +355,14 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             handler.postDelayed(showNumber, SHOW_HINT_DELAY);
         }
     };
+
     private Runnable showNumber = new Runnable() {
         @Override
         public void run() {
 
             trueAnswer = new int[currentComplexity];
+            userAnswer = new int[currentComplexity];
+
             for (int i = 0; i < currentComplexity; i++) {
                 int randomNumber = random.nextInt(COUNT_NUMBER);
 
@@ -350,6 +374,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             handler.postDelayed(postShowNumber, SHOW_TIME);
         }
     };
+
     private Runnable postShowNumber = new Runnable() {
         @Override
         public void run() {
@@ -357,9 +382,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
                 card.setText("_");
             }
 
-            for (int i = 0; i < COUNT_NUMBER; i++) {
-                buttons[i].setEnabled(true);
-            }
+            setButtonEnabled(true);
         }
     };
 
@@ -373,8 +396,8 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
         int paddingInDp = 4;
         int paddingInPx = (int) (paddingInDp * scale + 0.5f);
-        int textSizeSp = getTextSize(count);
 
+        int textSizeSp = 40;
 
         for (int i = 0; i < count; i++) {
             cards[i] = new TextView(getActivity());
@@ -390,16 +413,18 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
         return cards;
     }
 
-    private int getTextSize(int count) {
-        int defaultTextSizeDp = 100 / count;
-        float scale = getResources().getDisplayMetrics().density;
-        return (int) (defaultTextSizeDp * scale);
+    private void setButtonEnabled(boolean enabled) {
+        for (int i = 0; i < COUNT_NUMBER; i++) {
+            buttons[i].setEnabled(enabled);
+        }
+
+        editButton.setEnabled(enabled);
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        SettingsManager.setGuessNumberComplexity(currentComplexity);
+        //handler.removeCallbacks();
     }
 }
