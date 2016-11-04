@@ -12,6 +12,7 @@ import com.example.alexander.fastreading.RecordsManager;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
+import com.example.alexander.fastreading.speedreading.SpeedReadingActivity;
 import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
 
 public class TrainingMenuActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class TrainingMenuActivity extends AppCompatActivity {
         speedReadingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(TrainingMenuActivity.this, VisionFieldActivity.class));
+                startActivity(new Intent(TrainingMenuActivity.this, SpeedReadingActivity.class));
             }
         });
 

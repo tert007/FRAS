@@ -3,19 +3,14 @@ package com.example.alexander.fastreading.shulte.fragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
-import com.example.alexander.fastreading.ViewOnClickListener;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
 
 /**

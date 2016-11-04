@@ -96,6 +96,22 @@
         <item>Z</item>
     </string-array>
 
+    <string-array name="speed_reading_words">
+        <item>всплеск</item>
+        <item>годовщина</item>
+        <item>горчичник</item>
+        <item>гроссмейстер</item>
+        <item>ельник</item>
+        <item>завоевание</item>
+        <item>зигзаг</item>
+        <item>инквизиция</item>
+        <item>инспекция</item>
+        <item>кассир</item>
+        <item>клевета</item>
+        <item>клизма</item>
+        <item>ленинградец</item>
+    </string-array>
+
     <string name="file_path">File path</string>
     <string name="speed">Speed</string>
     <string name="file_opening_message">File\'s opening</string>
@@ -154,5 +170,4 @@
     <string name="guess_number">Remember the number</string>
     <string name="vision_field_settings_show_time">Show time</string>
     <string name="vision_field_settings_show_time_description">The duration of element showing</string>
-    <string name="title_activity_shulte_settings">Settings</string>
 </resources>

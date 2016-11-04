@@ -98,6 +98,22 @@
         <item>Я</item>
     </string-array>
 
+    <string-array name="speed_reading_words">
+        <item>всплеск</item>
+        <item>годовщина</item>
+        <item>горчичник</item>
+        <item>гроссмейстер</item>
+        <item>ельник</item>
+        <item>завоевание</item>
+        <item>зигзаг</item>
+        <item>инквизиция</item>
+        <item>инспекция</item>
+        <item>кассир</item>
+        <item>клевета</item>
+        <item>клизма</item>
+        <item>ленинградец</item>
+    </string-array>
+
     <string name="choose_reading_mode">Выберите режим чтения</string>
     <string name="exit">Выход</string>
     <string name="exit_message">Вы действительно хотите выйти?</string>

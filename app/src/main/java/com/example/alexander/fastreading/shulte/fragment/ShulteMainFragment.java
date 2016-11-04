@@ -98,6 +98,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setCancelable(false);
 
+                    chronometer.stop();
                     long startTime = chronometer.getBase();
                     long finishTime = SystemClock.elapsedRealtime();
 

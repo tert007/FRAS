@@ -97,6 +97,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
         </activity>
+
+        <activity
+            android:name=".speedreading.SpeedReadingActivity"
+            android:screenOrientation="portrait" />
     </application>
+
 
 </manifest>
