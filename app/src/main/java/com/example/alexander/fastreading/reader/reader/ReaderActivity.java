@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -20,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -58,15 +58,22 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
     private boolean itsSeekPause = true; // Seek Bar start status
 
-    private boolean itsFastReading;
+    //private boolean itsFastReading;
     private boolean fastReadingStarted;
     private WordSelector wordSelector;
+
+    private enum ReadingMode {READING_MODE, FAST_READING_MODE, FLASH_READING_MODE};
+    private ReadingMode readingMode;
 
     private int pageWidth;
     private int thirdPartOfPageWidth;
 
     private static final int defaultPageChangeDelay = 200;
     //private static final int wordLength = 6;
+
+    private ProgressBar flashModeProgressBar;
+    private int flashModeCurrentTime;
+    private int flashModeDelay;
 
     private int currentSpeedIndex;
     private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500};
@@ -104,6 +111,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        readingMode = ReadingMode.READING_MODE;
+
         textView = (TextView) findViewById(R.id.reader_pages_text_view);
         textSize = preferences.getString("reader_text_size", getString(R.string.text_size_default_value));
         textView.setTextSize(Integer.valueOf(textSize));
@@ -113,6 +122,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         currentPageTextView = (TextView) findViewById(R.id.reader_pages_current_page_text_view);
         currentPageResultTextView = (TextView) findViewById(R.id.reader_pages_current_page_result_text_view);
+
+        flashModeProgressBar = (ProgressBar) findViewById(R.id.reader_flash_mode_progress_bar);
 
         navigationLayout = findViewById(R.id.reader_pages_navigation_layout);
         currentChapterTitleTextView = (TextView) findViewById(R.id.reader_pages_current_chapter_title_text_view);
@@ -137,7 +148,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         textView.setText(separatedBook.getPage(currentPageIndex));
 
-                        if (itsFastReading) {
+                        if (readingMode == ReadingMode.FAST_READING_MODE) {
                             wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
                         }
                     }
@@ -164,7 +175,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                         if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                             dialogInterface.dismiss();
-
                             return true;
                         }
 
@@ -184,7 +194,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         textView.setText(separatedBook.getPage(currentPageIndex));
 
-                        if (itsFastReading) {
+                        if (readingMode == ReadingMode.FAST_READING_MODE) {
                             wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
                         }
 
@@ -227,7 +237,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
-                    ReaderActivity.super.onBackPressed();
+                    finish(); //
                 }
             });
             AlertDialog dialog = builder.create();
@@ -258,7 +268,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         speedTextView.setVisibility(View.GONE);
         speedResultTextView.setVisibility(View.GONE);
 
-        textView.setOnTouchListener(onTouchListener);
+        textView.setOnTouchListener(readingListenerOnTouchListener);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
 
         progressDialog.dismiss();
@@ -363,8 +373,16 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         super.onPostResume();
 
         final String currentTextSize = preferences.getString("reader_text_size", getString(R.string.text_size_default_value));
+        final String currentFlashModeDelay = preferences.getString("flash_mode_complexity", getString(R.string.reader_flash_mode_complexity_default_value));
 
-        if (!textSize.equals(currentTextSize)) {
+        if ( ! currentFlashModeDelay.equals(null)) {
+            flashModeDelay = Integer.valueOf(preferences.getString("flash_mode_complexity", getString(R.string.reader_flash_mode_complexity_default_value)));
+
+            flashModeProgressBar.setMax(flashModeDelay + (flashModeDelay / 10));
+            flashModeProgressBar.setProgress(0);
+        }
+
+        if ( ! textSize.equals(currentTextSize)) {
             progressDialog = new ProgressDialog(this);
             progressDialog.setMessage(getString(R.string.file_opening_message));
             progressDialog.setCancelable(false);
@@ -384,7 +402,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
             currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
             textView.setText(separatedBook.getPage((currentPageIndex)));
 
-            if (itsFastReading) {
+            if (readingMode == ReadingMode.FAST_READING_MODE) {
                 wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
             }
 
@@ -408,7 +426,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     }
 
     private void showFastReadingModeDialog() {
-        final boolean itWasFastReading = itsFastReading;
+        final boolean itWasFastReading = (readingMode == ReadingMode.FAST_READING_MODE);
+        final boolean itWasFlashReading = (readingMode == ReadingMode.FLASH_READING_MODE);
 
         fastReadingStarted = false;
 
@@ -416,33 +435,67 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         builder.setTitle(getString(R.string.reading_type));
 
         int index = 0;
-        if (itsFastReading) {
-            index = 1;
+        switch (readingMode) {
+            case READING_MODE:
+                index = 0;
+                break;
+            case FAST_READING_MODE:
+                index = 1;
+                break;
+            case FLASH_READING_MODE:
+                index = 2;
+                break;
         }
 
         builder.setSingleChoiceItems(R.array.reading_type, index, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                itsFastReading = i != 0;
+                switch (i) {
+                    case 0:
+                        readingMode = ReadingMode.READING_MODE;
+                        break;
+                    case 1:
+                        readingMode = ReadingMode.FAST_READING_MODE;
+                        break;
+                    case 2:
+                        readingMode = ReadingMode.FLASH_READING_MODE;
+                        break;
+                }
 
-                if (itsFastReading) {
-                    speedTextView.setVisibility(View.VISIBLE);
-                    speedResultTextView.setVisibility(View.VISIBLE);
-                    speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                if (readingMode == ReadingMode.FAST_READING_MODE) {
+                    if ( ! itWasFastReading) {
+                        speedTextView.setVisibility(View.VISIBLE);
+                        speedResultTextView.setVisibility(View.VISIBLE);
+                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
 
-                    textView.setOnTouchListener(fastReadingOnTouchListener);
-                    seekBar.setOnSeekBarChangeListener(fastReadingSeekBarChangeListener);
+                        flashModeProgressBar.setVisibility(View.GONE);
 
-                    if (!itWasFastReading) {
+                        textView.setOnTouchListener(fastReadingOnTouchListener);
+                        seekBar.setOnSeekBarChangeListener(fastReadingSeekBarChangeListener);
+
                         wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
                     }
-                } else {
+                } else if (readingMode == ReadingMode.FLASH_READING_MODE) {
+                    if ( ! itWasFlashReading) {
+                        speedTextView.setVisibility(View.GONE);
+                        speedResultTextView.setVisibility(View.GONE);
+
+                        textView.setText(separatedBook.getPage(currentPageIndex));
+
+                        flashModeProgressBar.setVisibility(View.VISIBLE);
+                        flashModeProgressBar.setMax(flashModeDelay + (flashModeDelay / 10));
+
+                        textView.setOnTouchListener(flashReadingOnTouchListener);
+                        seekBar.setOnSeekBarChangeListener(flashReadingSeekBarChangeListener);
+                    }
+                } else if (readingMode == ReadingMode.READING_MODE) {
                     speedTextView.setVisibility(View.GONE);
                     speedResultTextView.setVisibility(View.GONE);
+                    flashModeProgressBar.setVisibility(View.GONE);
 
                     textView.setText(separatedBook.getPage(currentPageIndex));
 
-                    textView.setOnTouchListener(onTouchListener);
+                    textView.setOnTouchListener(readingListenerOnTouchListener);
                     seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
                 }
 
@@ -454,7 +507,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         dialog.show();
     }
 
-    private Runnable wordSelectorThread = new Runnable() {
+    private Runnable fastReadingThread = new Runnable() {
         @Override
         public void run() {
             if (fastReadingStarted){
@@ -485,7 +538,63 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         }
     };
 
-    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+    private int FLASH_MODE_PROGRESS_DELAY = 100;
+
+    private Runnable flashReadingStartThread = new Runnable() {
+        @Override
+        public void run() {
+            if (fastReadingStarted) {
+                textView.removeCallbacks(flashReadingProgressUpdate);
+
+                flashModeCurrentTime = 0;
+
+                textView.setTextColor(Color.BLACK);
+                textView.setText(separatedBook.getPage(currentPageIndex));
+
+                textView.post(flashReadingProgressUpdate);
+                textView.postDelayed(flashReadingEndThread, flashModeDelay);
+            }
+        }
+    };
+
+    private Runnable flashReadingProgressUpdate = new Runnable() {
+        @Override
+        public void run() {
+            if (fastReadingStarted) {
+                flashModeCurrentTime += FLASH_MODE_PROGRESS_DELAY;
+                flashModeProgressBar.setProgress(flashModeCurrentTime);
+
+                textView.postDelayed(this, FLASH_MODE_PROGRESS_DELAY);
+            }
+        }
+    };
+
+    private Runnable flashReadingEndThread = new Runnable() {
+        @Override
+        public void run() {
+            if (fastReadingStarted) {
+                textView.setTextColor(Color.GRAY);
+
+                if (currentPageIndex < separatedBook.size() - 1) {
+                    currentPageIndex++;
+
+                    currentPageResultTextView.setText(getCurrentPageByString());
+
+                    textView.postDelayed(flashReadingStartThread, flashModeDelay / 10);
+                } else {
+                    textView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            textView.setTextColor(Color.BLACK);
+                            fastReadingStarted = false;
+                        }
+                    }, flashModeDelay / 10);
+                }
+            }
+        }
+    };
+
+    private View.OnTouchListener readingListenerOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -545,7 +654,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
                     //itsSeekPause = !itsSeekPause;
 
-                    fastReadingStarted = !fastReadingStarted;
+                    fastReadingStarted = ! fastReadingStarted;
 
                     if (currentPageIndex ==  separatedBook.size() - 1)
                         if (wordSelector == null)
@@ -554,7 +663,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
                     if (fastReadingStarted) {
                         navigationLayout.setVisibility(View.GONE);
-                        textView.post(wordSelectorThread);
+                        textView.post(fastReadingThread);
                     } else {
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         seekBar.setMax(separatedBook.size() - 1);
@@ -567,6 +676,40 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         currentSpeedIndex++;
                         speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
                     }
+                }
+            }
+
+            return false;
+        }
+    };
+
+    private View.OnTouchListener flashReadingOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                fastReadingStarted = ! fastReadingStarted;
+
+                //if (currentPageIndex ==  separatedBook.size() - 1)
+                    //fastReadingStarted = false;
+
+                if (fastReadingStarted) {
+                    navigationLayout.setVisibility(View.GONE);
+                    textView.post(flashReadingStartThread); //
+                } else {
+                    ///
+
+                    textView.removeCallbacks(flashReadingStartThread);
+                    textView.removeCallbacks(flashReadingEndThread);
+                    textView.removeCallbacks(flashReadingProgressUpdate);
+                    ///
+
+                    flashModeProgressBar.setProgress(0);
+
+                    currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
+                    seekBar.setMax(separatedBook.size() - 1);
+                    seekBar.setProgress(currentPageIndex);
+                    currentPageSeekTextView.setText(getCurrentPageByString());
+                    navigationLayout.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -591,6 +734,35 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            textView.setText(separatedBook.getPage(currentPageIndex));
+            currentPageResultTextView.setText(getCurrentPageByString());
+        }
+    };
+
+
+    private SeekBar.OnSeekBarChangeListener flashReadingSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser){
+                currentPageIndex = progress;
+                currentPageSeekTextView.setText(getCurrentPageByString());
+                currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
+            }
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            textView.removeCallbacks(flashReadingStartThread);
+            textView.removeCallbacks(flashReadingEndThread);
+            textView.removeCallbacks(flashReadingProgressUpdate);
+
+            flashModeProgressBar.setProgress(0);
+
             textView.setText(separatedBook.getPage(currentPageIndex));
             currentPageResultTextView.setText(getCurrentPageByString());
         }

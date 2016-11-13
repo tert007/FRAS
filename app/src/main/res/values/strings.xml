@@ -58,8 +58,9 @@
     <string name="text_size_default_value" translatable="false">18</string>
 
     <string-array name="reading_type">
-        <item>Reading</item>
-        <item>Fast reading</item>
+        <item>Reading mode</item>
+        <item>Fast reading mode</item>
+        <item>Flash mode</item>
     </string-array>
 
     <string-array name="alphabet">
@@ -170,4 +171,51 @@
     <string name="guess_number">Remember the number</string>
     <string name="vision_field_settings_show_time">Show time</string>
     <string name="vision_field_settings_show_time_description">The duration of element showing</string>
+    <string name="reader_flash_mode_complexity">Flash mode complexity</string>
+    <string name="flash_mode">Режим пристрелкой</string>
+    <string name="reader_flash_mode_complexity_change_description">Change flash mode show time</string>
+
+    <string name="reader_flash_mode_complexity_default_value" translatable="false">10000</string>
+    <string-array name="reader_flash_mode_complexity_values" translatable="false">
+        <item>3000</item>
+        <item>4000</item>
+        <item>5000</item>
+        <item>6000</item>
+        <item>7000</item>
+        <item>8000</item>
+        <item>9000</item>
+        <item>10000</item>
+        <item>11000</item>
+        <item>12000</item>
+        <item>13000</item>
+        <item>14000</item>
+        <item>15000</item>
+        <item>16000</item>
+        <item>17000</item>
+        <item>18000</item>
+        <item>19000</item>
+        <item>20000</item>
+    </string-array>
+
+    <string-array name="reader_flash_mode_complexity_show_values">
+        <item>3 sec</item>
+        <item>4 sec</item>
+        <item>5 sec</item>
+        <item>6 sec</item>
+        <item>7 sec</item>
+        <item>8 sec</item>
+        <item>9 sec</item>
+        <item>10 sec</item>
+        <item>11 sec</item>
+        <item>12 sec</item>
+        <item>13 sec</item>
+        <item>14 sec</item>
+        <item>15 sec</item>
+        <item>16 sec</item>
+        <item>17 sec</item>
+        <item>18 sec</item>
+        <item>19 sec</item>
+        <item>20 sec</item>
+    </string-array>
+
 </resources>
