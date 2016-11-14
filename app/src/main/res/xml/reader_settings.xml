@@ -10,12 +10,4 @@
         android:entries="@array/text_size_settings"
         android:entryValues="@array/text_size_settings" />
 
-    <android.support.v7.preference.ListPreference
-        android:title="@string/reader_flash_mode_complexity"
-        android:summary="@string/reader_flash_mode_complexity_change_description"
-        android:key="flash_mode_complexity"
-        android:defaultValue="@string/reader_flash_mode_complexity_default_value"
-        android:entries="@array/reader_flash_mode_complexity_show_values"
-        android:entryValues="@array/reader_flash_mode_complexity_values" />
-
 </android.support.v7.preference.PreferenceScreen>

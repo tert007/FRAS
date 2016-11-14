@@ -154,31 +154,5 @@
     <string name="guess_number">Запомни число</string>
     <string name="vision_field_settings_show_time">Время показа</string>
     <string name="vision_field_settings_show_time_description">Продолжительность показа элемента на экране</string>
-    <string name="flash_mode">Режим пристрелкой</string>
-
-    <string name="reader_flash_mode_complexity">Сложность в режиме пристрелки</string>
-    <string name="reader_flash_mode_complexity_change_description">Изменть время показа в режиме пристрелки</string>
-
-
-    <string-array name="reader_flash_mode_complexity_show_values">
-        <item>3 сек</item>
-        <item>4 сек</item>
-        <item>5 сек</item>
-        <item>6 сек</item>
-        <item>7 сек</item>
-        <item>8 сек</item>
-        <item>9 сек</item>
-        <item>10 сек</item>
-        <item>11 сек</item>
-        <item>12 сек</item>
-        <item>13 сек</item>
-        <item>14 сек</item>
-        <item>15 сек</item>
-        <item>16 сек</item>
-        <item>17 сек</item>
-        <item>18 сек</item>
-        <item>19 сек</item>
-        <item>20 сек</item>
-    </string-array>
 
 </resources>

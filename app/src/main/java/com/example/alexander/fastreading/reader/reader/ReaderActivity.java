@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -72,11 +73,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     //private static final int wordLength = 6;
 
     private ProgressBar flashModeProgressBar;
-    private int flashModeCurrentTime;
-    private int flashModeDelay;
 
-    private int currentSpeedIndex;
-    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500};
+    private int speedIndex;
+    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000};
 
 
     @Override
@@ -237,7 +236,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
-                    finish(); //
+                    finish();
                 }
             });
             AlertDialog dialog = builder.create();
@@ -256,8 +255,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         setCurrentPage();
 
-        currentSpeedIndex = preferences.getInt("current_speed_index", 0);
-        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+        speedIndex = preferences.getInt("current_speed_index", 0);
+        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
         textView.setText(separatedBook.getPage((currentPageIndex)));
 
@@ -373,14 +372,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         super.onPostResume();
 
         final String currentTextSize = preferences.getString("reader_text_size", getString(R.string.text_size_default_value));
-        final String currentFlashModeDelay = preferences.getString("flash_mode_complexity", getString(R.string.reader_flash_mode_complexity_default_value));
-
-        if ( ! currentFlashModeDelay.equals(null)) {
-            flashModeDelay = Integer.valueOf(preferences.getString("flash_mode_complexity", getString(R.string.reader_flash_mode_complexity_default_value)));
-
-            flashModeProgressBar.setMax(flashModeDelay + (flashModeDelay / 10));
-            flashModeProgressBar.setProgress(0);
-        }
 
         if ( ! textSize.equals(currentTextSize)) {
             progressDialog = new ProgressDialog(this);
@@ -417,7 +408,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         fastReadingStarted = false;
 
         preferences.edit().
-                putInt("current_speed_index", currentSpeedIndex).
+                putInt("current_speed_index", speedIndex).
                 apply();
 
         bookDescription.setBookOffset(getBookOffset());
@@ -466,7 +457,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     if ( ! itWasFastReading) {
                         speedTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setVisibility(View.VISIBLE);
-                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
                         flashModeProgressBar.setVisibility(View.GONE);
 
@@ -477,13 +468,13 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     }
                 } else if (readingMode == ReadingMode.FLASH_READING_MODE) {
                     if ( ! itWasFlashReading) {
-                        speedTextView.setVisibility(View.GONE);
-                        speedResultTextView.setVisibility(View.GONE);
+                        speedTextView.setVisibility(View.VISIBLE);
+                        speedResultTextView.setVisibility(View.VISIBLE);
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
                         textView.setText(separatedBook.getPage(currentPageIndex));
 
                         flashModeProgressBar.setVisibility(View.VISIBLE);
-                        flashModeProgressBar.setMax(flashModeDelay + (flashModeDelay / 10));
 
                         textView.setOnTouchListener(flashReadingOnTouchListener);
                         seekBar.setOnSeekBarChangeListener(flashReadingSeekBarChangeListener);
@@ -516,9 +507,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 if ((worldSelectorPage = wordSelector.getNextSelectedWord()) != null){
                     textView.setText(worldSelectorPage.getPage());
 
-                    double delay = 60_000 / speed[currentSpeedIndex];
+                    double delay = 60_000 / speed[speedIndex];
                     //Log.d("LENGTH", String.valueOf(worldSelectorPage.getSelectedWordLength()));
-                    //double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (speed[currentSpeedIndex] * wordLength / 60);
+                    //double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (speed[speedIndex] * wordLength / 60);
 
                     textView.postDelayed(this, (int) delay);
                 } else {
@@ -538,57 +529,69 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         }
     };
 
-    private int FLASH_MODE_PROGRESS_DELAY = 100;
+    private boolean flashChanged;
+    private int flashModeCurrentTime;
 
-    private Runnable flashReadingStartThread = new Runnable() {
-        @Override
-        public void run() {
-            if (fastReadingStarted) {
-                textView.removeCallbacks(flashReadingProgressUpdate);
+    private Runnable flashReadingThread = new Runnable() {
 
-                flashModeCurrentTime = 0;
+        private static final int FLASH_MODE_PROGRESS_DELAY = 100;
 
-                textView.setTextColor(Color.BLACK);
-                textView.setText(separatedBook.getPage(currentPageIndex));
+        private CharSequence currentPage;
+        private int flashModeCurrentPageDelay;
 
-                textView.post(flashReadingProgressUpdate);
-                textView.postDelayed(flashReadingEndThread, flashModeDelay);
-            }
+        public int getFlashModeReadingDelay(CharSequence page, int speed) {
+            int wordsCount = page.toString().split("[\\s']").length;
+            return (60_000 / speed) * wordsCount;
         }
-    };
 
-    private Runnable flashReadingProgressUpdate = new Runnable() {
         @Override
         public void run() {
             if (fastReadingStarted) {
+                if (flashChanged) {
+                    if (currentPage == null) {
+                        currentPage = separatedBook.getPage(currentPageIndex);
+                    }
+
+                    int oldDelay = flashModeCurrentPageDelay;
+                    int remainder = oldDelay - flashModeCurrentTime;
+
+                    float ratio = (float) remainder / (float) oldDelay;
+                    int newRemainder = (int) (getFlashModeReadingDelay(currentPage, speed[speedIndex]) * ratio);
+
+                    flashModeCurrentPageDelay = oldDelay - remainder + newRemainder;
+                    flashModeProgressBar.setMax(flashModeCurrentPageDelay);
+
+                    flashChanged = false;
+                }
+
+                if (flashModeCurrentTime == 0) {
+                    currentPage = separatedBook.getPage(currentPageIndex);
+
+                    textView.setTextColor(Color.BLACK);
+                    textView.setText(currentPage);
+
+                    flashModeCurrentPageDelay = getFlashModeReadingDelay(currentPage, speed[speedIndex]);
+                    flashModeProgressBar.setMax(flashModeCurrentPageDelay);
+                } else if (flashModeCurrentTime > flashModeCurrentPageDelay - flashModeCurrentPageDelay / 10) {
+                    textView.setTextColor(Color.GRAY);
+                }
+
                 flashModeCurrentTime += FLASH_MODE_PROGRESS_DELAY;
                 flashModeProgressBar.setProgress(flashModeCurrentTime);
 
-                textView.postDelayed(this, FLASH_MODE_PROGRESS_DELAY);
-            }
-        }
-    };
+                if (flashModeCurrentTime >= flashModeCurrentPageDelay) {
+                    flashModeCurrentTime = 0;
 
-    private Runnable flashReadingEndThread = new Runnable() {
-        @Override
-        public void run() {
-            if (fastReadingStarted) {
-                textView.setTextColor(Color.GRAY);
+                    if (currentPageIndex < separatedBook.size() - 1) {
+                        currentPageIndex++;
+                        currentPageResultTextView.setText(getCurrentPageByString());
 
-                if (currentPageIndex < separatedBook.size() - 1) {
-                    currentPageIndex++;
-
-                    currentPageResultTextView.setText(getCurrentPageByString());
-
-                    textView.postDelayed(flashReadingStartThread, flashModeDelay / 10);
+                        textView.post(this);
+                    } else {
+                        fastReadingStarted = false;
+                    }
                 } else {
-                    textView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            textView.setTextColor(Color.BLACK);
-                            fastReadingStarted = false;
-                        }
-                    }, flashModeDelay / 10);
+                    textView.postDelayed(this, FLASH_MODE_PROGRESS_DELAY);
                 }
             }
         }
@@ -647,23 +650,24 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 int x = (int) event.getX();
 
                 if (x < thirdPartOfPageWidth) {
-                    if (currentSpeedIndex > 0){
-                        currentSpeedIndex--;
-                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                    if (speedIndex > 0){
+                        speedIndex--;
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
                     }
                 } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
-                    //itsSeekPause = !itsSeekPause;
-
                     fastReadingStarted = ! fastReadingStarted;
-
-                    if (currentPageIndex ==  separatedBook.size() - 1)
-                        if (wordSelector == null)
-                            fastReadingStarted = false;
-
 
                     if (fastReadingStarted) {
                         navigationLayout.setVisibility(View.GONE);
-                        textView.post(fastReadingThread);
+
+                        if (currentPageIndex !=  separatedBook.size() - 1) {
+                            textView.post(fastReadingThread);
+                        } else {
+                            if (wordSelector != null) {
+                                textView.post(fastReadingThread);
+                            }
+                        }
+
                     } else {
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         seekBar.setMax(separatedBook.size() - 1);
@@ -672,9 +676,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         navigationLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    if (currentSpeedIndex < speed.length - 1){
-                        currentSpeedIndex++;
-                        speedResultTextView.setText(String.valueOf(speed[currentSpeedIndex]));
+                    if (speedIndex < speed.length - 1){
+                        speedIndex++;
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
                     }
                 }
             }
@@ -687,29 +691,45 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                fastReadingStarted = ! fastReadingStarted;
+                int x = (int) event.getX();
 
-                //if (currentPageIndex ==  separatedBook.size() - 1)
-                    //fastReadingStarted = false;
+                if (x < thirdPartOfPageWidth) {
+                    if (speedIndex > 0){
+                        speedIndex--;
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
-                if (fastReadingStarted) {
-                    navigationLayout.setVisibility(View.GONE);
-                    textView.post(flashReadingStartThread); //
+                        flashChanged = true;
+                    }
+                } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
+
+                    fastReadingStarted = ! fastReadingStarted;
+
+                    if (fastReadingStarted) {
+                        navigationLayout.setVisibility(View.GONE);
+
+                        if (currentPageIndex != separatedBook.size() - 1) {
+                            textView.post(flashReadingThread);
+                        } else {
+                            if (flashModeCurrentTime != 0) {
+                                textView.post(flashReadingThread);
+                            }
+                        }
+                    } else {
+                        currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
+                        seekBar.setMax(separatedBook.size() - 1);
+                        seekBar.setProgress(currentPageIndex);
+                        currentPageSeekTextView.setText(getCurrentPageByString());
+                        navigationLayout.setVisibility(View.VISIBLE);
+                    }
+
+
                 } else {
-                    ///
+                    if (speedIndex < speed.length - 1){
+                        speedIndex++;
+                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
-                    textView.removeCallbacks(flashReadingStartThread);
-                    textView.removeCallbacks(flashReadingEndThread);
-                    textView.removeCallbacks(flashReadingProgressUpdate);
-                    ///
-
-                    flashModeProgressBar.setProgress(0);
-
-                    currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
-                    seekBar.setMax(separatedBook.size() - 1);
-                    seekBar.setProgress(currentPageIndex);
-                    currentPageSeekTextView.setText(getCurrentPageByString());
-                    navigationLayout.setVisibility(View.VISIBLE);
+                        flashChanged = true;
+                    }
                 }
             }
 
@@ -739,7 +759,6 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         }
     };
 
-
     private SeekBar.OnSeekBarChangeListener flashReadingSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -757,11 +776,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-            textView.removeCallbacks(flashReadingStartThread);
-            textView.removeCallbacks(flashReadingEndThread);
-            textView.removeCallbacks(flashReadingProgressUpdate);
-
-            flashModeProgressBar.setProgress(0);
+            textView.removeCallbacks(flashReadingThread);
+            flashModeCurrentTime = 0;
 
             textView.setText(separatedBook.getPage(currentPageIndex));
             currentPageResultTextView.setText(getCurrentPageByString());
