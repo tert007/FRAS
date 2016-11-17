@@ -2,11 +2,15 @@ package com.example.alexander.fastreading.speedreading.fragment;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,26 +20,32 @@ import com.example.alexander.fastreading.speedreading.SpeedReadingActivity;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class SpeedReadingAnswersFragment extends Fragment implements View.OnClickListener {
     private String answerWord;
     private static final int ANSWERS_TEXT_VIEW_COUNT = 6;
-    TextView[] textViews;
+    Button[] textViews;
+    TextView speedTextView;
+    SpeedReadingActivity mainActivity;
     int indexTrueAnswer;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.speed_reading_test_fragment, null);
-        textViews = new TextView[ANSWERS_TEXT_VIEW_COUNT];
-        textViews[0] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_1);
-        textViews[1] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_2);
-        textViews[2] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_3);
-        textViews[3] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_4);
-        textViews[4] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_5);
-        textViews[5] = (TextView) view.findViewById(R.id.speed_reading_answer_text_view_6);
+        textViews = new Button[ANSWERS_TEXT_VIEW_COUNT];
+        textViews[0] = (Button) view.findViewById(R.id.speed_reading_answer_button_1);
+        textViews[1] = (Button) view.findViewById(R.id.speed_reading_answer_button_2);
+        textViews[2] = (Button) view.findViewById(R.id.speed_reading_answer_button_3);
+        textViews[3] = (Button) view.findViewById(R.id.speed_reading_answer_button_4);
+        textViews[4] = (Button) view.findViewById(R.id.speed_reading_answer_button_5);
+        textViews[5] = (Button) view.findViewById(R.id.speed_reading_answer_button_6);
 
+        mainActivity = (SpeedReadingActivity) getActivity();
+        speedTextView = (TextView) view.findViewById(R.id.speed_reading_answer_speed_text_view);
         answerWord = getArguments().getString("last_word");
+        speedTextView.setText(String.valueOf(mainActivity.wordsPerMinute[mainActivity.index]));
         indexTrueAnswer = getRandomAnswersIndex();
         String[] words = getRandomWords(ANSWERS_TEXT_VIEW_COUNT,answerWord,indexTrueAnswer);
 
@@ -51,34 +61,40 @@ public class SpeedReadingAnswersFragment extends Fragment implements View.OnClic
     public void onClick(View v) {
         int selectedIndex = 0;
         switch (v.getId()){
-            case R.id.speed_reading_answer_text_view_1:
+            case R.id.speed_reading_answer_button_1:
                 selectedIndex = 0;
                 break;
-            case R.id.speed_reading_answer_text_view_2:
+            case R.id.speed_reading_answer_button_2:
                 selectedIndex = 1;
                 break;
-            case R.id.speed_reading_answer_text_view_3:
+            case R.id.speed_reading_answer_button_3:
                 selectedIndex = 2;
                 break;
-            case R.id.speed_reading_answer_text_view_4:
+            case R.id.speed_reading_answer_button_4:
                 selectedIndex = 3;
+                break;
+            case R.id.speed_reading_answer_button_5:
+                selectedIndex = 4;
+                break;
+            case R.id.speed_reading_answer_button_6:
+                selectedIndex = 5;
                 break;
         }
         if(selectedIndex == indexTrueAnswer) {
-            Context context = getActivity().getApplicationContext();
-            Toast.makeText(context, "Ответ правильный", Toast.LENGTH_LONG).show();
-            SpeedReadingActivity mainActivity = (SpeedReadingActivity) getActivity();
             mainActivity.countAnswer++;
             mainActivity.setSpeed(true);
-            mainActivity.startExercise();
+            speedTextView.setText(String.valueOf(mainActivity.wordsPerMinute[mainActivity.index]));
+            speedTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.accept_green));
+            Handler handler = new Handler();
+            handler.postDelayed(speedDelayed,1000);
         }
         else{
-            Context context = getActivity().getApplicationContext();
-            Toast.makeText(context, "Ответ не правильный", Toast.LENGTH_LONG).show();
-            SpeedReadingActivity mainActivity = (SpeedReadingActivity) getActivity();
             mainActivity.countAnswer++;
             mainActivity.setSpeed(false);
-            mainActivity.startExercise();
+            speedTextView.setText(String.valueOf(mainActivity.wordsPerMinute[mainActivity.index]));
+            speedTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.reject_red));
+            Handler handler = new Handler();
+            handler.postDelayed(speedDelayed,1000);
         }
     }
 
@@ -111,5 +127,12 @@ public class SpeedReadingAnswersFragment extends Fragment implements View.OnClic
         Random random = new Random();
         return random.nextInt(array.length-1);
     }
+
+    private Runnable speedDelayed = new Runnable() {
+        @Override
+        public void run() {
+            mainActivity.startExercise();
+        }
+    };
 
 }
