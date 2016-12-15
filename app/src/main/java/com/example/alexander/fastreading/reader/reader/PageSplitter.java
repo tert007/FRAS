@@ -3,6 +3,7 @@ package com.example.alexander.fastreading.reader.reader;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.util.Log;
 
 import com.example.alexander.fastreading.reader.entity.BookContent;
 
@@ -25,6 +26,7 @@ public class PageSplitter {
         this.textPaint = textPaint;
         this.pageWidth = pageWidth;
         this.pageHeight = pageHeight;
+
         this.lineSpacingMultiplier = 1f;
         this.lineSpacingExtra = 0f;
     }
@@ -56,7 +58,7 @@ public class PageSplitter {
             int startIndex = 0;
             int endIndex = 0;
 
-            StaticLayout tempLayout = new StaticLayout(chapter, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, false);
+            StaticLayout tempLayout = new StaticLayout(chapter, textPaint, pageWidth, Layout.Alignment.ALIGN_NORMAL, lineSpacingMultiplier, lineSpacingExtra, true);
             int lastLineIndex = tempLayout.getLineCount() - 1;
 
             if (lastLineIndex == 0) {
@@ -66,9 +68,9 @@ public class PageSplitter {
             int selectedLine = 0;
             while (selectedLine != lastLineIndex) {
                 int verticalOffset = usedHeight + pageHeight;
+                //Log.d("vertical_offset", String.valueOf(verticalOffset));
 
                 selectedLine = tempLayout.getLineForVertical(verticalOffset);
-
                 if (tempLayout.getLineBottom(selectedLine) > verticalOffset){
                     selectedLine--;
                 }

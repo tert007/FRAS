@@ -5,19 +5,153 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight="8"
+    <ScrollView
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <TextView
-            android:text="@string/shulte_table_description"
+        <LinearLayout
+            android:orientation="vertical"
             android:padding="@dimen/default_margin"
-
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/shulte_description_part_1_title"
+                android:gravity="center"
+
+                android:textSize="26sp"
+                android:textColor="@color/black"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/shulte_description_part_1"
+
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/shulte_description_part_2_title"
+                android:gravity="center"
+
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+
+                android:textSize="26sp"
+                android:textColor="@color/black"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/shulte_description_part_2"
+
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+
+                android:layout_gravity="center"
+
+                android:src="@drawable/shulte_description_image_1"
+                android:layout_width="175dp"
+                android:layout_height="175dp" />
+
+            <TextView
+                android:text="@string/shulte_description_image_1_title"
+
+                android:gravity="center"
+
+                android:paddingTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+
+                android:layout_gravity="center"
+
+                android:src="@drawable/shulte_description_image_2"
+                android:layout_width="175dp"
+                android:layout_height="175dp" />
+
+            <TextView
+                android:text="@string/shulte_description_image_2_title"
+
+                android:gravity="center"
+
+                android:paddingTop="4dp"
+                android:textSize="14sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+
+                android:layout_gravity="center"
+
+                android:src="@drawable/shulte_description_image_3"
+                android:layout_width="175dp"
+                android:layout_height="175dp" />
+
+            <TextView
+                android:text="@string/shulte_description_image_3_title"
+
+                android:gravity="center"
+
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+
+                android:textSize="14sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/shulte_description_part_3_title"
+                android:gravity="center"
+                android:visibility="gone"
+
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+
+                android:textSize="26sp"
+                android:textColor="@color/black"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/shulte_description_part_3"
+
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+
+        android:paddingTop="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <CheckBox
             android:id="@+id/shulte_description_dont_show_again_check_box"
@@ -29,13 +163,6 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_weight="2"
-
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
 
         <Button
             android:id="@+id/shulte_description_exit_button"
@@ -44,14 +171,12 @@
             android:text="@string/start"
 
             android:theme="@style/ButtonStyle"
-
             android:layout_gravity="center"
 
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
 
             android:layout_width="125dp"
             android:layout_height="wrap_content"/>
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

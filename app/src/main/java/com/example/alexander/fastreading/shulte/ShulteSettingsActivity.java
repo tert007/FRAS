@@ -1,6 +1,5 @@
 package com.example.alexander.fastreading.shulte;
 
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -32,13 +31,13 @@ public class ShulteSettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         final View complexityView = findViewById(R.id.shulte_settings_complexity_view);
-        final Spinner spinner = (Spinner) complexityView.findViewById(R.id.shulte_settings_spinner);
+        final Spinner complexitySpinner = (Spinner) complexityView.findViewById(R.id.shulte_settings_spinner);
         final TextView complexityLockTextView = (TextView) findViewById(R.id.shulte_settings_complexity_lock_text_view);
 
         complexityView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                spinner.performClick();
+                complexitySpinner.performClick();
             }
         });
 
@@ -52,12 +51,12 @@ public class ShulteSettingsActivity extends AppCompatActivity {
                 break;
             }
         }
-        spinner.setSelection(itemPosition);
+        complexitySpinner.setSelection(itemPosition);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        complexitySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int complexity = Integer.valueOf((String) spinner.getSelectedItem());
+                int complexity = Integer.valueOf((String) complexitySpinner.getSelectedItem());
                 SettingsManager.setShulteComplexity(complexity);
 
                 if (complexity == DEFAULT_COMPLEXITY) {
@@ -73,8 +72,17 @@ public class ShulteSettingsActivity extends AppCompatActivity {
             }
         });
 
-        final SwitchCompat permutationSwitch = (SwitchCompat) findViewById(R.id.shulte_permutation_switch);
+        final View permutationView = findViewById(R.id.shulte_settings_permutation_view);
+
+        final SwitchCompat permutationSwitch = (SwitchCompat) permutationView.findViewById(R.id.shulte_settings_permutation_switch);
         permutationSwitch.setChecked(SettingsManager.isShultePermutation());
+
+        permutationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                permutationSwitch.performClick();
+            }
+        });
 
         permutationSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,8 +91,16 @@ public class ShulteSettingsActivity extends AppCompatActivity {
             }
         });
 
-        final SwitchCompat coloredSwitch = (SwitchCompat) findViewById(R.id.shulte_colored_switch);
+        final View coloredView = findViewById(R.id.shulte_settings_colored_view);
+        final SwitchCompat coloredSwitch = (SwitchCompat) coloredView.findViewById(R.id.shulte_settings_colored_switch);
         coloredSwitch.setChecked(SettingsManager.isShulteColored());
+
+        coloredView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                coloredSwitch.performClick();
+            }
+        });
 
         coloredSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,20 +109,31 @@ public class ShulteSettingsActivity extends AppCompatActivity {
             }
         });
 
+        final View eyeModeView = findViewById(R.id.shulte_settings_eye_mode_view);
 
-        final SwitchCompat eyeModeSwitch = (SwitchCompat) findViewById(R.id.shulte_eye_mode_switch);
+        final SwitchCompat eyeModeSwitch = (SwitchCompat) eyeModeView.findViewById(R.id.shulte_settings_eye_mode_switch);
         boolean eyeMode = SettingsManager.isShulteEyeMode();
         eyeModeSwitch.setChecked(eyeMode);
 
         final TextView eyesModeLockTextView = (TextView) findViewById(R.id.shulte_settings_eyes_mode_lock_text_view);
+        final TextView eyesModeHowToUSeTextView = (TextView) findViewById(R.id.shulte_settings_eyes_mode_how_to_use_text_view);
 
         if (eyeMode) {
             eyesModeLockTextView.setVisibility(View.VISIBLE);
+            eyesModeHowToUSeTextView.setVisibility(View.VISIBLE);
+            permutationView.setEnabled(false);
             permutationSwitch.setEnabled(false);
         } else {
+            permutationView.setEnabled(true);
             permutationSwitch.setEnabled(true);
         }
 
+        eyeModeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                eyeModeSwitch.performClick();
+            }
+        });
         eyeModeSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,16 +142,22 @@ public class ShulteSettingsActivity extends AppCompatActivity {
 
                 if  (eyeMode) {
                     eyesModeLockTextView.setVisibility(View.VISIBLE);
+                    eyesModeHowToUSeTextView.setVisibility(View.VISIBLE);
 
                     permutationSwitch.setChecked(false);
+                    permutationView.setEnabled(false);
                     permutationSwitch.setEnabled(false);
+
                     SettingsManager.setShultePermutation(false);
                 } else {
                     eyesModeLockTextView.setVisibility(View.GONE);
+                    eyesModeHowToUSeTextView.setVisibility(View.GONE);
 
+                    permutationView.setEnabled(true);
                     permutationSwitch.setEnabled(true);
                 }
             }
         });
+
     }
 }

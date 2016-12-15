@@ -25,7 +25,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
 
-        android:background="@drawable/reader_library_title_cover_background"
+        android:background="@drawable/reader_library_title_cover_shape_background"
 
         android:layout_width="72dp"
         android:layout_height="72dp" />

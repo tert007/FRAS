@@ -12,7 +12,6 @@ import android.widget.CheckBox;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
-import com.example.alexander.fastreading.shulte.ShulteActivity;
 
 /**
  * Created by Alexander on 27.07.2016.
@@ -36,7 +35,7 @@ public class GuessNumberDescriptionFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((GuessNumberActivity) getActivity()).startTrainingFragment();
+                ((GuessNumberActivity) getActivity()).startPrepareFragment();
             }
         });
 

@@ -2,6 +2,7 @@ package com.example.alexander.fastreading.reader.library.fragment.fileexplorer;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ListFragment;
@@ -35,6 +36,10 @@ public class ReaderFileExplorerFileExplorerFragment extends ListFragment impleme
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        //Environment.getRootDirectory();
+
+
         return inflater.inflate(R.layout.reader_file_explorer_fragment, null);
     }
 

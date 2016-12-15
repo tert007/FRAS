@@ -2,18 +2,13 @@ package com.example.alexander.fastreading.visionfield;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
-import com.example.alexander.fastreading.shulte.ShulteColourGenerator;
 import com.example.alexander.fastreading.shulte.TextViewOnTouchListener;
-
-import java.util.List;
 
 /**
  * Created by Alexander on 26.07.2016.

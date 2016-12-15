@@ -26,11 +26,13 @@ public class SettingsManager {
 
     private static final String VISION_FIELD_COMPLEXITY_KEY = "vision_field_complexity";
     private static final int VISION_FIELD_COMPLEXITY_DEFAULT_VALUE = 30_000;
-
     private static final String VISION_FIELD_SHOW_DELAY_KEY = "vision_field_show_delay";
     private static final int VISION_FIELD_SHOW_DELAY_DEFAULT_VALUE = 1000;
     private static final String VISION_FIELD_SHOW_HELP_KEY = "vision_field_show_help";
     private static final boolean VISION_FIELD_SHOW_HELP_DEFAULT_VALUE = true;
+
+    private static final String SPEED_READING_SHOW_HELP = "speed_reading_show_help";
+    private static final boolean SPEED_READING_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static int guessNumberComplexity;
     private static boolean guessNumberShowHelp;
@@ -44,6 +46,8 @@ public class SettingsManager {
     private static int visionFieldComplexity;
     private static int visionFieldShowDelay;
     private static boolean visionFieldShowHelp;
+
+    private static boolean speedReadingShowHelp;
 
     private static SharedPreferences sharedPreferences;
 
@@ -178,5 +182,18 @@ public class SettingsManager {
     public static void setVisionFieldShowDelay(int showDelay) {
         sharedPreferences.edit().putInt(VISION_FIELD_SHOW_DELAY_KEY, showDelay).apply();
         visionFieldShowDelay = showDelay;
+    }
+
+    public static boolean isSpeedReadingShowHelp() {
+        if (speedReadingShowHelp == false) {
+            speedReadingShowHelp = sharedPreferences.getBoolean(SPEED_READING_SHOW_HELP, SPEED_READING_SHOW_HELP_DEFAULT_VALUE);
+        }
+
+        return speedReadingShowHelp;
+    }
+
+    public static void setSpeedReadingShowHelp(boolean showHelp) {
+        sharedPreferences.edit().putBoolean(SPEED_READING_SHOW_HELP, showHelp).apply();
+        speedReadingShowHelp = showHelp;
     }
 }

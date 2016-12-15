@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading.shulte.fragment;
+package com.example.alexander.fastreading.speedreading.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -11,32 +11,32 @@ import android.widget.CheckBox;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
-import com.example.alexander.fastreading.shulte.ShulteActivity;
-
+import com.example.alexander.fastreading.speedreading.SpeedReadingActivity;
+import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
 
 /**
  * Created by Alexander on 27.07.2016.
  */
-public class ShulteDescriptionFragment extends Fragment {
+public class SpeedReadingDescriptionFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.shulte_description_fragment, null);
+        View view = inflater.inflate(R.layout.speed_reading_description_fragment, container, false);
 
-        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.shulte_description_dont_show_again_check_box);
+        final CheckBox checkBox = (CheckBox) view.findViewById(R.id.speed_reading_description_dont_show_again_check_box);
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SettingsManager.setShulteShowHelp(! checkBox.isChecked());
+                SettingsManager.setSpeedReadingShowHelp(! checkBox.isChecked());
             }
         });
 
-        final Button button = (Button) view.findViewById(R.id.shulte_description_exit_button);
+        final Button button = (Button) view.findViewById(R.id.speed_reading_description_start_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ShulteActivity) getActivity()).startPrepareFragment();
+                ((SpeedReadingActivity) getActivity()).startTrainingFragment();
             }
         });
 

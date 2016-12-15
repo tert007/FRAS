@@ -12,8 +12,8 @@
 
     <item
         android:icon="@drawable/help"
-        android:id="@+id/help"
-        android:title="@string/help"
+        android:id="@+id/info"
+        android:title="@string/info"
         android:orderInCategory="200"
         app:showAsAction="ifRoom" />
 </menu>

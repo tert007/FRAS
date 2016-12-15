@@ -13,7 +13,7 @@ import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberDescriptionFragment;
 import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberMainFragment;
-import com.example.alexander.fastreading.visionfield.fragment.VisionFieldDescriptionFragment;
+import com.example.alexander.fastreading.guessnumber.fragment.GuessNumberPrepareFragment;
 
 
 public class GuessNumberActivity extends AppCompatActivity {
@@ -40,9 +40,35 @@ public class GuessNumberActivity extends AppCompatActivity {
         if (SettingsManager.isGuessNumberShowHelp()) {
             startDescriptionFragment();
         } else {
-            startTrainingFragment();
+            startPrepareFragment();
         }
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.guess_number_toolbar, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.restart: {
+                startPrepareFragment();
+                return true;
+            }
+            case R.id.info: {
+                Intent intent = new Intent(this, GuessNumberDescriptionActivity.class);
+                startActivity(intent);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 
     public void startTrainingFragment() {
         fragmentManager.beginTransaction().
@@ -57,28 +83,11 @@ public class GuessNumberActivity extends AppCompatActivity {
                 commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.guess_number_toolbar, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.restart: {
-                startTrainingFragment();
-                return true;
-            }
-            case R.id.help: {
-                Intent intent = new Intent(this, GuessNumberDescriptionActivity.class);
-                startActivity(intent);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void startPrepareFragment() {
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.guess_number_fragment_container, new GuessNumberPrepareFragment()).
+                commit();
     }
 
 }

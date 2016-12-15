@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".trainingmenu.TrainingMenuActivity">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <LinearLayout
+            android:layout_centerInParent="true"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -19,67 +16,78 @@
                 android:id="@+id/training_menu_start_shulte"
 
                 android:text="@string/shulte_table"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
+                android:textSize="20sp"
+                android:textColor="@drawable/training_menu_text_colour_selector"
                 android:gravity="center"
 
                 android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/training_menu_shulte_icon"
                 android:drawableStart="@drawable/training_menu_shulte_icon"
 
-                android:padding="8dp"
+                android:background="@drawable/training_menu_background_selector"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
 
                 android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
+                android:layout_width="275dp"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/training_menu_start_guess_number"
 
                 android:text="@string/guess_number"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
+                android:textSize="20sp"
+                android:textColor="@drawable/training_menu_text_colour_selector"
                 android:gravity="center"
 
                 android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/training_menu_guess_number_icon"
                 android:drawableStart="@drawable/training_menu_guess_number_icon"
 
-                android:padding="8dp"
+                android:background="@drawable/training_menu_background_selector"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
 
                 android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
+                android:layout_width="275dp"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/training_menu_start_vision_field"
 
                 android:text="@string/vision_field"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
+                android:textSize="20sp"
+                android:textColor="@drawable/training_menu_text_colour_selector"
                 android:gravity="center"
+
+                android:background="@drawable/training_menu_background_selector"
 
                 android:drawablePadding="8dp"
                 android:drawableLeft="@drawable/training_menu_vision_field_icon"
                 android:drawableStart="@drawable/training_menu_vision_field_icon"
 
-                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
 
                 android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
+                android:layout_width="275dp"
                 android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/training_menu_start_speed_reading"
 
-                android:text="Скорость чтения"
+                android:visibility="gone"
+
+                android:text="@string/speed_reading"
                 android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
+                android:textColor="@drawable/text_colour_selector"
                 android:gravity="center"
 
                 android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/training_icon_guess_number"
-                android:drawableStart="@drawable/training_icon_guess_number"
+                android:drawableLeft="@drawable/training_test"
+                android:drawableStart="@drawable/training_test"
 
                 android:padding="8dp"
 
@@ -87,311 +95,7 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t2"
-                android:drawableStart="@drawable/t2"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t3"
-                android:drawableStart="@drawable/t3"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t5"
-                android:drawableStart="@drawable/t5"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t8"
-                android:drawableStart="@drawable/t8"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t9"
-                android:drawableStart="@drawable/t9"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t11"
-                android:drawableStart="@drawable/t11"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t12"
-                android:drawableStart="@drawable/t12"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t13"
-                android:drawableStart="@drawable/t13"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t14"
-                android:drawableStart="@drawable/t14"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t15"
-                android:drawableStart="@drawable/t15"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t16"
-                android:drawableStart="@drawable/t16"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t17"
-                android:drawableStart="@drawable/t17"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t19"
-                android:drawableStart="@drawable/t19"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t20"
-                android:drawableStart="@drawable/t20"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t21"
-                android:drawableStart="@drawable/t21"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t22"
-                android:drawableStart="@drawable/t22"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t23"
-                android:drawableStart="@drawable/t23"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t24"
-                android:drawableStart="@drawable/t24"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="Скорость чтения"
-                android:textSize="22sp"
-                android:textColor="@drawable/menu_selector"
-                android:gravity="center"
-
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/t25"
-                android:drawableStart="@drawable/t25"
-
-                android:padding="8dp"
-
-                android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
         </LinearLayout>
-    </ScrollView>
 
 
-</LinearLayout>
+</RelativeLayout>

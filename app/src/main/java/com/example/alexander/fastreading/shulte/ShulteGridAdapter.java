@@ -33,6 +33,18 @@ public class ShulteGridAdapter extends ArrayAdapter<String> {
 
         final TextView textView = (TextView) convertView.findViewById(R.id.shulte_grid_item_text_view);
 
+        switch (SettingsManager.getShulteComplexity()) {
+            case 5:
+                textView.setTextSize(35);
+                break;
+            case 6:
+                textView.setTextSize(30);
+                break;
+            default:
+                textView.setTextSize(25);
+                break;
+        }
+
         if (SettingsManager.isShulteColored()) {
             textView.setTextColor(ShulteColourGenerator.getColour());
         }

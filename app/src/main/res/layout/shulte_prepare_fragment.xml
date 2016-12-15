@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/shulte_prepare_prepare_view"
+
+        android:layout_centerInParent="true"
+
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/prepare"
+
+            android:textColor="@color/grey"
+            android:textSize="30sp"
+
+            android:gravity="center_horizontal"
+
+            android:layout_marginBottom="30dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.example.alexander.fastreading.CircularProgressBar
+            android:id="@+id/shulte_prepare_progress_circular_view"
+
+            android:layout_gravity="center_horizontal"
+
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+</RelativeLayout>

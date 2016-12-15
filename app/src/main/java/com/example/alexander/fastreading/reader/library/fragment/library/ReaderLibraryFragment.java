@@ -1,11 +1,19 @@
 package com.example.alexander.fastreading.reader.library.fragment.library;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -83,13 +91,47 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addBookDelegate.onFloatButtonClick();
+
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                PERMISSION_REQUEST_CODE);
+                    } else {
+                        Snackbar.make(getView(), R.string.permission_error, Snackbar.LENGTH_LONG).setAction(R.string.settings, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getActivity().getPackageName()));
+                                startActivity(appSettingsIntent);
+                            }
+                        }).show();
+                    }
+                } else {
+                    addBookDelegate.onFloatButtonClick();
+                }
             }
         });
 
-        //floatingActionButton.at
-
         return view;
+    }
+
+    private static final int PERMISSION_REQUEST_CODE = 1;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                Snackbar.make(getView(), R.string.permission_error, Snackbar.LENGTH_LONG).show();
+            } else {
+                addBookDelegate.onFloatButtonClick();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //onBookClick

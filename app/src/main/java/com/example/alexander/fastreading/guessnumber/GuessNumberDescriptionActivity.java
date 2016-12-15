@@ -18,7 +18,7 @@ public class GuessNumberDescriptionActivity extends AppCompatActivity {
         setContentView(R.layout.guess_number_description_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.help);
+        toolbar.setTitle(R.string.info);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 

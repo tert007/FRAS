@@ -13,6 +13,7 @@ import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldDescriptionFragment;
 import com.example.alexander.fastreading.visionfield.fragment.VisionFieldMainFragment;
+import com.example.alexander.fastreading.visionfield.fragment.VisionFieldPrepareFragment;
 
 public class VisionFieldActivity extends AppCompatActivity {
 
@@ -33,20 +34,6 @@ public class VisionFieldActivity extends AppCompatActivity {
         fragmentManager = getFragmentManager();
     }
 
-    public void startDescriptionFragment() {
-        fragmentManager.
-                beginTransaction().
-                replace(R.id.vision_field_fragment_container, new VisionFieldDescriptionFragment()).
-                commit();
-    }
-
-    public void startTrainingFragment() {
-        fragmentManager.
-                beginTransaction().
-                replace(R.id.vision_field_fragment_container, new VisionFieldMainFragment()).
-                commit();
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -54,7 +41,7 @@ public class VisionFieldActivity extends AppCompatActivity {
         if (SettingsManager.isVisionFieldShowHelp()) {
             startDescriptionFragment();
         } else {
-            startTrainingFragment();
+            startPrepareFragment();
         }
     }
 
@@ -62,9 +49,9 @@ public class VisionFieldActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.restart:
-                startTrainingFragment();
+                startPrepareFragment();
                 return true;
-            case R.id.help: {
+            case R.id.info: {
                 Intent intent = new Intent(this, VisionFieldDescriptionActivity.class);
                 startActivity(intent);
                 return true;
@@ -83,5 +70,26 @@ public class VisionFieldActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.vision_field_toolbar, menu);
         return true;
+    }
+
+    public void startDescriptionFragment() {
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.vision_field_fragment_container, new VisionFieldDescriptionFragment()).
+                commit();
+    }
+
+    public void startTrainingFragment() {
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.vision_field_fragment_container, new VisionFieldMainFragment()).
+                commit();
+    }
+
+    public void startPrepareFragment() {
+        fragmentManager.
+                beginTransaction().
+                replace(R.id.vision_field_fragment_container, new VisionFieldPrepareFragment()).
+                commit();
     }
 }

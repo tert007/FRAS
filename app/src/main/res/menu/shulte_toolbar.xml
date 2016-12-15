@@ -11,17 +11,16 @@
             app:showAsAction="ifRoom" />
 
         <item
-            android:icon="@drawable/help"
-            android:id="@+id/help"
-            android:title="@string/help"
+            android:icon="@drawable/settings"
+            android:id="@+id/settings"
+            android:title="@string/settings"
             android:orderInCategory="200"
             app:showAsAction="ifRoom" />
 
         <item
-            android:icon="@drawable/settings"
-            android:id="@+id/settings"
-            android:title="@string/settings"
+            android:icon="@drawable/help"
+            android:id="@+id/info"
+            android:title="@string/info"
             android:orderInCategory="300"
             app:showAsAction="ifRoom" />
-
 </menu>

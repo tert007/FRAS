@@ -27,7 +27,6 @@ public class FileHelper {
     public static final String FB2 = "fb2";
     public static final String FB2_ZIP = "fb2.zip";
 
-
     private static final List<String> supportedExtensions;
 
     static {
@@ -45,7 +44,7 @@ public class FileHelper {
             return Collections.emptyList();
         }
 
-        List<File> acceptedFile = new ArrayList<>(files.length);
+        List<File> acceptedFiles = new ArrayList<>(files.length);
 
         for (File file : files) {
             if (file.isHidden()){
@@ -53,16 +52,16 @@ public class FileHelper {
             }
 
             if (file.isDirectory()){
-                acceptedFile.add(file);
+                acceptedFiles.add(file);
             } else {
                 String fileExtension = getFileExtension(file);
                 if (supportedExtensions.contains(fileExtension)){
-                    acceptedFile.add(file);
+                    acceptedFiles.add(file);
                 }
             }
         }
 
-        return acceptedFile;
+        return acceptedFiles;
     }
 
     public static String getFileExtension(File file) {
@@ -296,22 +295,22 @@ public class FileHelper {
         return files;
     }
 
-    private static List<File> getFilesRecursive(File file, List<File> files) {
+    private static List<File> getFilesRecursive(File file, List<File> outFilesList) {
         if (file.isFile()){
-            files.add(file);
+            outFilesList.add(file);
 
-            return files;
+            return outFilesList;
         }
 
         File[] tempFiles =  file.listFiles();
         if (tempFiles == null)
-            return files;
+            return outFilesList;
 
         for(File file1 : tempFiles) {
-            getFilesRecursive(file1, files);
+            getFilesRecursive(file1, outFilesList);
         }
 
-        return files;
+        return outFilesList;
     }
 
 }

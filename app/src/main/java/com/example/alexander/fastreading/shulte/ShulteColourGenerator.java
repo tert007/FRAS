@@ -23,7 +23,7 @@ public class ShulteColourGenerator {
             case 3:
                 return Color.parseColor("#FFAB110E"); //RED
             default:
-                return Color.parseColor("#FFA17222"); //Pink
+                return Color.parseColor("#FFA000"); //orange
         }
     }
 }

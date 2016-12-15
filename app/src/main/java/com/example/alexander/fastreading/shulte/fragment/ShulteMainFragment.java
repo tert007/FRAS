@@ -13,8 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
+import android.widget.AdapterView;
 import android.widget.Chronometer;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -22,14 +21,11 @@ import android.widget.TextView;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.RecordsManager;
 import com.example.alexander.fastreading.SettingsManager;
-import com.example.alexander.fastreading.shulte.ShulteGridAdapter;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
+import com.example.alexander.fastreading.shulte.ShulteGridAdapter;
 import com.example.alexander.fastreading.shulte.ShulteNumberGenerator;
 import com.example.alexander.fastreading.shulte.TextViewOnTouchListener;
 
-/**
- * Created by Alexander on 27.07.2016.
- */
 public class ShulteMainFragment extends Fragment implements TextViewOnTouchListener {
 
     private static final String START_NEXT_ITEM_VALUE = "1";
@@ -72,6 +68,8 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
             recordView.setVisibility(View.GONE);
         }
 
+        final TextView eyesModeEnabled = (TextView) view.findViewById(R.id.shulte_main_eyes_mode_enabled_text_view);
+
         recordTextView = (TextView) recordView.findViewById(R.id.shulte_record);
 
         if(RecordsManager.getShulteRecord() == 0){
@@ -90,11 +88,11 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
         if (SettingsManager.isShulteEyeMode()) {
             nextItemTextView.setText(NOT_INITIALIZE_VALUE);
 
-            final Button eyesModeFinisButton = (Button) view.findViewById(R.id.shulte_eye_mode_button);
-            eyesModeFinisButton.setVisibility(View.VISIBLE);
-            eyesModeFinisButton.setOnClickListener(new View.OnClickListener() {
+            eyesModeEnabled.setVisibility(View.VISIBLE);
+
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setCancelable(false);
 
@@ -158,6 +156,8 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setTextColor(previousColour);
 
+                    textView.playSoundEffect(android.view.SoundEffectConstants.CLICK);
+
                     String nextItem = shulteNumberGenerator.getNextNumberItem(pickedItemText);
 
                     if (nextItem == null){
@@ -195,7 +195,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                         });
                         builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                getActivity().onBackPressed();
+                                getActivity().finish();
                             }
                         });
                         AlertDialog dialog = builder.create();
@@ -232,6 +232,8 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                     return true;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
+                    textView.playSoundEffect(android.view.SoundEffectConstants.CLICK);
+
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setTextColor(previousColour);
                     return false;

@@ -5,10 +5,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.speedreading.fragment.SpeedReadingDescriptionFragment;
 import com.example.alexander.fastreading.speedreading.fragment.SpeedReadingMainFragment;
 import com.example.alexander.fastreading.speedreading.fragment.SpeedReadingAnswersFragment;
 
@@ -43,16 +43,17 @@ public class SpeedReadingActivity extends AppCompatActivity implements SpeedRead
     public int index = 2;
     public int speed = 60_000 / wordsPerMinute[index];
 
-    public void setSpeed(boolean incr){
-        if(incr){
-            if(index < wordsPerMinute.length)
+    public void setSpeed(boolean increment){
+        if(increment){
+            if(index < wordsPerMinute.length) {
                 index++;
-            speed = 60_000 / wordsPerMinute[index];
-        }
-        else{
-            if(index > 0)
+                speed = 60_000 / wordsPerMinute[index];
+            }
+        } else {
+            if(index > 0) {
                 index--;
-            speed = 60_000 / wordsPerMinute[index];
+                speed = 60_000 / wordsPerMinute[index];
+            }
         }
     }
 
@@ -64,27 +65,23 @@ public class SpeedReadingActivity extends AppCompatActivity implements SpeedRead
         fragmentManager = getFragmentManager();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.speed_reading);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        startExercise();
+        if (SettingsManager.isSpeedReadingShowHelp()) {
+            startDescriptionFragment();
+        } else {
+            startTrainingFragment();
+        }
     }
 
     @Override
-    public void onLastWordResponse(String lastWord) {
-        SpeedReadingAnswersFragment answersFragment = new SpeedReadingAnswersFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("last_word", lastWord);
-
-        answersFragment.setArguments(bundle);
-
-        fragmentManager.beginTransaction().
-                replace(R.id.speed_reading_fragment_container, answersFragment).
-                commit();
+    public void onLastWordResponse(String trueAnswer) {
+        startAnswerFragment(trueAnswer);
     }
 
-    public void startExercise(){
+    public void startTrainingFragment(){
         SpeedReadingMainFragment mainFragment = new SpeedReadingMainFragment();
         mainFragment.lastWordDelegate = this;
 
@@ -93,4 +90,22 @@ public class SpeedReadingActivity extends AppCompatActivity implements SpeedRead
                 commit();
     }
 
+    public void startAnswerFragment(String trueAnswer){
+        SpeedReadingAnswersFragment answersFragment = new SpeedReadingAnswersFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("true_answer", trueAnswer);
+
+        answersFragment.setArguments(bundle);
+
+        fragmentManager.beginTransaction().
+                replace(R.id.speed_reading_fragment_container, answersFragment).
+                commit();
+    }
+
+    private void startDescriptionFragment() {
+        fragmentManager.beginTransaction().
+                replace(R.id.speed_reading_fragment_container, new SpeedReadingDescriptionFragment()).
+                commit();
+    }
 }

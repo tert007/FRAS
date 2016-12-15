@@ -1,5 +1,6 @@
 package com.example.alexander.fastreading.reader.library;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import com.example.alexander.fastreading.reader.library.fragment.library.ReaderL
 import com.example.alexander.fastreading.reader.library.fragment.library.ReaderLibraryFragment;
 import com.example.alexander.fastreading.reader.library.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.library.fragment.fileexplorer.ReaderFileExplorerFileExplorerFragment;
+import com.example.alexander.fastreading.reader.reader.ReaderActivity;
 
 
 public class LibraryActivity extends AppCompatActivity implements ReaderLibraryFloatButtonOnClickResponse, ReaderBookDescriptionResponse {

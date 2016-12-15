@@ -23,24 +23,6 @@ public class ShulteNumberGenerator {
         }
     }
 
-    /*
-    private List<String> randomizeList(List<String> randomList){
-
-        for (int i = 0; i < randomList.size(); i++){
-            int randomNumber = random.nextInt(randomList.size());
-            if (i != randomNumber){
-                String firstBuffer = randomList.get(randomNumber);
-                String secondBuffer = randomList.get(i);
-
-                randomList.set(i, firstBuffer);
-                randomList.set(randomNumber, secondBuffer);
-            }
-        }
-
-        return randomList;
-    }
-    */
-
     public List<String> getRandomNumbers() {
         for (int i = 0; i < itemsCount; i++){
             int randomNumber = random.nextInt(itemsCount);

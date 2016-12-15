@@ -29,7 +29,10 @@ public class SpeedReadingMainFragment extends Fragment {
 
     public SpeedReadingLastWordResponse lastWordDelegate;
 
+    private static final Random random = new Random();
+
     private static final int COUNT_TRY = 15;
+
     private static final int TEXT_VIEWS_COUNT = 8;
     private static final int DEFAULT_RANDOM_OFFSET = 8;
     private static final int DEFAULT_RANDOM_COUNT = 12;
@@ -48,7 +51,9 @@ public class SpeedReadingMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.speed_reading_main_fragment, null);
+
         textViews = new TextView[TEXT_VIEWS_COUNT];
+
         textViews[0] = (TextView) view.findViewById(R.id.speed_reading_word_view_1);
         textViews[1] = (TextView) view.findViewById(R.id.speed_reading_word_view_2);
         textViews[2] = (TextView) view.findViewById(R.id.speed_reading_word_view_3);
@@ -57,15 +62,17 @@ public class SpeedReadingMainFragment extends Fragment {
         textViews[5] = (TextView) view.findViewById(R.id.speed_reading_word_view_6);
         textViews[6] = (TextView) view.findViewById(R.id.speed_reading_word_view_7);
         textViews[7] = (TextView) view.findViewById(R.id.speed_reading_word_view_8);
+
         ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
-        progressBar.setMax(COUNT_TRY * 10);
+        progressBar.setMax(COUNT_TRY);
+
         TextView speedTextView = (TextView) view.findViewById(R.id.speed_reading_main_speed_text_view);
         wordsBase = getResources().getStringArray(R.array.speed_reading_words);
         wordCount = getRandomNumber();
         mainActivity = (SpeedReadingActivity) getActivity();
-        speedTextView.setText("Скорость: " + mainActivity.wordsPerMinute[mainActivity.index]);
+        speedTextView.setText(String.valueOf(mainActivity.wordsPerMinute[mainActivity.index]));
 
-        progressBar.setProgress(mainActivity.countAnswer * 10);
+        progressBar.setProgress(mainActivity.countAnswer);
 
         if(COUNT_TRY == mainActivity.countAnswer){
             handler.postDelayed(showResult, 1000);
@@ -77,14 +84,12 @@ public class SpeedReadingMainFragment extends Fragment {
         return view;
     }
 
-    private int getRandomNumber(){
-        Random random = new Random();
+    private int getRandomNumber() {
         int number = random.nextInt(DEFAULT_RANDOM_COUNT);
         return number + DEFAULT_RANDOM_OFFSET;
     }
 
     private int getRandomArrayKey(String[] array){
-        Random random = new Random();
         return random.nextInt(array.length);
     }
 
@@ -92,7 +97,6 @@ public class SpeedReadingMainFragment extends Fragment {
     private Runnable wordDelayed = new Runnable() {
         @Override
         public void run() {
-
             if(wordIndex < wordCount) {
                 int randomKey = getRandomArrayKey(wordsBase);
 
@@ -104,6 +108,7 @@ public class SpeedReadingMainFragment extends Fragment {
                 randomWord = wordsBase[randomKey];
                 textViews[textViewIndex].setText(randomWord);
                 textViewIndex++;
+
                 if (textViewIndex == TEXT_VIEWS_COUNT) {
                     textViewIndex = 0;
                 }

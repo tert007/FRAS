@@ -8,8 +8,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.RecordsManager;
-import com.example.alexander.fastreading.SettingsManager;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
 import com.example.alexander.fastreading.speedreading.SpeedReadingActivity;
@@ -22,10 +20,10 @@ public class TrainingMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.training_menu_activity);
 
-        Typeface typeface = Typeface.createFromAsset(this.getAssets(), "ElMessiri-Regular.ttf");
+        //Typeface typeface = Typeface.createFromAsset(this.getAssets(), "ElMessiri-Regular.ttf");
 
         final TextView shulteTextView = (TextView) findViewById(R.id.training_menu_start_shulte);
-        shulteTextView.setTypeface(typeface);
+        //shulteTextView.setTypeface(typeface);
         shulteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,7 +32,7 @@ public class TrainingMenuActivity extends AppCompatActivity {
         });
 
         final TextView guessNumberTextView = (TextView) findViewById(R.id.training_menu_start_guess_number);
-        guessNumberTextView.setTypeface(typeface);
+        //guessNumberTextView.setTypeface(typeface);
         guessNumberTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,7 +41,7 @@ public class TrainingMenuActivity extends AppCompatActivity {
         });
 
         final TextView visionFieldTextView = (TextView) findViewById(R.id.training_menu_start_vision_field);
-        visionFieldTextView.setTypeface(typeface);
+        //visionFieldTextView.setTypeface(typeface);
         visionFieldTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,14 +50,12 @@ public class TrainingMenuActivity extends AppCompatActivity {
         });
 
         final TextView speedReadingTextView = (TextView) findViewById(R.id.training_menu_start_speed_reading);
-        speedReadingTextView.setTypeface(typeface);
+        //speedReadingTextView.setTypeface(typeface);
         speedReadingTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(TrainingMenuActivity.this, SpeedReadingActivity.class));
             }
         });
-
-
     }
 }

@@ -11,6 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,9 +29,14 @@ import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.dao.BookController;
+import com.example.alexander.fastreading.reader.entity.BookChapter;
 import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
+import com.example.alexander.fastreading.reader.entity.EpubBookChapter;
 import com.example.alexander.fastreading.reader.reader.settings.ReaderSettingsActivity;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Alexander on 23.09.2016.
@@ -251,7 +259,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         thirdPartOfPageWidth = pageWidth / 3;
 
         PageSplitter pageSplitter = new PageSplitter(textView.getPaint(), textView.getWidth(), textView.getHeight());
-        separatedBook = pageSplitter.getSeparatedBook(bookContent);
+        separatedBook = pageSplitter.getSeparatedBook(this.bookContent);
 
         setCurrentPage();
 
@@ -264,8 +272,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         currentPageResultTextView.setVisibility(View.VISIBLE);
         currentPageResultTextView.setText(getCurrentPageByString());
 
-        speedTextView.setVisibility(View.GONE);
-        speedResultTextView.setVisibility(View.GONE);
+        speedTextView.setVisibility(View.INVISIBLE);
+        speedResultTextView.setVisibility(View.INVISIBLE);
 
         textView.setOnTouchListener(readingListenerOnTouchListener);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
@@ -455,11 +463,13 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
                 if (readingMode == ReadingMode.FAST_READING_MODE) {
                     if ( ! itWasFastReading) {
+                        flashModeProgressBar.setProgress(0);
+
                         speedTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setText(String.valueOf(speed[speedIndex]));
 
-                        flashModeProgressBar.setVisibility(View.GONE);
+                        flashModeProgressBar.setVisibility(View.INVISIBLE);
 
                         textView.setOnTouchListener(fastReadingOnTouchListener);
                         seekBar.setOnSeekBarChangeListener(fastReadingSeekBarChangeListener);
@@ -468,6 +478,8 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     }
                 } else if (readingMode == ReadingMode.FLASH_READING_MODE) {
                     if ( ! itWasFlashReading) {
+                        flashModeProgressBar.setProgress(0);
+
                         speedTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setText(String.valueOf(speed[speedIndex]));
@@ -480,9 +492,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         seekBar.setOnSeekBarChangeListener(flashReadingSeekBarChangeListener);
                     }
                 } else if (readingMode == ReadingMode.READING_MODE) {
-                    speedTextView.setVisibility(View.GONE);
-                    speedResultTextView.setVisibility(View.GONE);
-                    flashModeProgressBar.setVisibility(View.GONE);
+                    flashModeProgressBar.setProgress(0);
+
+                    speedTextView.setVisibility(View.INVISIBLE);
+                    speedResultTextView.setVisibility(View.INVISIBLE);
+                    flashModeProgressBar.setVisibility(View.INVISIBLE);
 
                     textView.setText(separatedBook.getPage(currentPageIndex));
 
@@ -605,7 +619,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
                 if (x < thirdPartOfPageWidth) {
                     itsSeekPause = true;
-                    navigationLayout.setVisibility(View.GONE);
+                    navigationLayout.setVisibility(View.INVISIBLE);
 
                     if (currentPageIndex > 0){
                         currentPageIndex--;
@@ -624,12 +638,12 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         navigationLayout.setVisibility(View.VISIBLE);
 
                     } else {
-                        navigationLayout.setVisibility(View.GONE);
+                        navigationLayout.setVisibility(View.INVISIBLE);
 
                     }
                 } else {
                     itsSeekPause = true;
-                    navigationLayout.setVisibility(View.GONE);
+                    navigationLayout.setVisibility(View.INVISIBLE);
 
                     if (currentPageIndex < separatedBook.size() - 1){
                         currentPageIndex++;
@@ -658,7 +672,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     fastReadingStarted = ! fastReadingStarted;
 
                     if (fastReadingStarted) {
-                        navigationLayout.setVisibility(View.GONE);
+                        navigationLayout.setVisibility(View.INVISIBLE);
 
                         if (currentPageIndex !=  separatedBook.size() - 1) {
                             textView.post(fastReadingThread);
@@ -705,7 +719,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     fastReadingStarted = ! fastReadingStarted;
 
                     if (fastReadingStarted) {
-                        navigationLayout.setVisibility(View.GONE);
+                        navigationLayout.setVisibility(View.INVISIBLE);
 
                         if (currentPageIndex != separatedBook.size() - 1) {
                             textView.post(flashReadingThread);
@@ -777,7 +791,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
             textView.removeCallbacks(flashReadingThread);
+
             flashModeCurrentTime = 0;
+            flashModeProgressBar.setProgress(0);
 
             textView.setText(separatedBook.getPage(currentPageIndex));
             currentPageResultTextView.setText(getCurrentPageByString());

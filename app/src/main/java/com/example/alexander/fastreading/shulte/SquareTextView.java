@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.example.alexander.fastreading.R;
-
 /**
  * Created by Alexander on 29.07.2016.
  */
