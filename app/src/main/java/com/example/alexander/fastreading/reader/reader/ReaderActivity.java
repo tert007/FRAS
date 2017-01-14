@@ -7,14 +7,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -27,21 +25,19 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
 import com.example.alexander.fastreading.R;
+import com.example.alexander.fastreading.app.SettingsManager;
 import com.example.alexander.fastreading.reader.dao.BookController;
-import com.example.alexander.fastreading.reader.entity.BookChapter;
 import com.example.alexander.fastreading.reader.entity.BookContent;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.entity.EpubBookChapter;
 import com.example.alexander.fastreading.reader.reader.settings.ReaderSettingsActivity;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Alexander on 23.09.2016.
  */
-public class ReaderActivity extends AppCompatActivity implements FileReaderAsyncTaskResponse {
+public class ReaderActivity extends AppCompatActivity implements FileReaderAsyncTaskResponse, BillingProcessor.IBillingHandler {
 
     private BookController bookController;
 
@@ -83,8 +79,101 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
     private ProgressBar flashModeProgressBar;
 
     private int speedIndex;
-    private static final int[] speed = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000};
 
+    private static final int[] premiumSpeedArray = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500, 1550, 1600, 1650, 1700, 1750, 1800, 1850, 1900, 1950, 2000};
+    private static final int[] speedArray = {100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750};
+
+    private static int[] currentSpeedArray;
+
+    BillingProcessor billingProcessor;
+
+    private boolean isPremiumUser;
+
+    private static final String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArncdZCT0YWSgOsMQxtFnJKkEwd4b8qE68HT1SHr+2GTwqluicDTBA1aHliTlwWBI9WROLAFK9xYeuxB2IYUWU73XBU9bMEGBzlEdOnCl9h4DT/4Qw0oxu5UILSTX6YShCSSohgWA1Q91/Y9k22UPFbgdjULJtGmGMhXZC9Tho72ctyKM0j1qjHkuu4OoznVy4aqxBK/bfytt5+nZI3lIft3U8FZ5nVsei4MoW7bZmGtb5vr0ZbEPfWHCi6MtH0HopSf7f9NWSWD3RyvfTpmdbh4DIo+JghHt5L08HmscZCNaGvBQzSx+uGqLZdgYYYQGhRSk5NsvrOMbqpo17lJmxwIDAQAB";
+    private static final String PREMIUM_USER_SKU = "com.speedreading.alexander.speedreading.premium";
+
+    View parentView;
+
+    public void purchasePremium() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setView(R.layout.premim_dialog);
+
+        builder.setPositiveButton(R.string.buy, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                dialogInterface.dismiss();
+
+                boolean isAvailable = BillingProcessor.isIabServiceAvailable(ReaderActivity.this);
+                if (isAvailable) {
+                    billingProcessor.purchase(ReaderActivity.this, PREMIUM_USER_SKU);
+                } else {
+                    Snackbar.make(parentView, R.string.billing_system_is_not_available, Snackbar.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        if (productId.equals(PREMIUM_USER_SKU)) {
+
+            isPremiumUser = true;
+            SettingsManager.setPremiumUser(true);
+            currentSpeedArray = premiumSpeedArray;
+        }
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        if (billingProcessor.listOwnedProducts().contains(PREMIUM_USER_SKU)) {
+            if ( ! isPremiumUser) {
+                isPremiumUser = true;
+                SettingsManager.setPremiumUser(true);
+                currentSpeedArray = premiumSpeedArray;
+            }
+        } else {
+            isPremiumUser = false;
+            SettingsManager.setPremiumUser(false);
+            currentSpeedArray = speedArray;
+        }
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        Snackbar.make(parentView, R.string.billing_system_error, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onBillingInitialized() {
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if ( ! billingProcessor.handleActivityResult(requestCode, resultCode, data))
+            super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (billingProcessor != null)
+            billingProcessor.release();
+
+        super.onDestroy();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +185,18 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         progressDialog.show();
 
         setContentView(R.layout.reader_activity);
+
+        isPremiumUser = SettingsManager.isPremiumUser();
+
+        if (isPremiumUser) {
+            currentSpeedArray = premiumSpeedArray;
+        } else {
+            currentSpeedArray = speedArray;
+        }
+
+        billingProcessor = new BillingProcessor(this, base64EncodedPublicKey, this);
+
+        parentView = findViewById(android.R.id.content);
 
         bookController = new BookController(this);
 
@@ -155,6 +256,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         textView.setText(separatedBook.getPage(currentPageIndex));
 
+                        if (readingMode == ReadingMode.FLASH_READING_MODE) {
+                            flashModeCurrentTime = 0;
+                            flashModeProgressBar.setProgress(0);
+                        }
+
                         if (readingMode == ReadingMode.FAST_READING_MODE) {
                             wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
                         }
@@ -200,6 +306,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         seekBar.setProgress(currentPageIndex);
                         currentChapterTitleTextView.setText(separatedBook.getTitle(currentPageIndex));
                         textView.setText(separatedBook.getPage(currentPageIndex));
+
+                        if (readingMode == ReadingMode.FLASH_READING_MODE) {
+                            flashModeCurrentTime = 0;
+                            flashModeProgressBar.setProgress(0);
+                        }
 
                         if (readingMode == ReadingMode.FAST_READING_MODE) {
                             wordSelector = new WordSelector(separatedBook.getPage(currentPageIndex));
@@ -264,7 +375,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         setCurrentPage();
 
         speedIndex = preferences.getInt("current_speed_index", 0);
-        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+        if (currentSpeedArray.length < speedIndex) {
+            speedIndex = currentSpeedArray.length - 1;
+        }
+
+        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
 
         textView.setText(separatedBook.getPage((currentPageIndex)));
 
@@ -280,7 +395,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
 
         progressDialog.dismiss();
 
-        showFastReadingModeDialog();
+        if (SettingsManager.isReaderShowHelp()) {
+            showGuideDialog();
+        } else {
+            showFastReadingModeDialog();
+        }
     }
 
     @Override
@@ -424,6 +543,33 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
         bookController.updateBookDescription(bookDescription);
     }
 
+    private void showGuideDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        View guideView = getLayoutInflater().inflate(R.layout.reader_guide_dialog, null);
+        final AppCompatCheckBox checkBox = (AppCompatCheckBox) guideView.findViewById(R.id.reader_guide_dialog_dont_show_again_check_box);
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingsManager.setReaderShowHelp( ! checkBox.isChecked());
+            }
+        });
+
+        builder.setView(guideView);
+
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showFastReadingModeDialog();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void showFastReadingModeDialog() {
         final boolean itWasFastReading = (readingMode == ReadingMode.FAST_READING_MODE);
         final boolean itWasFlashReading = (readingMode == ReadingMode.FLASH_READING_MODE);
@@ -464,10 +610,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 if (readingMode == ReadingMode.FAST_READING_MODE) {
                     if ( ! itWasFastReading) {
                         flashModeProgressBar.setProgress(0);
+                        flashModeCurrentTime = 0;
 
                         speedTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setVisibility(View.VISIBLE);
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
 
                         flashModeProgressBar.setVisibility(View.INVISIBLE);
 
@@ -479,10 +626,11 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 } else if (readingMode == ReadingMode.FLASH_READING_MODE) {
                     if ( ! itWasFlashReading) {
                         flashModeProgressBar.setProgress(0);
+                        flashModeCurrentTime = 0;
 
                         speedTextView.setVisibility(View.VISIBLE);
                         speedResultTextView.setVisibility(View.VISIBLE);
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
 
                         textView.setText(separatedBook.getPage(currentPageIndex));
 
@@ -493,6 +641,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     }
                 } else if (readingMode == ReadingMode.READING_MODE) {
                     flashModeProgressBar.setProgress(0);
+                    flashModeCurrentTime = 0;
 
                     speedTextView.setVisibility(View.INVISIBLE);
                     speedResultTextView.setVisibility(View.INVISIBLE);
@@ -521,9 +670,9 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 if ((worldSelectorPage = wordSelector.getNextSelectedWord()) != null){
                     textView.setText(worldSelectorPage.getPage());
 
-                    double delay = 60_000 / speed[speedIndex];
+                    double delay = 60_000 / currentSpeedArray[speedIndex];
                     //Log.d("LENGTH", String.valueOf(worldSelectorPage.getSelectedWordLength()));
-                    //double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (speed[speedIndex] * wordLength / 60);
+                    //double delay = worldSelectorPage.getSelectedWordLength() * 1000 / (currentSpeedArray[speedIndex] * wordLength / 60);
 
                     textView.postDelayed(this, (int) delay);
                 } else {
@@ -570,7 +719,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     int remainder = oldDelay - flashModeCurrentTime;
 
                     float ratio = (float) remainder / (float) oldDelay;
-                    int newRemainder = (int) (getFlashModeReadingDelay(currentPage, speed[speedIndex]) * ratio);
+                    int newRemainder = (int) (getFlashModeReadingDelay(currentPage, currentSpeedArray[speedIndex]) * ratio);
 
                     flashModeCurrentPageDelay = oldDelay - remainder + newRemainder;
                     flashModeProgressBar.setMax(flashModeCurrentPageDelay);
@@ -584,7 +733,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                     textView.setTextColor(Color.BLACK);
                     textView.setText(currentPage);
 
-                    flashModeCurrentPageDelay = getFlashModeReadingDelay(currentPage, speed[speedIndex]);
+                    flashModeCurrentPageDelay = getFlashModeReadingDelay(currentPage, currentSpeedArray[speedIndex]);
                     flashModeProgressBar.setMax(flashModeCurrentPageDelay);
                 } else if (flashModeCurrentTime > flashModeCurrentPageDelay - flashModeCurrentPageDelay / 10) {
                     textView.setTextColor(Color.GRAY);
@@ -666,7 +815,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 if (x < thirdPartOfPageWidth) {
                     if (speedIndex > 0){
                         speedIndex--;
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
                     }
                 } else if (thirdPartOfPageWidth <= x && x <= pageWidth - thirdPartOfPageWidth){
                     fastReadingStarted = ! fastReadingStarted;
@@ -690,9 +839,14 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         navigationLayout.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    if (speedIndex < speed.length - 1){
+                    if (speedIndex < currentSpeedArray.length - 1){
                         speedIndex++;
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
+                    } else {
+                        if (! isPremiumUser) {
+                            fastReadingStarted = false;
+                            purchasePremium();
+                        }
                     }
                 }
             }
@@ -710,7 +864,7 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                 if (x < thirdPartOfPageWidth) {
                     if (speedIndex > 0){
                         speedIndex--;
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
 
                         flashChanged = true;
                     }
@@ -735,14 +889,17 @@ public class ReaderActivity extends AppCompatActivity implements FileReaderAsync
                         currentPageSeekTextView.setText(getCurrentPageByString());
                         navigationLayout.setVisibility(View.VISIBLE);
                     }
-
-
                 } else {
-                    if (speedIndex < speed.length - 1){
+                    if (speedIndex < currentSpeedArray.length - 1){
                         speedIndex++;
-                        speedResultTextView.setText(String.valueOf(speed[speedIndex]));
+                        speedResultTextView.setText(String.valueOf(currentSpeedArray[speedIndex]));
 
                         flashChanged = true;
+                    } else {
+                        if (! isPremiumUser) {
+                            fastReadingStarted = false;
+                            purchasePremium();
+                        }
                     }
                 }
             }

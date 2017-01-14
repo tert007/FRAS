@@ -1,5 +1,6 @@
 package com.example.alexander.fastreading.shulte;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,16 +9,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
+import com.example.alexander.fastreading.Training;
 import com.example.alexander.fastreading.shulte.fragment.ShulteDescriptionFragment;
-import com.example.alexander.fastreading.shulte.fragment.ShulteMainFragment;
+import com.example.alexander.fastreading.shulte.fragment.ShulteTrainingFragment;
 import com.example.alexander.fastreading.shulte.fragment.ShultePrepareFragment;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class ShulteActivity extends AppCompatActivity {
 
-    //private AdView adView;
+    private AdView adView;
+    private boolean isPremiumUser;
+
+    private enum FragmentState { Prepare, Training, Description };
+    private FragmentState currentState;
 
     private FragmentManager fragmentManager;
 
@@ -31,28 +41,63 @@ public class ShulteActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.shulte_table);
         setSupportActionBar(toolbar);
 
-        //MobileAds.initialize(this, "ca-app-pub-1214906094509332~8123538200");
+        adView = (AdView) findViewById(R.id.adView);
 
-        //adView = (AdView) findViewById(R.id.adView);
-        /*
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                adView.setVisibility(View.VISIBLE);
-            }
+        isPremiumUser = SettingsManager.isPremiumUser();
+        if (isPremiumUser) {
+            adView.setVisibility(View.GONE);
+        } else {
+            adView.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    adView.setVisibility(View.VISIBLE);
+                }
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
-                adView.setVisibility(View.GONE);
-            }
-        });
+                @Override
+                public void onAdFailedToLoad(int errorCode) {
+                    super.onAdFailedToLoad(errorCode);
+                    adView.setVisibility(View.GONE);
+                }
+            });
 
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
-*/
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        }
+
         fragmentManager = getFragmentManager();
+
+        if (SettingsManager.isShulteShowHelp()) {
+            startDescriptionFragment();
+        } else {
+            startPrepareFragment();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (adView != null) {
+            adView.resume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null) {
+            adView.pause();
+        }
+        super.onPause();
     }
 
     @Override
@@ -76,58 +121,50 @@ public class ShulteActivity extends AppCompatActivity {
         }
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-/*
-        if (adView != null) {
-            adView.resume();
-        }
-*/
-        if (SettingsManager.isShulteShowHelp()) {
-            startDescriptionFragment();
-        } else {
-            startPrepareFragment();
-        }
-    }
-
-    @Override
-    protected void onPause() {/*
-        if (adView != null) {
-            adView.pause();
-        }*/
-        super.onPause();
-    }
-
-
-    @Override
-    public void onDestroy() {/*
-        if (adView != null) {
-            adView.destroy();
-        }*/
-        super.onDestroy();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.shulte_toolbar, menu);
         return true;
     }
 
+    private Fragment currentFragment;
+
+    @Override
+    public void onBackPressed() {
+        switch (currentState) {
+            case Prepare:
+                super.onBackPressed();
+                break;
+            case Description:
+                super.onBackPressed();
+                break;
+            case Training:
+                ((Training) currentFragment).trainingOnBackPressed();
+                break;
+        }
+    }
+
     public void startDescriptionFragment() {
+        currentState = FragmentState.Description;
+
         fragmentManager.beginTransaction().
                 replace(R.id.shulte_fragment_container, new ShulteDescriptionFragment()).
                 commit();
     }
 
     public void startTrainingFragment() {
+        currentState = FragmentState.Training;
+
+        currentFragment = new ShulteTrainingFragment();
+
         fragmentManager.beginTransaction().
-                replace(R.id.shulte_fragment_container, new ShulteMainFragment()).
+                replace(R.id.shulte_fragment_container, currentFragment).
                 commit();
     }
 
     public void startPrepareFragment() {
+        currentState = FragmentState.Prepare;
+
         fragmentManager.beginTransaction().
                 replace(R.id.shulte_fragment_container, new ShultePrepareFragment()).
                 commit();

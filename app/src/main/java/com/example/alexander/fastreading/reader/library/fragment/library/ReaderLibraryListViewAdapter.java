@@ -1,30 +1,25 @@
 package com.example.alexander.fastreading.reader.library.fragment.library;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
+import com.example.alexander.fastreading.reader.library.ReaderBookClickResponse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Alexander on 04.09.2016.
  */
 public class ReaderLibraryListViewAdapter extends ArrayAdapter<BookDescription> {
 
-    public ReaderBookDescriptionResponse bookClickDelegate;
+    public ReaderBookClickResponse bookClickDelegate;
     public ReaderLibraryRemoveBookOnClickResponse removeBookDelegate;
 
     public ReaderLibraryListViewAdapter(Context context, int textViewResourceId) {

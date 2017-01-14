@@ -2,16 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.alexander.fastreading">
 
+    <uses-permission android:name="com.android.vending.BILLING" />
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".app.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/application_title"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- This meta-data tag is required to use Google Play services. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Include the AdActivity configChanges and theme. -->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".MainMenu"
             android:screenOrientation="portrait">
@@ -21,7 +37,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".trainingmenu.TrainingMenuActivity"
             android:screenOrientation="portrait" />
@@ -39,15 +54,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".reader.reader.ReaderActivity" />
         </activity>
-
         <activity
             android:name=".visionfield.VisionFieldActivity"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".shulte.ShulteActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".shulte.ShulteSettingsActivity"
             android:parentActivityName=".shulte.ShulteActivity"
@@ -56,7 +68,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
         </activity>
-
         <activity
             android:name=".shulte.ShulteDescriptionActivity"
             android:parentActivityName=".shulte.ShulteActivity"
@@ -65,11 +76,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
         </activity>
-
         <activity
             android:name=".guessnumber.GuessNumberActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".guessnumber.GuessNumberDescriptionActivity"
             android:parentActivityName=".guessnumber.GuessNumberActivity"
@@ -78,7 +87,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
         </activity>
-
         <activity
             android:name=".visionfield.VisionFieldDescriptionActivity"
             android:parentActivityName=".shulte.ShulteActivity"
@@ -87,12 +95,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
         </activity>
-
         <activity
             android:name=".visionfield.VisionFieldSettingsActivity"
             android:parentActivityName=".shulte.ShulteActivity"
             android:screenOrientation="portrait">
-
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.alexander.fastreading.shulte.ShulteActivity" />
@@ -101,7 +107,28 @@
         <activity
             android:name=".speedreading.SpeedReadingActivity"
             android:screenOrientation="portrait" />
-    </application>
 
+        <activity
+            android:name=".speedreading.SpeedReadingDescriptionActivity"
+            android:parentActivityName=".speedreading.SpeedReadingActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.speedreading.SpeedReadingActivity" />
+        </activity>
+
+        <activity
+            android:name=".motivator.MotivatorActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".MainMenuDescriptionActivity"
+            android:parentActivityName=".MainMenu"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.alexander.fastreading.MainMenu" />
+        </activity>
+    </application>
 
 </manifest>

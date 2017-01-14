@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
 
 /**
  * Created by Alexander on 29.10.2016.

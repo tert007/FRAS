@@ -1,5 +1,7 @@
 package com.example.alexander.fastreading.guessnumber.fragment;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -23,28 +25,29 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.RecordsManager;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.RecordsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
+import com.example.alexander.fastreading.Training;
 import com.example.alexander.fastreading.guessnumber.GuessNumberActivity;
 
 import java.util.Random;
 
-public class GuessNumberMainFragment extends Fragment implements View.OnClickListener {
+public class GuessNumberTrainingFragment extends Fragment implements View.OnClickListener, Training {
 
     private static final String NOT_INITIALIZE_VALUE = "-";
 
     private static final int COUNT_TRY = 15;
     private static final int COUNT_NUMBER = 10;
 
-    private static final int ANSWER_TO_COMPLEXITY_DOWN = -2;
-    private static final int ANSWER_TO_COMPLEXITY_UP = 3;
+    private static final int ANSWERS_TO_COMPLEXITY_DOWN = -2;
+    private static final int ANSWERS_TO_COMPLEXITY_UP = 3;
 
     private int countTrueAnswer = 0;
 
     private static final int MINIMUM_COMPLEXITY = 4;
     private static final int MAXIMUM_COMPLEXITY = 8;
 
-    private static final int SHOW_NUMBER_PERIOD = 1000;
+    private static final int SHOW_NUMBER_DELAY = 1000;
 
     private int currentResult;
     private int currentComplexity;
@@ -111,6 +114,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
         spannableString.setSpan(new ImageSpan(getActivity(), R.drawable.guess_number_edit_button_background), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         editButton.setText(spannableString);
         editButton.setOnClickListener(this);
+        editButton.setEnabled(false);
 
         currentResultTextView = (TextView) view.findViewById(R.id.guess_number_current_result);
         currentResultTextView.setText(String.valueOf(currentResult));
@@ -147,7 +151,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             button.setOnClickListener(this);
         }
 
-        handler.postDelayed(preShowNumber, SHOW_DELAY);
+        handler.postDelayed(preShowNumber, SHOW_RESULT_DELAY);
         cards = createCard(currentComplexity);
 
         return view;
@@ -205,7 +209,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
             progressBar.setProgress(currentCountTry);
 
-            setButtonEnabled(false);
+            setButtonsEnabled(false);
 
             boolean itsTrueAnswer = true;
             for (int i = 0; i < currentComplexity; i++) {
@@ -250,9 +254,10 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
             currentResultTextView.setText(String.valueOf(currentResult));
 
             if (currentCountTry == COUNT_TRY) {
-                handler.postDelayed(showResult, SHOW_DELAY);
+                isCompleted = true;
+                handler.postDelayed(showResult, SHOW_RESULT_DELAY);
             } else {
-                handler.postDelayed(preShowNumber, SHOW_NUMBER_PERIOD);
+                handler.postDelayed(preShowNumber, SHOW_NUMBER_DELAY);
             }
 
         } else {
@@ -260,10 +265,134 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private static final int SHOW_DELAY = 1000;
+    private boolean isPaused;
+    private boolean isCompleted;
+
+    private Dialog dialog;
+
+    @Override
+    public void onPause() {
+        isPaused = true;
+
+        //По идее не нужно
+        handler.removeCallbacks(preShowNumber);
+        handler.removeCallbacks(hideHintShowNumber);
+        handler.removeCallbacks(showNumber);
+        handler.removeCallbacks(postShowNumber);
+        handler.removeCallbacks(showResult);
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (isPaused) {
+            if (dialog == null) {
+                showOnResumeDialog();
+            }
+        }
+
+    }
+
+    private void showOnResumeDialog() {
+        setButtonsEnabled(false);
+        currentCardIndex = 0;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+
+        builder.setMessage(R.string.training_is_paused);
+
+        builder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                isPaused = false;
+                dialog = null;
+
+                if (isCompleted) {
+                    handler.postDelayed(showResult, SHOW_RESULT_DELAY);
+                } else {
+                    handler.postDelayed(preShowNumber, SHOW_NUMBER_DELAY);
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void trainingOnBackPressed() {
+        if (dialog != null) {
+            return;
+        }
+
+        isPaused = true;
+
+        setButtonsEnabled(false);
+        currentCardIndex = 0;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+
+        builder.setMessage(R.string.exit_message);
+
+        builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                isPaused = false;
+                dialog = null;
+
+                if (isCompleted) {
+                    handler.postDelayed(showResult, SHOW_RESULT_DELAY);
+                } else {
+                    handler.postDelayed(preShowNumber, SHOW_NUMBER_DELAY);
+                }
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    private static final int SHOW_RESULT_DELAY = 1000;
     private Runnable showResult = new Runnable() {
         @Override
         public void run() {
+            if (isPaused) {
+                return;
+            }
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setCancelable(false);
 
@@ -288,32 +417,36 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
 
             builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    ((GuessNumberActivity) getActivity()).startTrainingFragment();
+                    ((GuessNumberActivity) getActivity()).startPrepareFragment();
                 }
             });
             builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    getActivity().onBackPressed();
+                    getActivity().finish();
                 }
             });
-            AlertDialog dialog = builder.create();
+            dialog = builder.create();
             dialog.show();
         }
     };
 
     private static final int SHOW_HINT_DELAY = 200;
-    private static final int SHOW_TIME = 500;
+    private static final int POST_SHOW_DELAY = 500;
 
     private Handler handler = new Handler();
 
     private Runnable preShowNumber = new Runnable() {
         @Override
         public void run() {
+            if (isPaused) {
+                return;
+            }
+
             points = 0;
 
-            setButtonEnabled(false);
+            setButtonsEnabled(false);
 
-            if (countTrueAnswer == ANSWER_TO_COMPLEXITY_DOWN) {
+            if (countTrueAnswer == ANSWERS_TO_COMPLEXITY_DOWN) {
                 if (currentComplexity > MINIMUM_COMPLEXITY) {
                     currentComplexity--;
 
@@ -324,7 +457,7 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
                 countTrueAnswer = 0;
             }
 
-            if (countTrueAnswer == ANSWER_TO_COMPLEXITY_UP) {
+            if (countTrueAnswer == ANSWERS_TO_COMPLEXITY_UP) {
                 if (currentComplexity < MAXIMUM_COMPLEXITY) {
                     currentComplexity++;
 
@@ -348,6 +481,10 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
     private Runnable hideHintShowNumber = new Runnable() {
         @Override
         public void run() {
+            if (isPaused) {
+                return;
+            }
+
             for (TextView card : cards) {
                 card.setTextColor(Color.BLACK);
             }
@@ -359,6 +496,9 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
     private Runnable showNumber = new Runnable() {
         @Override
         public void run() {
+            if (isPaused) {
+                return;
+            }
 
             trueAnswer = new int[currentComplexity];
             userAnswer = new int[currentComplexity];
@@ -371,18 +511,22 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
                 cards[i].setTextColor(Color.BLACK);
             }
 
-            handler.postDelayed(postShowNumber, SHOW_TIME);
+            handler.postDelayed(postShowNumber, POST_SHOW_DELAY);
         }
     };
 
     private Runnable postShowNumber = new Runnable() {
         @Override
         public void run() {
+            if (isPaused) {
+                return;
+            }
+
             for (TextView card : cards) {
                 card.setText("_");
             }
 
-            setButtonEnabled(true);
+            setButtonsEnabled(true);
         }
     };
 
@@ -413,18 +557,11 @@ public class GuessNumberMainFragment extends Fragment implements View.OnClickLis
         return cards;
     }
 
-    private void setButtonEnabled(boolean enabled) {
+    private void setButtonsEnabled(boolean enabled) {
         for (int i = 0; i < COUNT_NUMBER; i++) {
             buttons[i].setEnabled(enabled);
         }
 
         editButton.setEnabled(enabled);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        //handler.removeCallbacks();
     }
 }

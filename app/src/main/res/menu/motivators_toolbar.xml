@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:icon="@drawable/settings"
-        android:title="@string/settings"
+        android:icon="@drawable/share"
+        android:id="@+id/share"
+        android:title="@string/share"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 </menu>

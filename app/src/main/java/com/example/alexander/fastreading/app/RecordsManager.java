@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading;
+package com.example.alexander.fastreading.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -12,7 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
 
 public class ShulteSettingsActivity extends AppCompatActivity {
 

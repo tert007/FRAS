@@ -5,19 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_weight="8"
+    <ScrollView
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
-        <TextView
-            android:text="@string/shulte_table_description"
+        <LinearLayout
+            android:orientation="vertical"
             android:padding="@dimen/default_margin"
-
-            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/speed_reading_description_title"
+                android:gravity="center"
+
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+
+                android:textSize="26sp"
+                android:textColor="@color/black"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="@string/speed_reading_description"
+                android:textSize="16sp"
+                android:textColor="@color/grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:orientation="vertical"
+
+        android:paddingTop="@dimen/default_margin"
+        android:paddingBottom="@dimen/default_margin"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
 
         <CheckBox
             android:id="@+id/speed_reading_description_dont_show_again_check_box"
@@ -29,13 +58,6 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_weight="2"
-
-        android:layout_width="match_parent"
-        android:layout_height="0dp">
 
         <Button
             android:id="@+id/speed_reading_description_start_button"
@@ -47,11 +69,10 @@
 
             android:layout_gravity="center"
 
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="8dp"
 
             android:layout_width="125dp"
             android:layout_height="wrap_content"/>
-    </FrameLayout>
+    </LinearLayout>
 
 </LinearLayout>

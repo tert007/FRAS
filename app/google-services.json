@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "600224958351",
+    "firebase_url": "https://speedreading-ebcaa.firebaseio.com",
+    "project_id": "speedreading-ebcaa",
+    "storage_bucket": "speedreading-ebcaa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600224958351:android:eff310eb4e59244a",
+        "android_client_info": {
+          "package_name": "com.speedreading.alexander.speedreading"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600224958351-6o4bjcb7b9eftdrcvqrmpj1pgk47f090.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArrfAd5gGosgHG6tuU1pyT2-M8-tLV5Cg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

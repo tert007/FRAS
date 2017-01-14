@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ScrollView
         android:layout_weight="1"
         android:layout_width="match_parent"
@@ -21,6 +20,9 @@
                 android:text="@string/guess_number_description_title"
                 android:gravity="center"
 
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"
+
                 android:textSize="26sp"
                 android:textColor="@color/black"
 
@@ -29,7 +31,6 @@
 
             <TextView
                 android:text="@string/guess_number_description"
-
                 android:textSize="16sp"
                 android:textColor="@color/grey"
                 android:layout_width="match_parent"
@@ -75,9 +76,4 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
-
-
-
-
-
 </LinearLayout>

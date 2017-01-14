@@ -1,5 +1,6 @@
 package com.example.alexander.fastreading.shulte.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -19,14 +20,15 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.RecordsManager;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.RecordsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
+import com.example.alexander.fastreading.Training;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
 import com.example.alexander.fastreading.shulte.ShulteGridAdapter;
 import com.example.alexander.fastreading.shulte.ShulteNumberGenerator;
 import com.example.alexander.fastreading.shulte.TextViewOnTouchListener;
 
-public class ShulteMainFragment extends Fragment implements TextViewOnTouchListener {
+public class ShulteTrainingFragment extends Fragment implements TextViewOnTouchListener, Training {
 
     private static final String START_NEXT_ITEM_VALUE = "1";
     private static final String NOT_INITIALIZE_VALUE = "-";
@@ -93,10 +95,14 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                    chronometer.stop();
+
+                    currentState = FragmentState.ShowResult;
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setCancelable(false);
 
-                    chronometer.stop();
                     long startTime = chronometer.getBase();
                     long finishTime = SystemClock.elapsedRealtime();
 
@@ -114,7 +120,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
 
                     builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            ((ShulteActivity) getActivity()).startTrainingFragment();
+                            ((ShulteActivity) getActivity()).startPrepareFragment();
                         }
                     });
                     builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
@@ -135,6 +141,115 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
         chronometer.start();
 
         return view;
+    }
+
+    private long chronometerStoppedTime;
+
+    private enum FragmentState { ShowResult, Game, PauseFragmentDialog, ExitFragmentDialog }
+
+    private FragmentState currentState;
+
+    AlertDialog dialog;
+
+    @Override
+    public void onPause() {
+        if (currentState == FragmentState.ExitFragmentDialog || currentState == FragmentState.PauseFragmentDialog) {
+            dialog.dismiss();
+        }
+
+        if (currentState != FragmentState.ShowResult) {
+
+            if (currentState == FragmentState.Game) {
+                chronometerStoppedTime = chronometer.getBase() - SystemClock.elapsedRealtime();
+                chronometer.stop();
+            }
+
+            currentState = FragmentState.PauseFragmentDialog;
+        }
+
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (currentState == FragmentState.PauseFragmentDialog) // защита от первого вывода
+            showPauseDialog();
+    }
+
+    private void showPauseDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+
+        builder.setMessage(R.string.training_is_paused);
+
+        builder.setPositiveButton(R.string.dialog_continue, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                currentState = FragmentState.Game;
+
+                chronometer.setBase(SystemClock.elapsedRealtime() + chronometerStoppedTime);
+                chronometer.start();
+            }
+        });
+
+        builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void trainingOnBackPressed() {
+        chronometerStoppedTime = chronometer.getBase() - SystemClock.elapsedRealtime();
+        chronometer.stop();
+
+        currentState = FragmentState.ExitFragmentDialog;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setCancelable(false);
+
+        builder.setMessage(R.string.exit_message);
+
+        builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.finish();
+                }
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+
+                currentState = FragmentState.Game;
+
+                chronometer.setBase(SystemClock.elapsedRealtime() + chronometerStoppedTime);
+                chronometer.start();
+            }
+        });
+
+        dialog = builder.create();
+        dialog.show();
     }
 
     @Override
@@ -161,6 +276,8 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                     String nextItem = shulteNumberGenerator.getNextNumberItem(pickedItemText);
 
                     if (nextItem == null){
+                        currentState = FragmentState.ShowResult;
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setCancelable(false);
 
@@ -190,7 +307,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
 
                         builder.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                ((ShulteActivity) getActivity()).startTrainingFragment();
+                                ((ShulteActivity) getActivity()).startPrepareFragment();
                             }
                         });
                         builder.setNegativeButton(R.string.complete, new DialogInterface.OnClickListener() {
@@ -209,7 +326,7 @@ public class ShulteMainFragment extends Fragment implements TextViewOnTouchListe
                                 @Override
                                 public void run() {
                                     ShulteGridAdapter shulteGridAdapter = new ShulteGridAdapter(getActivity(), R.id.shulte_grid_item_text_view, shulteNumberGenerator.getRandomNumbers());
-                                    shulteGridAdapter.delegate = ShulteMainFragment.this;
+                                    shulteGridAdapter.delegate = ShulteTrainingFragment.this;
 
                                     gridView.setAdapter(shulteGridAdapter);
                                 }

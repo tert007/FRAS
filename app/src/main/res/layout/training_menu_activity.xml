@@ -18,9 +18,9 @@
                 android:text="@string/shulte_table"
                 android:textSize="20sp"
                 android:textColor="@drawable/training_menu_text_colour_selector"
-                android:gravity="center"
+                android:gravity="center_vertical"
 
-                android:drawablePadding="8dp"
+                android:drawablePadding="25dp"
                 android:drawableLeft="@drawable/training_menu_shulte_icon"
                 android:drawableStart="@drawable/training_menu_shulte_icon"
 
@@ -39,9 +39,9 @@
                 android:text="@string/guess_number"
                 android:textSize="20sp"
                 android:textColor="@drawable/training_menu_text_colour_selector"
-                android:gravity="center"
+                android:gravity="center_vertical"
 
-                android:drawablePadding="8dp"
+                android:drawablePadding="25dp"
                 android:drawableLeft="@drawable/training_menu_guess_number_icon"
                 android:drawableStart="@drawable/training_menu_guess_number_icon"
 
@@ -60,11 +60,11 @@
                 android:text="@string/vision_field"
                 android:textSize="20sp"
                 android:textColor="@drawable/training_menu_text_colour_selector"
-                android:gravity="center"
+                android:gravity="center_vertical"
 
                 android:background="@drawable/training_menu_background_selector"
 
-                android:drawablePadding="8dp"
+                android:drawablePadding="25dp"
                 android:drawableLeft="@drawable/training_menu_vision_field_icon"
                 android:drawableStart="@drawable/training_menu_vision_field_icon"
 
@@ -78,21 +78,22 @@
             <TextView
                 android:id="@+id/training_menu_start_speed_reading"
 
-                android:visibility="gone"
-
                 android:text="@string/speed_reading"
-                android:textSize="22sp"
-                android:textColor="@drawable/text_colour_selector"
-                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@drawable/training_menu_text_colour_selector"
+                android:gravity="center_vertical"
 
-                android:drawablePadding="8dp"
-                android:drawableLeft="@drawable/training_test"
-                android:drawableStart="@drawable/training_test"
+                android:background="@drawable/training_menu_background_selector"
 
-                android:padding="8dp"
+                android:drawablePadding="25dp"
+                android:drawableLeft="@drawable/training_menu_speed_reading_icon"
+                android:drawableStart="@drawable/training_menu_speed_reading_icon"
+
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
 
                 android:layout_gravity="center_horizontal"
-                android:layout_width="300dp"
+                android:layout_width="275dp"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>

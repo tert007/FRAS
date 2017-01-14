@@ -10,9 +10,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
 import com.example.alexander.fastreading.speedreading.SpeedReadingActivity;
-import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
 
 /**
  * Created by Alexander on 27.07.2016.
@@ -36,7 +35,7 @@ public class SpeedReadingDescriptionFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((SpeedReadingActivity) getActivity()).startTrainingFragment();
+                ((SpeedReadingActivity) getActivity()).startPrepareFragment();
             }
         });
 

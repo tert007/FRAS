@@ -1,0 +1,48 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".speedreading.fragment.SpeedReadingAnswersFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+
+        android:gravity="center_vertical"
+
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <TextView
+            android:text="@string/speed"
+            android:gravity="center_horizontal"
+
+            android:textSize="35sp"
+            android:textColor="@color/grey"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/speed_reading_answer_speed_text_view"
+            tools:text="200"
+            android:gravity="center_horizontal"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:textColor="@color/grey"
+            android:textSize="90sp"/>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:layout_margin="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

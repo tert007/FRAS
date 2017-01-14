@@ -16,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,7 @@ import android.widget.TextView;
 import com.example.alexander.fastreading.R;
 import com.example.alexander.fastreading.reader.dao.BookController;
 import com.example.alexander.fastreading.reader.entity.BookDescription;
-import com.example.alexander.fastreading.reader.library.ReaderBookDescriptionResponse;
+import com.example.alexander.fastreading.reader.library.ReaderBookClickResponse;
 
 import java.io.File;
 import java.util.Collections;
@@ -34,12 +35,12 @@ import java.util.List;
 /**
  * Created by Alexander on 03.09.2016.
  */
-public class ReaderLibraryFragment extends Fragment implements ReaderBookDescriptionResponse, ReaderLibraryRemoveBookOnClickResponse {
+public class ReaderLibraryFragment extends Fragment implements ReaderBookClickResponse, ReaderLibraryRemoveBookOnClickResponse {
 
     private BookController bookController;
 
     public ReaderLibraryFloatButtonOnClickResponse addBookDelegate;
-    public ReaderBookDescriptionResponse bookClickDelegate;
+    public ReaderBookClickResponse bookClickDelegate;
 
     private ListView listView;
     private ReaderLibraryListViewAdapter listAdapter;
@@ -56,19 +57,23 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
         bookController = new BookController(getActivity());
         bookDescriptions = bookController.getBookDescriptions();
 
-        boolean bookLibraryWasChanged = false;
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
 
-        for (int i = 0; i < bookDescriptions.size(); i++) {
-            if (! (new File(bookDescriptions.get(i).getFilePath())).exists()) {
-                bookController.removeBook(bookDescriptions.get(i));
-                bookDescriptions.remove(i);
+            boolean bookLibraryWasChanged = false;
 
-                bookLibraryWasChanged = true;
+            for (int i = 0; i < bookDescriptions.size(); i++) {
+                if (!(new File(bookDescriptions.get(i).getFilePath())).exists()) {
+                    bookController.removeBook(bookDescriptions.get(i));
+                    bookDescriptions.remove(i);
+
+                    bookLibraryWasChanged = true;
+                }
             }
-        }
 
-        if (bookLibraryWasChanged) {
-            Snackbar.make(view, getString(R.string.library_was_changed), Snackbar.LENGTH_LONG).show();
+            if (bookLibraryWasChanged) {
+                Snackbar.make(view, getString(R.string.library_was_changed), Snackbar.LENGTH_LONG).show();
+            }
         }
 
         emptyLibraryTextView = (TextView) view.findViewById(R.id.reader_library_empty_library_text_view);
@@ -86,31 +91,12 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
             listView.setAdapter(listAdapter);
         }
 
-
         FloatingActionButton floatingActionButton = (FloatingActionButton) view.findViewById(R.id.reader_library_floating_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                PERMISSION_REQUEST_CODE);
-                    } else {
-                        Snackbar.make(getView(), R.string.permission_error, Snackbar.LENGTH_LONG).setAction(R.string.settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getActivity().getPackageName()));
-                                startActivity(appSettingsIntent);
-                            }
-                        }).show();
-                    }
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
                 } else {
                     addBookDelegate.onFloatButtonClick();
                 }
@@ -124,11 +110,23 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE && grantResults.length == 1) {
-            if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Snackbar.make(getView(), R.string.permission_error, Snackbar.LENGTH_LONG).show();
-            } else {
-                addBookDelegate.onFloatButtonClick();
+        if (grantResults.length > 0) {
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //addBookDelegate.onFloatButtonClick();
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                } else {
+                    Snackbar.make(getView(), R.string.permission_error, Snackbar.LENGTH_LONG).setAction(R.string.settings, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getActivity().getPackageName()));
+                            startActivity(appSettingsIntent);
+                        }
+                    }).show();
+                }
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -137,7 +135,16 @@ public class ReaderLibraryFragment extends Fragment implements ReaderBookDescrip
     //onBookClick
     @Override
     public void bookResponse(BookDescription bookDescription) {
-        bookClickDelegate.bookResponse(bookDescription);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_CODE);
+
+        } else {
+            bookClickDelegate.bookResponse(bookDescription);
+        }
     }
 
     @Override

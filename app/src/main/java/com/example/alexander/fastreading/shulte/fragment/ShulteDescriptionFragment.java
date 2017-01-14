@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
 import com.example.alexander.fastreading.shulte.ShulteActivity;
 
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+    android:paddingTop="@dimen/default_margin"
+
+    android:paddingStart="@dimen/default_margin"
+    android:paddingLeft="@dimen/default_margin"
+    android:paddingEnd="@dimen/default_margin"
+    android:paddingRight="@dimen/default_margin"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="Премиум режим:"
+        android:textColor="@color/grey"
+        android:textSize="16sp"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Скорость до 2000"
+        android:textColor="@color/grey"
+        android:textSize="16sp"
+
+        android:gravity="center_vertical"
+
+        android:drawablePadding="@dimen/default_margin"
+
+        android:drawableLeft="@drawable/new_posibilities"
+        android:drawableStart="@drawable/new_posibilities"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+    android:text="Премиум тренажёры"
+    android:textColor="@color/grey"
+    android:textSize="16sp"
+
+    android:gravity="center_vertical"
+
+    android:drawablePadding="@dimen/default_margin"
+
+    android:drawableLeft="@drawable/new_posibilities"
+    android:drawableStart="@drawable/new_posibilities"
+
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="Отсутствие рекламы"
+        android:textColor="@color/grey"
+        android:textSize="16sp"
+
+        android:gravity="center_vertical"
+
+        android:drawablePadding="@dimen/default_margin"
+
+        android:drawableLeft="@drawable/new_posibilities"
+        android:drawableStart="@drawable/new_posibilities"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

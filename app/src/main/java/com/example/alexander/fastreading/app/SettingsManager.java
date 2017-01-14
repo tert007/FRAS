@@ -1,4 +1,4 @@
-package com.example.alexander.fastreading;
+package com.example.alexander.fastreading.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,6 +8,10 @@ import android.preference.PreferenceManager;
  * Created by Alexander on 30.07.2016.
  */
 public class SettingsManager {
+
+    private static final String PREMIUM_USER_KEY = "is_premium_user";
+    private static final boolean PREMIUM_SER_DEFAULT_VALUE = false;
+
     private static final String GUESS_NUMBER_COMPLEXITY_KEY = "guess_number_complexity";
     private static final int GUESS_NUMBER_COMPLEXITY_DEFAULT_VALUE = 4;
     private static final String GUESS_NUMBER_SHOW_HELP_KEY = "guess_number_show_help";
@@ -28,11 +32,15 @@ public class SettingsManager {
     private static final int VISION_FIELD_COMPLEXITY_DEFAULT_VALUE = 30_000;
     private static final String VISION_FIELD_SHOW_DELAY_KEY = "vision_field_show_delay";
     private static final int VISION_FIELD_SHOW_DELAY_DEFAULT_VALUE = 1000;
+
     private static final String VISION_FIELD_SHOW_HELP_KEY = "vision_field_show_help";
     private static final boolean VISION_FIELD_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static final String SPEED_READING_SHOW_HELP = "speed_reading_show_help";
     private static final boolean SPEED_READING_SHOW_HELP_DEFAULT_VALUE = true;
+
+    private static final String READER_SHOW_HELP = "reader_show_help";
+    private static final boolean READER_SHOW_HELP_DEFAULT_VALUE = true;
 
     private static int guessNumberComplexity;
     private static boolean guessNumberShowHelp;
@@ -53,6 +61,22 @@ public class SettingsManager {
 
     public static void Initialize(Context context){
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    }
+
+    public static boolean isReaderShowHelp() {
+        return sharedPreferences.getBoolean(READER_SHOW_HELP, READER_SHOW_HELP_DEFAULT_VALUE);
+    }
+
+    public static void setReaderShowHelp(boolean showHelp) {
+        sharedPreferences.edit().putBoolean(READER_SHOW_HELP, showHelp).apply();
+    }
+
+    public static boolean isPremiumUser() {
+        return sharedPreferences.getBoolean(PREMIUM_USER_KEY, PREMIUM_SER_DEFAULT_VALUE);
+    }
+
+    public static void setPremiumUser(boolean isPremium) {
+        sharedPreferences.edit().putBoolean(PREMIUM_USER_KEY, isPremium).apply();
     }
 
     public static boolean isGuessNumberShowHelp() {

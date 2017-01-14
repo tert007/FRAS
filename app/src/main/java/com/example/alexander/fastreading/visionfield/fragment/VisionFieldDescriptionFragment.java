@@ -1,25 +1,17 @@
 package com.example.alexander.fastreading.visionfield.fragment;
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.GridView;
-import android.widget.TextView;
 
 import com.example.alexander.fastreading.R;
-import com.example.alexander.fastreading.SettingsManager;
+import com.example.alexander.fastreading.app.SettingsManager;
 import com.example.alexander.fastreading.visionfield.VisionFieldActivity;
-import com.example.alexander.fastreading.visionfield.VisionFieldGridAdapter;
-
-import java.util.Random;
 
 /**
  * Created by Alexander on 27.07.2016.

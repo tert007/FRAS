@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+    android:paddingTop="@dimen/default_margin"
+
+    android:paddingStart="@dimen/default_margin"
+    android:paddingLeft="@dimen/default_margin"
+    android:paddingEnd="@dimen/default_margin"
+    android:paddingRight="@dimen/default_margin"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="180dp">
+
+            <TextView
+                android:text="Скорость\n-"
+                android:textColor="@color/grey"
+                android:textSize="16sp"
+
+                android:gravity="center"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <View
+            android:background="@color/light_grey"
+            android:layout_width="1dp"
+            android:layout_height="180dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="180dp">
+
+            <TextView
+                android:text="Стоп"
+                android:textColor="@color/grey"
+                android:textSize="16sp"
+
+                android:gravity="center"
+
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+
+            <ImageView
+                android:src="@drawable/start"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:text="Старт"
+                android:textColor="@color/grey"
+                android:textSize="16sp"
+
+                android:gravity="center"
+
+                android:layout_width="match_parent"
+                android:layout_height="70dp" />
+        </LinearLayout>
+
+        <View
+            android:background="@color/light_grey"
+            android:layout_width="1dp"
+            android:layout_height="180dp"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="180dp">
+
+            <TextView
+                android:text="Скорость\n+"
+                android:textColor="@color/grey"
+                android:textSize="16sp"
+
+                android:gravity="center"
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/reader_guide_dialog_dont_show_again_check_box"
+
+        android:text="@string/dont_show_it_again"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

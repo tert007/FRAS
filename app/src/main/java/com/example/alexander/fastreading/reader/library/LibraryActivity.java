@@ -1,10 +1,9 @@
 package com.example.alexander.fastreading.reader.library;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,10 +13,9 @@ import com.example.alexander.fastreading.reader.library.fragment.library.ReaderL
 import com.example.alexander.fastreading.reader.library.fragment.library.ReaderLibraryFragment;
 import com.example.alexander.fastreading.reader.library.fragment.description.ReaderBookDescriptionFragment;
 import com.example.alexander.fastreading.reader.library.fragment.fileexplorer.ReaderFileExplorerFileExplorerFragment;
-import com.example.alexander.fastreading.reader.reader.ReaderActivity;
 
 
-public class LibraryActivity extends AppCompatActivity implements ReaderLibraryFloatButtonOnClickResponse, ReaderBookDescriptionResponse {
+public class LibraryActivity extends AppCompatActivity implements ReaderLibraryFloatButtonOnClickResponse, ReaderBookClickResponse {
 
     private ReaderFileExplorerFileExplorerFragment fileExplorerFragment;
     private ReaderBookDescriptionFragment bookDescriptionFragment;
@@ -117,5 +115,11 @@ public class LibraryActivity extends AppCompatActivity implements ReaderLibraryF
                 commit();
 
         currentFragmentFragmentState = FragmentState.BOOK_DESCRIPTION;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (readerLibraryFragment != null)
+        readerLibraryFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

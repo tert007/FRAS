@@ -9,7 +9,6 @@
 
     tools:context=".MainMenu">
 
-
     <View
         android:layout_weight="6"
         android:layout_width="match_parent"
@@ -57,18 +56,22 @@
         android:visibility="visible"
         android:text="@string/reading"
 
-        android:textSize="30sp"
-        android:textColor="@drawable/text_colour_selector"
+        android:textSize="20sp"
+        android:textColor="@drawable/training_menu_text_colour_selector"
 
-        android:padding="8dp"
+
+        android:drawablePadding="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/training_menu_background_selector"
 
         android:drawableLeft="@drawable/i1"
         android:drawableStart="@drawable/i1"
 
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:layout_gravity="center_horizontal"
 
-        android:layout_width="300dp"
+        android:layout_width="275dp"
         android:layout_height="wrap_content" />
 
     <TextView
@@ -76,18 +79,43 @@
 
         android:text="@string/training"
 
-        android:textSize="30sp"
-        android:textColor="@drawable/text_colour_selector"
+        android:textSize="20sp"
+        android:textColor="@drawable/training_menu_text_colour_selector"
 
-        android:padding="8dp"
+        android:drawablePadding="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/training_menu_background_selector"
 
         android:drawableLeft="@drawable/i3"
         android:drawableStart="@drawable/i3"
 
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:layout_gravity="center_horizontal"
 
-        android:layout_width="300dp"
+        android:layout_width="275dp"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/main_menu_motivators_text_view"
+
+        android:text="@string/motivators"
+
+        android:textSize="20sp"
+        android:textColor="@drawable/training_menu_text_colour_selector"
+
+        android:drawablePadding="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/training_menu_background_selector"
+
+        android:drawableLeft="@drawable/i5"
+        android:drawableStart="@drawable/i5"
+
+        android:gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
+
+        android:layout_width="275dp"
         android:layout_height="wrap_content" />
 
     <View
@@ -95,17 +123,43 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <ImageView
-        android:id="@+id/main_menu_share_image_view"
+    <LinearLayout
         android:layout_gravity="center_horizontal"
 
-        android:src="@drawable/share"
-        android:background="@drawable/main_menu_share_icon_background_selector"
-        android:clickable="true"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        android:padding="4dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
+        <ImageView
+            android:id="@+id/main_menu_description_image_view"
+
+            android:background="@drawable/main_menu_share_icon_background_selector"
+
+            android:clickable="true"
+
+            android:src="@drawable/main_menu_description_icon"
+            android:padding="4dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/main_menu_share_image_view"
+            android:layout_gravity="center_horizontal"
+
+            android:src="@drawable/share"
+            android:background="@drawable/main_menu_share_icon_background_selector"
+            android:clickable="true"
+
+            android:padding="4dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+    </LinearLayout>
+
+
 
     <View
         android:layout_weight="3"

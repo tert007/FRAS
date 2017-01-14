@@ -8,14 +8,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress"
-
-        style="?android:attr/progressBarStyleHorizontal"
-
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -26,6 +18,8 @@
             android:textSize="16sp"
             android:textColor="@color/grey"
 
+            android:gravity="center_vertical"
+
             android:layout_marginRight="4dp"
             android:layout_marginEnd="4dp"
 
@@ -35,14 +29,27 @@
         <TextView
             android:id="@+id/speed_reading_main_speed_text_view"
 
+            android:gravity="center_vertical"
+
             android:textSize="16sp"
             android:textColor="@color/grey"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <ProgressBar
+            android:id="@+id/progress"
+
+            style="?android:attr/progressBarStyleHorizontal"
+
+            android:layout_gravity="center_vertical"
+
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
     </LinearLayout>
-
-
 
     <LinearLayout
         android:orientation="vertical"
@@ -60,33 +67,35 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
                 android:gravity="center"
+
+
                 android:id="@+id/speed_reading_word_view_1"
                 android:layout_weight="1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+
                 android:id="@+id/speed_reading_word_view_2"
                 android:layout_weight="1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/speed_reading_word_view_3"
-                android:layout_weight="1"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="26sp"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/speed_reading_word_view_4"
+
+                android:id="@+id/speed_reading_word_view_3"
                 android:layout_weight="1"/>
         </LinearLayout>
 
@@ -101,7 +110,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1" />
             <View
                 android:layout_width="0dp"
@@ -110,7 +119,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1" />
             <View
                 android:layout_width="0dp"
@@ -119,16 +128,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
-                android:layout_weight="1" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1" />
             <View
                 android:layout_width="0dp"
@@ -137,40 +137,43 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="50dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+
+                android:id="@+id/speed_reading_word_view_4"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:gravity="center"
+
                 android:id="@+id/speed_reading_word_view_5"
                 android:layout_weight="1"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
                 android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
+
                 android:id="@+id/speed_reading_word_view_6"
                 android:layout_weight="1"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/speed_reading_word_view_7"
-                android:layout_weight="1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/speed_reading_word_view_8"
-                android:layout_weight="1"/>
         </LinearLayout>
 
         <LinearLayout
@@ -184,7 +187,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1" />
             <View
                 android:layout_width="0dp"
@@ -193,7 +196,7 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1"/>
             <View
                 android:layout_width="0dp"
@@ -202,17 +205,92 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@color/grey"
                 android:layout_weight="1"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:gravity="center"
+
+                android:id="@+id/speed_reading_word_view_7"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:gravity="center"
+
+                android:id="@+id/speed_reading_word_view_8"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/black"
+                android:textSize="26sp"
+                android:gravity="center"
+
+                android:id="@+id/speed_reading_word_view_9"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:background="@color/black"
                 android:layout_weight="1"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_weight="1" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_weight="1"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/grey"
+                android:layout_weight="1"/>
+
             <View
                 android:layout_width="0dp"
                 android:layout_height="1dp"
